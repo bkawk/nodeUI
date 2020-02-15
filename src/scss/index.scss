@@ -1,0 +1,48 @@
+* {
+  border: 0;
+  box-sizing: border-box;
+  font-size: 100%;
+  font-style: normal;
+  list-style: none;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  quotes: none;
+  vertical-align: baseline;
+}
+
+html,
+body,
+#root {
+  -webkit-font-smoothing: antialiased;
+  cursor: default;
+  display: block;
+  font-size: 13px;
+  height: 100%;
+  overflow: hidden;
+}
+
+*:focus {
+  outline: none !important;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  &--canvas {
+    background-color: #393939;
+  }
+  &--buttons {
+    background-color: #1E1E1E; 
+    border-top: 1px solid black;
+    height: 60px;
+    padding: 10px;
+
+    button {
+      background-color: cornflowerblue;
+      padding: 10px 20px;
+      font-weight: 800;
+      color: white;
+    }
+  }
+}
