@@ -28,11 +28,17 @@ body,
 
 .container {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: 1fr 300px;
   &--canvas {
     background-color: #393939;
+    overflow: hidden;
+  }
+  &--inspector {
+    background-color: #393939;
+    border-left: 1px solid black;
   }
   &--buttons {
+    grid-column: span 2 / auto;
     background-color: #1E1E1E; 
     border-top: 1px solid black;
     height: 60px;

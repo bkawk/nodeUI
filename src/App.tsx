@@ -8,6 +8,7 @@ const App: React.FC = () => {
   const width = window.innerWidth;
   const height = window.innerHeight - 60;
   const grid = new Grid({ x: width, y: height });
+
   const setGrid = () => {
     const gridImage = document.getElementById('gridImageBg');
     if (canvasRef.current) {
@@ -46,6 +47,7 @@ const App: React.FC = () => {
         <img src={gridImageBg} id='gridImageBg' style={pStyle} alt='grid'/>
         <canvas ref={canvasRef} width={width} height={height} />
       </div>
+      <div className='container--inspector'>inspector</div>
       <div className='container--buttons'>
         <button onClick={newNode}>New Node</button>
       </div>
