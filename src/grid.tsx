@@ -41,7 +41,7 @@ class Grid implements InputHandlerInterface {
     this.canvasSize = canvasSize;
     this.nodeObjects = [];
     this.controls = {
-      view: { x: this.canvasSize.x / 2, y: this.canvasSize.y / 2, zoom: 1 },
+      view: { x: 0, y: 0, zoom: 1 },
       viewPos: { prevX: null, prevY: null, isDragging: false, dragBg: true },
     };
     new InputHandler(this);
@@ -56,18 +56,14 @@ class Grid implements InputHandlerInterface {
   }
 
   draw(ctx: CanvasRenderingContext2D, gridImage: CanvasImageSource) {
+    ctx.clearRect(0, 0, this.canvasSize.x, this.canvasSize.y);
     ctx.save();
     if (this.controls.viewPos.dragBg) {
       ctx.translate(this.controls.view.x, this.controls.view.y);
     }
     ctx.scale(this.controls.view.zoom, this.controls.view.zoom);
     const gridPatternBackground = ctx.createPattern(gridImage, 'repeat');
-    ctx.rect(
-      -Math.abs(this.canvasSize.x / 2),
-      -Math.abs(this.canvasSize.y / 2),
-      4000,
-      4000
-    );
+    ctx.rect(0, 0, this.canvasSize.x, this.canvasSize.y);
     if (gridPatternBackground) ctx.fillStyle = gridPatternBackground;
     ctx.fill();
     this.nodeObjects.forEach((object) => object.draw(ctx));

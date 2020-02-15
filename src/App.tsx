@@ -1,15 +1,26 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Grid } from './grid';
 import gridImageBg from './images/grid.svg';
 import './scss/index.scss';
 
 const App: React.FC = () => {
+  const [state, setState] = useState({canvasSize: { x: 0, y: 0 }});
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const width = window.innerWidth;
-  const height = window.innerHeight - 60;
-  const grid = new Grid({ x: width, y: height });
+  const grid = new Grid(state.canvasSize);
 
-  const setGrid = () => {
+  const calcCanvasSize = () => {
+    const x = window.innerWidth - 300;
+    const y = window.innerHeight - 60;
+    setState((prev) => ({ canvasSize: { x, y} }));
+  };
+  let resizeTimer: any;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(calcCanvasSize, 500);
+  });
+  document.addEventListener('DOMContentLoaded', calcCanvasSize);
+
+  useEffect(() => {
     const gridImage = document.getElementById('gridImageBg');
     if (canvasRef.current) {
       const canvas = canvasRef.current;
@@ -19,7 +30,6 @@ const App: React.FC = () => {
         const tickLoop = (epoch: number) => {
           const tick = epoch - now;
           now = epoch;
-          ctx.clearRect(0, 0, width, height);
           grid.update(tick);
           grid.draw(ctx, gridImage as CanvasImageSource);
           requestAnimationFrame(tickLoop);
@@ -27,15 +37,7 @@ const App: React.FC = () => {
         requestAnimationFrame(tickLoop);
       }
     }
-  };
-
-  useEffect(() => {
-    setGrid();
-  });
-
-  const pStyle = {
-    display: 'none',
-  };
+  }, [grid]);
 
   const newNode = () => {
     grid.newNode();
@@ -43,11 +45,13 @@ const App: React.FC = () => {
 
   return (
     <div className='container'>
-      <div className='container--canvas'>
-        <img src={gridImageBg} id='gridImageBg' style={pStyle} alt='grid'/>
-        <canvas ref={canvasRef} width={width} height={height} />
+      <div className='container--top'>
+        <div className='container--canvas'>
+          <img src={gridImageBg} id='gridImageBg' alt='grid' />
+          <canvas ref={canvasRef} width={state.canvasSize.x} height={state.canvasSize.y} />
+        </div>
+        <div className='container--inspector'>inspector</div>
       </div>
-      <div className='container--inspector'>inspector</div>
       <div className='container--buttons'>
         <button onClick={newNode}>New Node</button>
       </div>

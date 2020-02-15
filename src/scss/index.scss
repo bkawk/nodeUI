@@ -18,7 +18,7 @@ body,
   cursor: default;
   display: block;
   font-size: 13px;
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
 }
 
@@ -28,17 +28,26 @@ body,
 
 .container {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-rows: auto 60px;
+  height: 100vh;
+  overflow: hidden;
+  &--top {
+    display: grid;
+    grid-template-columns: auto 300px;
+    overflow: hidden;
+  }
   &--canvas {
     background-color: #393939;
     overflow: hidden;
+    img {
+      display: none;
+    }
   }
   &--inspector {
     background-color: #393939;
     border-left: 1px solid black;
   }
   &--buttons {
-    grid-column: span 2 / auto;
     background-color: #1E1E1E; 
     border-top: 1px solid black;
     height: 60px;
