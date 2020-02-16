@@ -1,0 +1,48 @@
+.container {
+  display: grid;
+  grid-template-rows: 79px auto 60px;
+  height: 100vh;
+  overflow: hidden;
+  &--center {
+    display: grid;
+    grid-template-columns: 40px auto 500px;
+    overflow: hidden;
+  }
+  &--canvas {
+    background-image: linear-gradient(
+      180deg,
+      $canvas-bg-top 0%,
+      $canvas-bg-bottom 100%
+    );
+    overflow: hidden;
+  }
+  &--inspector {
+    background-image: linear-gradient(
+      180deg,
+      $inspector-bg-top 0%,
+      $inspector-bg-bottom 100%
+    );
+    border-left: 1px solid $border-light;
+    padding: $padding;
+  }
+  &--tools {
+    background-color: $tools-bg
+  }
+  &--main-toolbar {
+    background-color: $background;
+    border-bottom: 1px solid $border-dark;
+    border-top: 1px solid $border-light;
+    height: 75px;
+  }
+  &--footer {
+    background-color: $background;
+    border-bottom: 1px solid $border-dark;
+    border-top: 1px solid $border-light;
+    height: 60px;
+    padding: $padding;
+  }
+}
+
+.hidden {
+  display: none;
+}

@@ -1,0 +1,30 @@
+* {
+  border: 0;
+  box-sizing: border-box;
+  font-size: 100%;
+  font-style: normal;
+  list-style: none;
+  margin: 0;
+  outline: none;
+  padding: 0;
+  quotes: none;
+  vertical-align: baseline;
+}
+
+html,
+body,
+#root {
+  -webkit-font-smoothing: antialiased;
+  color: $not-white;
+  cursor: default;
+  display: block;
+  font-size: 13px;
+  height: 100vh;
+  overflow: hidden;
+  font-family: $base-font;
+}
+
+*:focus {
+  outline: none !important;
+}
+

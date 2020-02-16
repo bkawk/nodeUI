@@ -19,7 +19,7 @@ class Grid implements InputHandlerInterface {
     this.canvasSize = canvasSize;
     this.nodeObjects = [];
     this.controls = {
-      view: { x: 0, y: 0, zoom: 1.5 },
+      view: { x: 0, y: 0, zoom: 1 },
       viewPos: { prevX: null, prevY: null, isDragging: false, dragBg: true },
     };
     new InputHandler(this);

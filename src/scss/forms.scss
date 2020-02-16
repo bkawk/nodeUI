@@ -1,0 +1,22 @@
+input {
+  font-family: $code-font;
+  background-color: $input-bg;
+  color: $not-white;
+}
+button {
+  background-image: linear-gradient(180deg, $button-bg-top 0%, $button-bg-bottom 100%);
+  border-bottom: 1px solid $button-border-bottom;
+  border: 1px solid $button-border;
+  box-shadow: $button-shadow;
+  color: $not-white;
+  cursor: pointer;
+  font-weight: $bold-font;
+  padding: 10px 20px;
+}
+button:hover {
+  background-image: linear-gradient(180deg, #626262 0%, #474747 100%);
+  color: $bright-white;
+}
+button:active {
+  box-shadow: none;
+}
