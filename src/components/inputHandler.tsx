@@ -31,7 +31,7 @@ class InputHandler {
     window.addEventListener(
       'mousemove',
       (event) => {
-        if (this.mouseDown) grid.setPan(event, this.mouseDown);
+        grid.setPan(event, this.mouseDown);
       },
       false
     );

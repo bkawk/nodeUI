@@ -36,6 +36,7 @@ class Grid implements InputHandlerInterface {
     gridImage: CanvasImageSource,
     canvas: HTMLCanvasElement
   ) {
+    canvas.style.cursor = 'grab';
     this.canvas = canvas;
     this.ctx = ctx;
     this.gridImage = gridImage;
@@ -46,22 +47,25 @@ class Grid implements InputHandlerInterface {
   }
 
   draw() {
-    const ctx = this.ctx;
-    const controls = this.controls;
-    const canvasSize = this.canvasSize;
-    const gridPatternBackground = ctx.createPattern(this.gridImage, 'repeat');
-    ctx.clearRect(0, 0, canvasSize.x, canvasSize.y);
-    ctx.save();
-    if (controls.viewPos.dragBg) {
-      ctx.translate(controls.view.x, controls.view.y);
-    }
-    ctx.scale(controls.view.zoom, controls.view.zoom);
-    ctx.rect(0, 0, canvasSize.x, canvasSize.y);
-    if (gridPatternBackground) ctx.fillStyle = gridPatternBackground;
-    ctx.fill();
-    // TODO: only call draw() on objects that are being moved
-    this.nodeObjects.forEach((object) => object.draw(ctx));
-    ctx.restore();
+    const paint = () => {
+      const ctx = this.ctx;
+      const controls = this.controls;
+      const canvasSize = this.canvasSize;
+      const gridPatternBackground = ctx.createPattern(this.gridImage, 'repeat');
+      ctx.clearRect(0, 0, canvasSize.x, canvasSize.y);
+      ctx.save();
+      if (controls.viewPos.dragBg) {
+        ctx.translate(controls.view.x, controls.view.y);
+      }
+      ctx.scale(controls.view.zoom, controls.view.zoom);
+      if (gridPatternBackground) ctx.rect(0, 0, canvasSize.x, canvasSize.y);
+      if (gridPatternBackground) ctx.fillStyle = gridPatternBackground;
+      if (gridPatternBackground) ctx.fill();
+      // TODO: only call draw() on objects that are being moved
+      this.nodeObjects.forEach((object) => object.draw(ctx));
+      ctx.restore();
+    };
+    requestAnimationFrame(paint);
   }
 
   setMouseDown(event: MouseEvent, mouseDown: boolean) {
@@ -71,21 +75,22 @@ class Grid implements InputHandlerInterface {
     // TODO: set the correct cursor
     const controls = this.controls;
     if (mouseDown) {
+      this.canvas.style.cursor = 'grab';
       controls.viewPos.isDragging = true;
       controls.viewPos.prevX = x;
       controls.viewPos.prevY = y;
     }
     if (!mouseDown) {
-      this.canvas.style.cursor = 'default';
       controls.viewPos.isDragging = false;
       controls.viewPos.prevX = null;
       controls.viewPos.prevY = null;
     }
   }
   setPan(event: MouseEvent, mouseDown: boolean) {
+    const canvas = this.canvas;
+    canvas.style.cursor = 'grab';
     const { x, y } = event;
     const controls = this.controls;
-    if (this.canvas.style.cursor !== 'grab') this.canvas.style.cursor = 'grab';
     const pos = { x, y };
     let dx;
     let dy;
@@ -101,38 +106,24 @@ class Grid implements InputHandlerInterface {
   }
 
   setZoom(event: WheelEvent) {
+    // TODO: clamp zoom but dont break the zoom to curosor!
     const { x, y, deltaY } = event;
     const controls = this.controls;
-    const canvas = this.canvas;
+    const canvasSize = this.canvasSize;
+    const weigthed = {x: 0, y: 0};
     const direction = deltaY > 0 ? -1 : 1;
+    if (direction === 1) this.canvas.style.cursor = 'zoom-in';
+    if (direction === -1) this.canvas.style.cursor = 'zoom-out';
     const factor = 0.02;
-    const wx = (x - controls.view.x) / (800 * controls.view.zoom);
-    const wy = (y - controls.view.y) / (800 * controls.view.zoom);
-    const zoom = 1 * direction * factor;
-    controls.view.x -= Math.floor(wx * 800 * zoom);
-    controls.view.y -= Math.floor(wy * 800 * zoom);
-    const test = controls.view.zoom += zoom;
-    if (test > 3 ) {
-      controls.view.zoom = 3;
-      canvas.style.cursor = 'default';
-    } else if (test < 1) {
-      controls.view.zoom = 1;
-      canvas.style.cursor = 'default';
-    } else {
-      if (direction === -1) canvas.style.cursor = 'zoom-out';
-      if (direction === 1) canvas.style.cursor = 'zoom-in';
-      controls.view.zoom += zoom;
-      this.draw();
+    const zoom = direction * factor;
+    if ((controls.view.zoom + zoom) < 3 && (controls.view.zoom + zoom) > 0.8) {
+    weigthed.x = (x - controls.view.x) / (canvasSize.x * controls.view.zoom);
+    weigthed.y = (y - controls.view.y) / (canvasSize.y * controls.view.zoom);
+    controls.view.x -= weigthed.x * canvasSize.x * zoom;
+    controls.view.y -= weigthed.y * canvasSize.y * zoom;
+    controls.view.zoom += zoom;
+    this.draw();
     }
-    let debounceZoom: any;
-    clearTimeout(debounceZoom);
-    debounceZoom = setTimeout(() => {
-      if (controls.viewPos.isDragging === true) {
-        canvas.style.cursor = 'grap';
-      } else  {
-        canvas.style.cursor = 'default';
-      }
-    }, 1500);
   }
 }
 
