@@ -36,6 +36,8 @@ class Grid implements InputHandlerInterface {
   canvasSize: XYInterface;
   controls: ControlInterface;
   nodeObjects: NodeObjectInterface[];
+  ctx!: CanvasRenderingContext2D;
+  gridImage!: CanvasImageSource;
 
   constructor(canvasSize: XYInterface) {
     this.canvasSize = canvasSize;
@@ -51,7 +53,11 @@ class Grid implements InputHandlerInterface {
     this.nodeObjects.push(new Square(this));
   }
 
-  update(tick: number) {
+  update(ctx: CanvasRenderingContext2D, gridImage: CanvasImageSource) {
+    this.ctx = ctx;
+    this.gridImage = gridImage;
+    // TODO: only call update on objects that are being moved
+    const tick = 0;
     this.nodeObjects.forEach((object) => object.update(tick));
   }
 
@@ -82,6 +88,7 @@ class Grid implements InputHandlerInterface {
       this.controls.viewPos.prevX = null;
       this.controls.viewPos.prevY = null;
     }
+    this.draw(this.ctx, this.gridImage);
   }
   setPan(event: MouseEvent, mouseDown: boolean) {
     const { x, y } = event;
@@ -99,6 +106,7 @@ class Grid implements InputHandlerInterface {
         this.controls.viewPos.prevY = pos.y;
       }
     }
+    this.draw(this.ctx, this.gridImage);
   }
 
   setZoom(event: WheelEvent) {
@@ -112,6 +120,7 @@ class Grid implements InputHandlerInterface {
     this.controls.view.x -= wx * 800 * zoom;
     this.controls.view.y -= wy * 800 * zoom;
     this.controls.view.zoom += zoom;
+    this.draw(this.ctx, this.gridImage);
   }
 }
 

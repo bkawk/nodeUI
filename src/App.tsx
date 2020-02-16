@@ -13,10 +13,10 @@ const App: React.FC = () => {
     const y = window.innerHeight - 60;
     setState((prev) => ({ canvasSize: { x, y} }));
   };
-  let resizeTimer: any;
+  let debounceResize: any;
   window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(calcCanvasSize, 500);
+    clearTimeout(debounceResize);
+    debounceResize = setTimeout(calcCanvasSize, 500);
   });
   document.addEventListener('DOMContentLoaded', calcCanvasSize);
 
@@ -26,15 +26,7 @@ const App: React.FC = () => {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
       if (ctx && gridImage) {
-        let now = 0;
-        const tickLoop = (epoch: number) => {
-          const tick = epoch - now;
-          now = epoch;
-          grid.update(tick);
-          grid.draw(ctx, gridImage as CanvasImageSource);
-          requestAnimationFrame(tickLoop);
-        };
-        requestAnimationFrame(tickLoop);
+        grid.update(ctx, gridImage as CanvasImageSource);
       }
     }
   }, [grid]);
