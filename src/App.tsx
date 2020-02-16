@@ -13,7 +13,9 @@ const App: React.FC = () => {
     const y = window.innerHeight - 60;
     setState((prev) => ({ canvasSize: { x, y} }));
   };
+
   let debounceResize: any;
+  // TODO: fimd the right type for timer / number
   window.addEventListener('resize', () => {
     clearTimeout(debounceResize);
     debounceResize = setTimeout(calcCanvasSize, 500);

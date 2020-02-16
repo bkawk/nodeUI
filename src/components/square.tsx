@@ -1,4 +1,4 @@
-import { XYInterface } from '../grid';
+import { XYInterface } from '../components/interfaces';
 
 interface NodesInterface {
   canvasSize: XYInterface;

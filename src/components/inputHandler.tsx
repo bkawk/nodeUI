@@ -1,4 +1,4 @@
-import { InputHandlerInterface } from '../grid';
+import { InputHandlerInterface } from './interfaces';
 
 class InputHandler {
   mouseDown: boolean;
