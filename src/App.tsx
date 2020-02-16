@@ -8,8 +8,8 @@ const App: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const grid = new Grid(state.canvasSize);
   const calcCanvasSize = () => {
-    const x = window.innerWidth - 300;
-    const y = window.innerHeight - 60;
+    const x = window.innerWidth - 540;
+    const y = window.innerHeight - 130;
     setState((prev) => ({ canvasSize: { x, y} }));
   };
 
@@ -38,15 +38,19 @@ const App: React.FC = () => {
 
   return (
     <div className='container'>
+      <div className='container--buttons'>
+        <button onClick={newNode}>New Node</button>
+      </div>
       <div className='container--top'>
+      <div className='container--tools'></div>
         <div className='container--canvas'>
           <img src={gridImageBg} id='gridImageBg' alt='grid' />
           <canvas ref={canvasRef} width={state.canvasSize.x} height={state.canvasSize.y} />
         </div>
         <div className='container--inspector'>inspector</div>
       </div>
-      <div className='container--buttons'>
-        <button onClick={newNode}>New Node</button>
+      <div className='container--footer'>
+
       </div>
     </div>
   );

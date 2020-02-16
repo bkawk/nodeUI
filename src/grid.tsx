@@ -19,7 +19,7 @@ class Grid implements InputHandlerInterface {
     this.canvasSize = canvasSize;
     this.nodeObjects = [];
     this.controls = {
-      view: { x: 0, y: 0, zoom: 1 },
+      view: { x: 0, y: 0, zoom: 1.5 },
       viewPos: { prevX: null, prevY: null, isDragging: false, dragBg: true },
     };
     new InputHandler(this);
@@ -48,6 +48,7 @@ class Grid implements InputHandlerInterface {
 
   draw() {
     const paint = () => {
+      if (this.gridImage) {
       const ctx = this.ctx;
       const controls = this.controls;
       const canvasSize = this.canvasSize;
@@ -64,15 +65,16 @@ class Grid implements InputHandlerInterface {
       // TODO: only call draw() on objects that are being moved
       this.nodeObjects.forEach((object) => object.draw(ctx));
       ctx.restore();
+    }
     };
     requestAnimationFrame(paint);
+
   }
 
   setMouseDown(event: MouseEvent, mouseDown: boolean) {
     const { x, y } = event;
     // TODO: figure out if we just cllicked a node or background by looping through this.nodeObjects
-    // TODO: if you cloicked a node lock the pan zoom
-    // TODO: set the correct cursor
+    // TODO: if you clicked a node lock the pan zoom
     const controls = this.controls;
     if (mouseDown) {
       this.canvas.style.cursor = 'grab';
@@ -88,12 +90,12 @@ class Grid implements InputHandlerInterface {
   }
   setPan(event: MouseEvent, mouseDown: boolean) {
     const canvas = this.canvas;
-    canvas.style.cursor = 'grab';
     const { x, y } = event;
     const controls = this.controls;
     const pos = { x, y };
     let dx;
     let dy;
+    if (canvas && canvas.style.cursor !== 'grab') canvas.style.cursor = 'grab';
     if (controls.viewPos.prevX) dx = x - controls.viewPos.prevX;
     if (controls.viewPos.prevY) dy = y - controls.viewPos.prevY;
     if (controls.viewPos.prevX || controls.viewPos.prevY) {
@@ -106,7 +108,6 @@ class Grid implements InputHandlerInterface {
   }
 
   setZoom(event: WheelEvent) {
-    // TODO: clamp zoom but dont break the zoom to curosor!
     const { x, y, deltaY } = event;
     const controls = this.controls;
     const canvasSize = this.canvasSize;
@@ -114,7 +115,7 @@ class Grid implements InputHandlerInterface {
     const direction = deltaY > 0 ? -1 : 1;
     if (direction === 1) this.canvas.style.cursor = 'zoom-in';
     if (direction === -1) this.canvas.style.cursor = 'zoom-out';
-    const factor = 0.02;
+    const factor = 0.05;
     const zoom = direction * factor;
     if ((controls.view.zoom + zoom) < 3 && (controls.view.zoom + zoom) > 0.8) {
     weigthed.x = (x - controls.view.x) / (canvasSize.x * controls.view.zoom);
