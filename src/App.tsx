@@ -7,7 +7,6 @@ const App: React.FC = () => {
   const [state, setState] = useState({canvasSize: { x: 0, y: 0 }});
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const grid = new Grid(state.canvasSize);
-
   const calcCanvasSize = () => {
     const x = window.innerWidth - 300;
     const y = window.innerHeight - 60;
@@ -23,12 +22,12 @@ const App: React.FC = () => {
   document.addEventListener('DOMContentLoaded', calcCanvasSize);
 
   useEffect(() => {
-    const gridImage = document.getElementById('gridImageBg');
     if (canvasRef.current) {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
-      if (ctx && gridImage) {
-        grid.update(ctx, gridImage as CanvasImageSource);
+      const gridImage = document.getElementById('gridImageBg');
+      if (ctx && gridImage && canvas) {
+        grid.update(ctx, gridImage as CanvasImageSource, canvas);
       }
     }
   }, [grid]);
