@@ -1,17 +1,16 @@
-import { XYInterface } from '../components/interfaces';
-
-interface NodesInterface {
-  canvasSize: XYInterface;
-}
+import { NodesInterface, XYInterface } from '../components/interfaces';
+import squareImg from '../images/square.svg';
 
 class Square {
   canvasSize: XYInterface;
   position: XYInterface;
   size: XYInterface;
   name: string;
+  mainToolbarIcon: string;
 
   constructor(nodes: NodesInterface) {
-    this.name = 'square';
+    this.mainToolbarIcon = squareImg;
+    this.name = 'Square';
     this.canvasSize = nodes.canvasSize;
     this.position = { x: 0, y: 0 };
     this.size = { x: 0, y: 0 };

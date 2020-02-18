@@ -3,6 +3,10 @@ export interface XYInterface {
   y: number;
 }
 
+export interface MainToolbarInterface {
+  [key: string]: any;
+}
+
 export interface ControlInterface {
   view: { x: number; y: number; zoom: number };
   viewPos: {
@@ -11,6 +15,10 @@ export interface ControlInterface {
     isDragging: boolean;
     dragBg: boolean;
   };
+}
+
+export interface NodesInterface {
+  canvasSize: XYInterface;
 }
 
 export interface InputHandlerInterface {
