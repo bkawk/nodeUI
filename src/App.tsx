@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MainToolbar } from './components/mainToolbar';
+import { Tools } from './components/tools';
 import { Grid } from './grid';
 import gridImageBg from './images/grid.svg';
 import './scss/index.scss';
@@ -38,7 +39,9 @@ const App: React.FC = () => {
         <MainToolbar grid={grid} />
       </div>
       <div className='container--center'>
-        <div className='container--tools'></div>
+        <div className='container--tools'>
+          <Tools grid={grid}/>
+        </div>
         <div className='container--canvas'>
           <img src={gridImageBg} id='gridImageBg' alt='grid' className='hidden'/>
           <canvas

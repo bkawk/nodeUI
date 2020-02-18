@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="21px" viewBox="0 0 26 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>Group 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#8E9CAD" offset="0%"></stop>
+            <stop stop-color="#C9C9CB" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="0%" x2="3.43171687%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#B71600" offset="0%"></stop>
+            <stop stop-color="#D96A00" offset="50.4856419%"></stop>
+            <stop stop-color="#B71600" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-2" transform="translate(1.000000, 1.000000)" fill-rule="nonzero">
+            <path d="M15.059,17.1170337 L15.059,17.7720853 L17.803125,17.7725532 C18.216311,17.7725532 18.5746843,18.0597282 18.6677502,18.5111201 L18.678125,18.6362766 C18.678125,19.0514647 18.3792017,19.4024014 17.9274915,19.4901659 L17.803125,19.5 L6.196875,19.5 C5.71784124,19.5 5.321875,19.1159409 5.321875,18.6362766 C5.321875,18.2210886 5.62079829,17.8701519 6.07250849,17.7823873 L6.19678971,17.7725532 L8.94,17.7720853 L8.94,17.1170338 L0.375,17.1176119 C-0.0381860295,17.1176119 -0.396559322,16.830437 -0.489625197,16.379045 L-0.5,16.2538885 L-0.5,0.363723379 C-0.5,-0.115940854 -0.104033757,-0.5 0.375,-0.5 L23.625,-0.5 C24.1040338,-0.5 24.5,-0.115940854 24.5,0.363723379 L24.5,16.2538885 C24.5,16.7335527 24.1040338,17.1176119 23.6249663,17.1176119 L15.059,17.1170337 Z" id="Combined-Shape" stroke="#2C3845" fill="url(#linearGradient-1)"></path>
+            <path d="M8.21418294,9.80736375 L13.8075158,4.21426568 L12.2931945,2.69997915 L17.3,2.70012325 L17.3,7.70678448 L15.7858191,6.19263827 L10.1925868,11.7857423 L11.7067363,13.3 L6.7,13.3 L6.7,8.29321552 L8.21418294,9.80736375 Z" id="Path" stroke="#510902" stroke-width="0.6" fill="url(#linearGradient-2)" stroke-linejoin="round" transform="translate(12.000000, 8.000000) rotate(-315.000000) translate(-12.000000, -8.000000) "></path>
+        </g>
+    </g>
+</svg>
