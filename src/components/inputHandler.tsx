@@ -27,7 +27,7 @@ class InputHandler {
       'mouseup',
       (event) => {
         this.mouseDown = false;
-        // grid.setMouseDown(event, false);
+        grid.setMouseUp(event);
       },
       false
     );

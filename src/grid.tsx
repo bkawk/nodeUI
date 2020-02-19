@@ -16,12 +16,10 @@ class Grid implements InputHandlerInterface {
   gridImage!: CanvasImageSource;
   canvas!: HTMLCanvasElement;
   mainToolbar: MainToolbarInterface;
-  mouseLocation: any;
   inputHandler: InputHandler;
   selectedNode!: NodeObjectInterface | null;
 
   constructor(canvasSize: XYInterface) {
-    this.mouseLocation = 'x';
     this.canvasSize = canvasSize;
     this.nodeObjects = [];
     this.controls = {
@@ -50,7 +48,6 @@ class Grid implements InputHandlerInterface {
     this.canvas = canvas;
     this.ctx = ctx;
     this.gridImage = gridImage;
-    // TODO: only call update() on objects that are being moved
     const tick = 0;
     this.nodeObjects.forEach((object) => object.update(tick));
     this.draw();
@@ -70,19 +67,16 @@ class Grid implements InputHandlerInterface {
         ctx.save();
         ctx.translate(Math.floor(controls.view.x), Math.floor(controls.view.y));
         ctx.scale(controls.view.zoom, controls.view.zoom);
-        if (gridPatternBackground) ctx.rect(0, 0, Math.floor(canvasSize.x), Math.floor(canvasSize.y));
+        if (gridPatternBackground){
+          ctx.rect(0, 0, Math.floor(canvasSize.x), Math.floor(canvasSize.y));
+        }
         if (gridPatternBackground) ctx.fillStyle = gridPatternBackground;
         if (gridPatternBackground) ctx.fill();
-        // TODO: only call draw() on objects that are being moved
         this.nodeObjects.forEach((object) => object.draw(ctx));
         ctx.restore();
       }
     };
     requestAnimationFrame(paint);
-  }
-
-  setMouseLocation(event: MouseEvent) {
-    this.mouseLocation = event;
   }
 
   objectHitWas(event: MouseEvent) {
@@ -130,6 +124,10 @@ class Grid implements InputHandlerInterface {
       controls.viewPos.prevX = null;
       controls.viewPos.prevY = null;
     }
+  }
+
+  setMouseUp(event: MouseEvent) {
+    this.canvas.style.cursor = 'crosshair';
   }
 
   setMove(event: MouseEvent, mouseDown: boolean) {

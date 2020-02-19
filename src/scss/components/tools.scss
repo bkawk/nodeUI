@@ -1,5 +1,21 @@
 .tools {
-    padding: 7px;
-    padding-top: 12px;
+    padding: 3px;
+    padding-top: 3px;
     cursor: pointer;
+    &--container {
+        display: grid;
+        justify-content: center;
+        align-items: center;
+    }
+    &--box {
+        width: 34px;
+        height: 34px;
+        padding: 4px;
+        display: grid;
+        justify-content: center;
+        align-items: center;
+    }
+    &--box:hover {
+        background-color: #939393;
+    }
 }

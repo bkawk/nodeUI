@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Grid } from '../grid';
+import colors from '../images/colors.svg';
 import fullScreen from '../images/full-screen.svg';
 
 interface PropsInterface {
@@ -30,12 +31,21 @@ const Tools: React.FC<PropsInterface> = (props: PropsInterface) => {
 
   return (
     <div className='tools'>
-      <img
-        src={fullScreen}
-        alt='full screen'
-        className='tools--full-screen'
-        onClick={goFullScreen}
-      />
+      <div className='tools--container'>
+        <div className='tools--box'>
+          <img
+            src={fullScreen}
+            alt='full screen'
+            onClick={goFullScreen}
+          />
+        </div>
+        <div className='tools--box'>
+          <img
+            src={colors}
+            alt='colors'
+          />
+        </div>
+      </div>
     </div>
   );
 };

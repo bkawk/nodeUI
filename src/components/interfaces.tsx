@@ -26,6 +26,7 @@ export interface InputHandlerInterface {
   setPan(event: MouseEvent, mouseDown: boolean): void;
   setMouseDown(event: MouseEvent, mouseDown: boolean): void;
   setMove(event: MouseEvent, mouseDown: boolean): void;
+  setMouseUp(event: MouseEvent): void;
 }
 
 export interface NodeObjectInterface {
