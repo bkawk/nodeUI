@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Inspector } from './components/inspector';
 import { MainToolbar } from './components/mainToolbar';
 import { Tools } from './components/tools';
 import { Grid } from './grid';
@@ -45,12 +46,15 @@ const App: React.FC = () => {
         <div className='container--canvas'>
           <img src={gridImageBg} id='gridImageBg' alt='grid' className='hidden'/>
           <canvas
+            id='canvas'
             ref={canvasRef}
             width={state.canvasSize.x}
             height={state.canvasSize.y}
           />
         </div>
-        <div className='container--inspector'>inspector</div>
+        <div className='container--inspector'>
+          <Inspector grid={grid} />
+        </div>
       </div>
       <div className='container--footer'></div>
     </div>

@@ -13,18 +13,19 @@ export interface ControlInterface {
     prevX: number | null;
     prevY: number | null;
     isDragging: boolean;
-    dragBg: boolean;
   };
 }
 
 export interface NodesInterface {
   canvasSize: XYInterface;
+  controls: ControlInterface;
 }
 
 export interface InputHandlerInterface {
   setZoom(event: WheelEvent): void;
   setPan(event: MouseEvent, mouseDown: boolean): void;
   setMouseDown(event: MouseEvent, mouseDown: boolean): void;
+  setMouseLocation(event: MouseEvent): void;
 }
 
 export interface NodeObjectInterface {

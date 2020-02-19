@@ -2,17 +2,20 @@ import { InputHandlerInterface } from './interfaces';
 
 class InputHandler {
   mouseDown: boolean;
+  dragBg: boolean;
   constructor(grid: InputHandlerInterface) {
     this.mouseDown = false;
-
-    window.addEventListener(
+    this.dragBg = true;
+    const canvas = document.getElementById('canvas');
+    if (canvas) {
+    canvas.addEventListener(
       'wheel',
       (event: WheelEvent) => {
         grid.setZoom(event);
       },
       false
     );
-    window.addEventListener(
+    canvas.addEventListener(
       'mousedown',
       (event) => {
         this.mouseDown = true;
@@ -20,21 +23,26 @@ class InputHandler {
       },
       false
     );
-    window.addEventListener(
+    canvas.addEventListener(
       'mouseup',
       (event) => {
         this.mouseDown = false;
-        grid.setMouseDown(event, false);
+        // grid.setMouseDown(event, false);
       },
       false
     );
-    window.addEventListener(
+    canvas.addEventListener(
       'mousemove',
       (event) => {
-        if (this.mouseDown) grid.setPan(event, this.mouseDown);
+        grid.setMouseLocation(event);
+        if (this.mouseDown && this.dragBg) grid.setPan(event, this.mouseDown);
       },
       false
     );
+    }
+  }
+  update(dragBg: boolean) {
+    this.dragBg = dragBg;
   }
 }
 

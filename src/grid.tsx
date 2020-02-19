@@ -16,19 +16,22 @@ class Grid implements InputHandlerInterface {
   gridImage!: CanvasImageSource;
   canvas!: HTMLCanvasElement;
   mainToolbar: MainToolbarInterface;
+  mouseLocation: any;
+  inputHandler: InputHandler;
 
   constructor(canvasSize: XYInterface) {
+    this.mouseLocation = 'x';
     this.canvasSize = canvasSize;
     this.nodeObjects = [];
     this.controls = {
       view: { x: 0, y: 0, zoom: 1 },
-      viewPos: { prevX: null, prevY: null, isDragging: false, dragBg: true },
+      viewPos: { prevX: null, prevY: null, isDragging: false },
     };
     this.mainToolbar = {
       shapes: [new Square(this)],
       data: [new Square(this), new Square(this)],
     };
-    new InputHandler(this);
+    this.inputHandler = new InputHandler(this);
   }
 
   newNode(nodeToPush: string) {
@@ -42,7 +45,7 @@ class Grid implements InputHandlerInterface {
     gridImage: CanvasImageSource,
     canvas: HTMLCanvasElement
   ) {
-    canvas.style.cursor = 'grab';
+    canvas.style.cursor = 'crosshair';
     this.canvas = canvas;
     this.ctx = ctx;
     this.gridImage = gridImage;
@@ -54,6 +57,7 @@ class Grid implements InputHandlerInterface {
 
   draw() {
     const paint = () => {
+      console.log('Drawing Now');
       if (this.gridImage) {
         const ctx = this.ctx;
         const controls = this.controls;
@@ -64,9 +68,7 @@ class Grid implements InputHandlerInterface {
         );
         ctx.clearRect(0, 0, canvasSize.x, canvasSize.y);
         ctx.save();
-        if (controls.viewPos.dragBg) {
-          ctx.translate(controls.view.x, controls.view.y);
-        }
+        ctx.translate(controls.view.x, controls.view.y);
         ctx.scale(controls.view.zoom, controls.view.zoom);
         if (gridPatternBackground) ctx.rect(0, 0, canvasSize.x, canvasSize.y);
         if (gridPatternBackground) ctx.fillStyle = gridPatternBackground;
@@ -79,10 +81,37 @@ class Grid implements InputHandlerInterface {
     requestAnimationFrame(paint);
   }
 
+  setMouseLocation(event: MouseEvent) {
+    this.mouseLocation = event;
+  }
+
   setMouseDown(event: MouseEvent, mouseDown: boolean) {
-    const { x, y } = event;
-    // TODO: figure out if we just cllicked a node or background by looping through this.nodeObjects
-    // TODO: if you clicked a node lock the pan zoom
+    this.inputHandler.update(true);
+    console.log('Drag bg is allowed');
+    const x = event.offsetX;
+    const y = event.offsetY;
+    let index = 0;
+    let objectHit = false;
+    for (const value of this.nodeObjects) {
+      index++;
+      if (
+        x - this.controls.view.x > value.position.x * this.controls.view.zoom &&
+        x - this.controls.view.x <
+          value.position.x * this.controls.view.zoom +
+            value.size.x * this.controls.view.zoom &&
+        y - this.controls.view.y > value.position.y * this.controls.view.zoom &&
+        y - this.controls.view.y <
+          value.position.y * this.controls.view.zoom +
+            value.size.y * this.controls.view.zoom
+      ) {
+        console.log('hit');
+        objectHit = true;
+      }
+    }
+    if (objectHit) {
+      console.log('Drag bg is NOT allowed');
+      this.inputHandler.update(false);
+    }
     const controls = this.controls;
     if (mouseDown) {
       this.canvas.style.cursor = 'grab';
@@ -98,25 +127,27 @@ class Grid implements InputHandlerInterface {
   }
   setPan(event: MouseEvent, mouseDown: boolean) {
     const canvas = this.canvas;
-    const { x, y } = event;
+    const x = event.offsetX;
+    const y = event.offsetY;
     const controls = this.controls;
-    const pos = { x, y };
     let dx;
     let dy;
-    if (canvas && canvas.style.cursor !== 'grab') canvas.style.cursor = 'grab';
+    canvas.style.cursor = 'grab';
     if (controls.viewPos.prevX) dx = x - controls.viewPos.prevX;
     if (controls.viewPos.prevY) dy = y - controls.viewPos.prevY;
     if (controls.viewPos.prevX || controls.viewPos.prevY) {
       if (dx) controls.view.x += dx;
       if (dy) controls.view.y += dy;
-      controls.viewPos.prevX = Math.floor(pos.x);
-      controls.viewPos.prevY = Math.floor(pos.y);
+      controls.viewPos.prevX = Math.floor(x);
+      controls.viewPos.prevY = Math.floor(y);
     }
     this.draw();
   }
 
   setZoom(event: WheelEvent) {
-    const { x, y, deltaY } = event;
+    const x = event.offsetX;
+    const y = event.offsetY;
+    const { deltaY } = event;
     const controls = this.controls;
     const canvasSize = this.canvasSize;
     const weigthed = { x: 0, y: 0 };

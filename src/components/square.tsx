@@ -13,11 +13,9 @@ class Square {
     this.name = 'Square';
     this.canvasSize = nodes.canvasSize;
     this.position = { x: 0, y: 0 };
-    this.size = { x: 0, y: 0 };
+    this.size = { x: 30, y: 30};
     this.position.x = Math.floor(Math.random() * this.canvasSize.x);
     this.position.y = Math.floor(Math.random() * this.canvasSize.y);
-    this.size.x = 30;
-    this.size.y = 30;
   }
   update(tick: number) {
     //
