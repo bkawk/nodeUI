@@ -17,6 +17,9 @@ class Square {
     this.position.x = Math.floor(Math.random() * this.canvasSize.x);
     this.position.y = Math.floor(Math.random() * this.canvasSize.y);
   }
+  updatePosition(position: XYInterface) {
+    this.position = position;
+  }
   update(tick: number) {
     //
   }

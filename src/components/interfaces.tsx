@@ -25,7 +25,7 @@ export interface InputHandlerInterface {
   setZoom(event: WheelEvent): void;
   setPan(event: MouseEvent, mouseDown: boolean): void;
   setMouseDown(event: MouseEvent, mouseDown: boolean): void;
-  setMouseLocation(event: MouseEvent): void;
+  setMove(event: MouseEvent, mouseDown: boolean): void;
 }
 
 export interface NodeObjectInterface {
@@ -35,4 +35,5 @@ export interface NodeObjectInterface {
   name: string;
   update(tick: number): void;
   draw(ctx: CanvasRenderingContext2D): void;
+  updatePosition(position: XYInterface): void;
 }

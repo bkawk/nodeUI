@@ -34,8 +34,8 @@ class InputHandler {
     canvas.addEventListener(
       'mousemove',
       (event) => {
-        grid.setMouseLocation(event);
         if (this.mouseDown && this.dragBg) grid.setPan(event, this.mouseDown);
+        if (this.mouseDown && !this.dragBg) grid.setMove(event, this.mouseDown);
       },
       false
     );

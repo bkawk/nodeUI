@@ -18,6 +18,7 @@ class Grid implements InputHandlerInterface {
   mainToolbar: MainToolbarInterface;
   mouseLocation: any;
   inputHandler: InputHandler;
+  selectedNode!: NodeObjectInterface | null;
 
   constructor(canvasSize: XYInterface) {
     this.mouseLocation = 'x';
@@ -52,7 +53,7 @@ class Grid implements InputHandlerInterface {
     // TODO: only call update() on objects that are being moved
     const tick = 0;
     this.nodeObjects.forEach((object) => object.update(tick));
-    setTimeout(() => this.draw(), 500);
+    this.draw();
   }
 
   draw() {
@@ -85,33 +86,39 @@ class Grid implements InputHandlerInterface {
     this.mouseLocation = event;
   }
 
-  setMouseDown(event: MouseEvent, mouseDown: boolean) {
+  objectHitWas(event: MouseEvent) {
     this.inputHandler.update(true);
-    console.log('Drag bg is allowed');
     const x = event.offsetX;
     const y = event.offsetY;
+    const zoom = this.controls.view.zoom;
+    const controlsView = this.controls.view;
     let index = 0;
     let objectHit = false;
+    let nodeObjects = 0;
     for (const value of this.nodeObjects) {
       index++;
       if (
-        x - this.controls.view.x > value.position.x * this.controls.view.zoom &&
-        x - this.controls.view.x <
-          value.position.x * this.controls.view.zoom +
-            value.size.x * this.controls.view.zoom &&
-        y - this.controls.view.y > value.position.y * this.controls.view.zoom &&
-        y - this.controls.view.y <
-          value.position.y * this.controls.view.zoom +
-            value.size.y * this.controls.view.zoom
+        x - controlsView.x > value.position.x * zoom &&
+        x - controlsView.x < value.position.x * zoom + value.size.x * zoom &&
+        y - controlsView.y > value.position.y * zoom &&
+        y - controlsView.y < value.position.y * zoom + value.size.y * zoom
       ) {
-        console.log('hit');
+        nodeObjects = index;
         objectHit = true;
       }
     }
     if (objectHit) {
-      console.log('Drag bg is NOT allowed');
       this.inputHandler.update(false);
+      this.selectedNode = this.nodeObjects[nodeObjects - 1];
+    } else {
+      this.selectedNode = null;
     }
+  }
+
+  setMouseDown(event: MouseEvent, mouseDown: boolean) {
+    this.objectHitWas(event);
+    const x = event.offsetX;
+    const y = event.offsetY;
     const controls = this.controls;
     if (mouseDown) {
       this.canvas.style.cursor = 'grab';
@@ -125,6 +132,21 @@ class Grid implements InputHandlerInterface {
       controls.viewPos.prevY = null;
     }
   }
+
+  setMove(event: MouseEvent, mouseDown: boolean) {
+    const x = event.offsetX;
+    const y = event.offsetY;
+    const controlsView = this.controls.view;
+    const zoom = this.controls.view.zoom;
+    if (this.selectedNode) {
+      this.selectedNode.updatePosition({
+        x: (x - controlsView.x - (this.selectedNode.size.x / 2) * zoom) / zoom,
+        y: (y - controlsView.y - (this.selectedNode.size.y / 2) * zoom) / zoom,
+      });
+    }
+    this.draw();
+  }
+
   setPan(event: MouseEvent, mouseDown: boolean) {
     const canvas = this.canvas;
     const x = event.offsetX;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid } from '../grid';
 
 interface PropsInterface {
@@ -9,23 +9,29 @@ const Inspector: React.FC<PropsInterface> = (props: PropsInterface) => {
   const { grid } = props;
 
   const [state, setState] = useState({
-
     offsetX: 0,
     offsetY: 0,
   });
 
-  setInterval(() => {
-    setState((prev) => ({
-      ...prev,
-      offsetX: grid.mouseLocation.offsetX,
-      offsetY: grid.mouseLocation.offsetY,
-    }));
-  }, 10);
+  useEffect(() => {
+    const canvas = document.getElementById('canvas');
+    if (canvas) {
+      canvas.addEventListener(
+        'mousemove',
+        (event) => {
+          setState((prev) => ({
+            ...prev,
+            offsetX: event.offsetX,
+            offsetY: event.offsetY,
+          }));
+        },
+        false
+      );
+    }
+  }, []);
 
   return (
     <div className='inspector'>
-
-
       <div className='inspector--container'>
         <div className='inspector--description'>Cursor X</div>
         <input type='text' value={state.offsetX} />
@@ -35,7 +41,6 @@ const Inspector: React.FC<PropsInterface> = (props: PropsInterface) => {
         <div className='inspector--description'>Cursor Y</div>
         <input type='text' value={state.offsetY} />
       </div>
-
     </div>
   );
 };
