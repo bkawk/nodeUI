@@ -58,7 +58,6 @@ class Grid implements InputHandlerInterface {
 
   draw() {
     const paint = () => {
-      console.log('Drawing Now');
       if (this.gridImage) {
         const ctx = this.ctx;
         const controls = this.controls;
@@ -67,11 +66,11 @@ class Grid implements InputHandlerInterface {
           this.gridImage,
           'repeat'
         );
-        ctx.clearRect(0, 0, canvasSize.x, canvasSize.y);
+        ctx.clearRect(0, 0, Math.floor(canvasSize.x), Math.floor(canvasSize.y));
         ctx.save();
-        ctx.translate(controls.view.x, controls.view.y);
+        ctx.translate(Math.floor(controls.view.x), Math.floor(controls.view.y));
         ctx.scale(controls.view.zoom, controls.view.zoom);
-        if (gridPatternBackground) ctx.rect(0, 0, canvasSize.x, canvasSize.y);
+        if (gridPatternBackground) ctx.rect(0, 0, Math.floor(canvasSize.x), Math.floor(canvasSize.y));
         if (gridPatternBackground) ctx.fillStyle = gridPatternBackground;
         if (gridPatternBackground) ctx.fill();
         // TODO: only call draw() on objects that are being moved
@@ -160,8 +159,8 @@ class Grid implements InputHandlerInterface {
     if (controls.viewPos.prevX || controls.viewPos.prevY) {
       if (dx) controls.view.x += dx;
       if (dy) controls.view.y += dy;
-      controls.viewPos.prevX = Math.floor(x);
-      controls.viewPos.prevY = Math.floor(y);
+      controls.viewPos.prevX = x;
+      controls.viewPos.prevY = y;
     }
     this.draw();
   }

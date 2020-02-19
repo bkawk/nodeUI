@@ -13,7 +13,7 @@ class Square {
     this.name = 'Square';
     this.canvasSize = nodes.canvasSize;
     this.position = { x: 0, y: 0 };
-    this.size = { x: 30, y: 30};
+    this.size = { x: 30, y: 30 };
     this.position.x = Math.floor(Math.random() * this.canvasSize.x);
     this.position.y = Math.floor(Math.random() * this.canvasSize.y);
   }
@@ -25,7 +25,12 @@ class Square {
   }
   draw(ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = 'black';
-    ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
+    ctx.fillRect(
+      Math.floor(this.position.x),
+      Math.floor(this.position.y),
+      Math.floor(this.size.x),
+      Math.floor(this.size.y)
+    );
   }
 }
 
