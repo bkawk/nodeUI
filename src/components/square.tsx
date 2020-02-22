@@ -25,7 +25,7 @@ class Square {
     this.position = position;
   }
   toggleSelected(toggle: boolean) {
-    if (toggle) this.selected = toggle;
+    this.selected = toggle;
   }
   update(tick: number) {
     //

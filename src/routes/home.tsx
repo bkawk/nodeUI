@@ -96,10 +96,12 @@ const Home: React.FC = () => {
     const y: number = event.nativeEvent.offsetY;
     const selectedNode = objectWasHit(event.nativeEvent);
     if (selectedNode) {
+      if (canvas) canvas.style.cursor = 'pointer';
       selectedNode.toggleSelected(true);
       setLastSelected(selectedNode);
       setDraw(x + y);
     } else {
+      if (canvas) canvas.style.cursor = 'crosshair';
       if (lastSelected) lastSelected.toggleSelected(false);
       setDraw(x + y);
     }
