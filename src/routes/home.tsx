@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Inspector } from '../components/inspector';
+import { ObjectInterface } from '../components/interfaces';
 import { MainToolbar } from '../components/mainToolbar';
 import { Tools } from '../components/tools';
 import { Dispatch, Global, SELECTED } from '../globalState';
@@ -33,9 +34,10 @@ const Home: React.FC = () => {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
   const [loaded, setLoaded] = useState<boolean>(false);
-  const [mousePosition, setmousePosition] = useState({x: 0, y: 0});
+  const [mousePosition, setMousePosition] = useState({x: 0, y: 0});
+  const [lastSelected, setLastSelected] = useState<ObjectInterface>();
 
-  const objectHitWas = (event: MouseEvent) => {
+  const objectWasHit = (event: MouseEvent) => {
     const x = event.offsetX;
     const y = event.offsetY;
     const zoom = view.zoom;
@@ -55,18 +57,21 @@ const Home: React.FC = () => {
       }
     }
     if (objectHit) {
-      const selectedNode = global.objects.objectArray[nodeObjects - 1];
-      setDragBg(false);
-      dispatch({ type: SELECTED, value: selectedNode });
+      return global.objects.objectArray[nodeObjects - 1];
     } else {
-      const selectedNode = null;
-      setDragBg(true);
-      dispatch({ type: SELECTED, value: selectedNode });
+      return null;
     }
   };
 
   const setMouseDown = (event: React.MouseEvent) => {
-    objectHitWas(event.nativeEvent);
+    const selectedNode = objectWasHit(event.nativeEvent);
+    if (selectedNode) {
+      setDragBg(false);
+      dispatch({ type: SELECTED, value: selectedNode });
+    } else {
+      setDragBg(true);
+      dispatch({ type: SELECTED, value: selectedNode });
+    }
     const x = event.nativeEvent.offsetX;
     const y = event.nativeEvent.offsetY;
     if (canvas) canvas.style.cursor = 'grab';
@@ -89,7 +94,17 @@ const Home: React.FC = () => {
   const setMouseMove = (event: React.MouseEvent) => {
     const x: number = event.nativeEvent.offsetX;
     const y: number = event.nativeEvent.offsetY;
-    setmousePosition({x, y});
+    const selectedNode = objectWasHit(event.nativeEvent);
+    if (selectedNode) {
+      selectedNode.toggleSelected(true);
+      setLastSelected(selectedNode);
+      setDraw(x + y);
+    } else {
+      if (lastSelected) lastSelected.toggleSelected(false);
+      setDraw(x + y);
+    }
+    // TODO: save index to state then toggle select on global at that position
+    setMousePosition({x, y});
     if (viewPos.isDragging && dragBg) setPan(event.nativeEvent);
     if (viewPos.isDragging && !dragBg) setMove(event.nativeEvent);
   };
@@ -207,4 +222,4 @@ const Home: React.FC = () => {
   );
 };
 
-export { Home };
+export { Home };;

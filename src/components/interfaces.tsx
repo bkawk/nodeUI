@@ -10,6 +10,7 @@ export interface ObjectInterface {
   size: XYInterface;
   draw(ctx: CanvasRenderingContext2D): void;
   updatePosition(position: XYInterface): void;
+  toggleSelected(toggle: boolean): void;
 }
 
 export interface ActionInterface {

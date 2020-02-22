@@ -6,6 +6,9 @@ class Square {
   size: XYInterface;
   name: string;
   mainToolbarIcon: string;
+  color: string;
+  selectedColor: string;
+  selected: boolean;
 
   constructor() {
     this.mainToolbarIcon = squareImg;
@@ -14,15 +17,25 @@ class Square {
     this.size = { x: 30, y: 30 };
     this.position.x = Math.floor(Math.random() * 800);
     this.position.y = Math.floor(Math.random() * 800);
+    this.color = 'black';
+    this.selectedColor = 'rgba(255, 252, 117, 0.3)';
+    this.selected = false;
   }
   updatePosition(position: XYInterface) {
     this.position = position;
+  }
+  toggleSelected(toggle: boolean) {
+    if (toggle) this.selected = toggle;
   }
   update(tick: number) {
     //
   }
   draw(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = 'black';
+    if (this.selected) {
+      ctx.fillStyle = this.selectedColor;
+    } else {
+      ctx.fillStyle = this.color;
+    }
     ctx.fillRect(
       Math.floor(this.position.x),
       Math.floor(this.position.y),
