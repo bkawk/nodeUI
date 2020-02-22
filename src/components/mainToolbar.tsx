@@ -1,28 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { ToolbarInterface } from '../components/interfaces';
 import { Square } from '../components/square';
 import { ADD_OBJECT, Dispatch, Global } from '../globalState';
 
-interface NodeInterface {
-  name: string;
-  mainToolbarIcon: string;
-}
-
-interface SomeInterface {
- [key: string]: NodeInterface[];
-}
-
 const MainToolbar: React.FC  = () => {
-  const { global } = useContext(Global);
   const { dispatch } = useContext(Dispatch);
   const toolbar = {
     shapes: [
       new Square(),
     ],
     data: [new Square(), new Square(), ],
-  } as SomeInterface;
+  } as ToolbarInterface;
 
   const tabs = Object.keys(toolbar);
-
   const nodes = (tab: string) => {
     const arr = [];
     for (const value of toolbar[tab]) {
@@ -37,7 +27,6 @@ const MainToolbar: React.FC  = () => {
   });
 
   const newNode = (event: React.MouseEvent<HTMLDivElement>) => {
-    console.log('push')
     const nodeToPush = event.currentTarget.id;
     if (nodeToPush === 'Square') {
       dispatch({ type: ADD_OBJECT, value: new Square() });

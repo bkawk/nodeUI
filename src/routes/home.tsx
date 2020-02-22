@@ -28,6 +28,7 @@ const Home: React.FC = () => {
     zoom: 1,
   });
   const [dragBg, setDragBg] = useState(true);
+  const [draw, setDraw] = useState(0);
   const [canvasImage, setCanvasImage] = useState<HTMLImageElement>();
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
@@ -55,9 +56,12 @@ const Home: React.FC = () => {
     }
     if (objectHit) {
       const selectedNode = global.objects.objectArray[nodeObjects - 1];
+      setDragBg(false);
       dispatch({ type: SELECTED, value: selectedNode });
     } else {
       const selectedNode = null;
+      setDragBg(true);
+      dispatch({ type: SELECTED, value: selectedNode });
     }
   };
 
@@ -86,14 +90,6 @@ const Home: React.FC = () => {
     const x: number = event.nativeEvent.offsetX;
     const y: number = event.nativeEvent.offsetY;
     setmousePosition({x, y});
-    // const controlsView = controls.view;
-    // const zoom = controls.view.zoom;
-    // if (selectedNode) {
-    //   selectedNode.updatePosition({
-    //     x: (x - controlsView.x - (selectedNode.size.x / 2) * zoom) / zoom,
-    //     y: (y - controlsView.y - (selectedNode.size.y / 2) * zoom) / zoom,
-    //   });
-    // }
     if (viewPos.isDragging && dragBg) setPan(event.nativeEvent);
     if (viewPos.isDragging && !dragBg) setMove(event.nativeEvent);
   };
@@ -115,15 +111,15 @@ const Home: React.FC = () => {
   const setMove = (event: MouseEvent) => {
     const x = event.offsetX;
     const y = event.offsetY;
-    // const controlsView = controls.view;
-    // const zoom = controls.view.zoom;
-    // if (selectedNode) {
-    //   selectedNode.updatePosition({
-    //     x: (x - controlsView.x - (selectedNode.size.x / 2) * zoom) / zoom,
-    //     y: (y - controlsView.y - (selectedNode.size.y / 2) * zoom) / zoom,
-    //   });
-    // }
-    // draw();
+    const selected = global.objects.selected;
+    const zoom = view.zoom;
+    if (selected) {
+      selected.updatePosition({
+        x: (x - view.x - (selected.size.x / 2) * zoom) / zoom,
+        y: (y - view.y - (selected.size.y / 2) * zoom) / zoom,
+      });
+      setDraw(x + y);
+    }
   };
 
   const setZoom = (event: React.WheelEvent) => {
@@ -180,7 +176,7 @@ const Home: React.FC = () => {
       }
     };
     requestAnimationFrame(paint);
-  }, [windowSize, view, loaded, global.objects.objectArray]);
+  }, [windowSize, view, loaded, global.objects.objectArray, draw]);
 
   return (
     <div className='container'>

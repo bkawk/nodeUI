@@ -1,21 +1,5 @@
 import { createContext } from 'react';
-
-interface ActionInterface {
-  type: string;
-  value: object;
-}
-
-interface ObjectInterface {
-  position: {
-    x: number,
-    y: number,
-  };
-  size: {
-    x: number,
-    y: number,
-  };
-  draw(ctx: CanvasRenderingContext2D): void;
-}
+import { ActionInterface, StateInterface } from './components/interfaces';
 
 const Dispatch = createContext({
   dispatch: (action: ActionInterface) => {
@@ -23,17 +7,10 @@ const Dispatch = createContext({
   },
 });
 
-interface StateInterface {
-  objects: {
-    objectArray: ObjectInterface[];
-    selected: object;
-  };
-}
-
 const InitialState: StateInterface = {
   objects: {
     objectArray: [],
-    selected: {},
+    selected: null,
   },
 };
 
