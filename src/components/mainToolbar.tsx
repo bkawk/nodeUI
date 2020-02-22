@@ -1,28 +1,48 @@
-import React, { useState } from 'react';
-import { Grid } from '../grid';
+import React, { useContext, useEffect, useState } from 'react';
+import { Square } from '../components/square';
+import { ADD_OBJECT, Dispatch, Global } from '../globalState';
 
-interface PropsInterface {
-  grid: Grid;
+interface NodeInterface {
+  name: string;
+  mainToolbarIcon: string;
 }
 
-const MainToolbar: React.FC<PropsInterface> = (props: PropsInterface) => {
-  const { grid } = props;
-  const tabs = Object.keys(grid.mainToolbar);
+interface SomeInterface {
+ [key: string]: NodeInterface[];
+}
+
+const MainToolbar: React.FC  = () => {
+  const { global } = useContext(Global);
+  const { dispatch } = useContext(Dispatch);
+  const toolbar = {
+    shapes: [
+      new Square(),
+    ],
+    data: [new Square(), new Square(), ],
+  } as SomeInterface;
+
+  const tabs = Object.keys(toolbar);
+
   const nodes = (tab: string) => {
     const arr = [];
-    for (const value of grid.mainToolbar[tab]) {
+    for (const value of toolbar[tab]) {
       arr.push({ name: value.name, mainToolbarIcon: value.mainToolbarIcon });
     }
     return arr;
   };
+
   const [state, setState] = useState({
     nodes: nodes(tabs[0]),
     selected: 'shapes',
   });
 
   const newNode = (event: React.MouseEvent<HTMLDivElement>) => {
+    console.log('push')
     const nodeToPush = event.currentTarget.id;
-    grid.newNode(nodeToPush);
+    if (nodeToPush === 'Square') {
+      dispatch({ type: ADD_OBJECT, value: new Square() });
+    }
+
   };
 
   const changeTab = (event: React.MouseEvent<HTMLDivElement>) => {

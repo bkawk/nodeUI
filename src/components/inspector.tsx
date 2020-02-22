@@ -1,13 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Grid } from '../grid';
+import React, { useContext, useEffect, useState } from 'react';
+import { Global } from '../globalState';
 
-interface PropsInterface {
-  grid: Grid;
-}
-
-const Inspector: React.FC<PropsInterface> = (props: PropsInterface) => {
-  const { grid } = props;
-
+const Inspector: React.FC = () => {
+  const { global } = useContext(Global);
   const [state, setState] = useState({
     offsetX: 0,
     offsetY: 0,
@@ -17,13 +12,9 @@ const Inspector: React.FC<PropsInterface> = (props: PropsInterface) => {
     const canvas = document.getElementById('canvas');
     if (canvas) {
       canvas.addEventListener(
-        'mousemove',
+        'mouseup',
         (event) => {
-          setState((prev) => ({
-            ...prev,
-            offsetX: event.offsetX,
-            offsetY: event.offsetY,
-          }));
+          //
         },
         false
       );
@@ -34,12 +25,22 @@ const Inspector: React.FC<PropsInterface> = (props: PropsInterface) => {
     <div className='inspector'>
       <div className='inspector--container'>
         <div className='inspector--description'>Cursor X</div>
-        <input type='text' value={state.offsetX} />
+        <input type='text' value={0} />
       </div>
 
       <div className='inspector--container'>
         <div className='inspector--description'>Cursor Y</div>
-        <input type='text' value={state.offsetY} />
+        <input type='text' value={0} />
+      </div>
+
+      <div className='inspector--container'>
+        <div className='inspector--description'>Canvas X</div>
+        <input type='text' value={0} />
+      </div>
+
+      <div className='inspector--container'>
+        <div className='inspector--description'>Canvas Y</div>
+        <input type='text' value={0} />
       </div>
     </div>
   );

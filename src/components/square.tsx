@@ -1,21 +1,19 @@
-import { NodesInterface, XYInterface } from '../components/interfaces';
+import { XYInterface } from '../components/interfaces';
 import squareImg from '../images/square.svg';
 
 class Square {
-  canvasSize: XYInterface;
   position: XYInterface;
   size: XYInterface;
   name: string;
   mainToolbarIcon: string;
 
-  constructor(nodes: NodesInterface) {
+  constructor() {
     this.mainToolbarIcon = squareImg;
     this.name = 'Square';
-    this.canvasSize = nodes.canvasSize;
     this.position = { x: 0, y: 0 };
     this.size = { x: 30, y: 30 };
-    this.position.x = Math.floor(Math.random() * this.canvasSize.x);
-    this.position.y = Math.floor(Math.random() * this.canvasSize.y);
+    this.position.x = Math.floor(Math.random() * 800);
+    this.position.y = Math.floor(Math.random() * 800);
   }
   updatePosition(position: XYInterface) {
     this.position = position;
