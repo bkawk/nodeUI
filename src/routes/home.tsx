@@ -3,7 +3,7 @@ import { Inspector } from '../components/inspector';
 import { ObjectInterface } from '../components/interfaces';
 import { MainToolbar } from '../components/mainToolbar';
 import { Tools } from '../components/tools';
-import { Dispatch, Global, SELECTED } from '../globalState';
+import { CLEAR_SELECTED, Dispatch, Global, NEW_SELECTED, PUSH_SELECTED} from '../globalState';
 import { useWindowSize } from '../hooks/useWindowSize';
 import gridImageBg from '../images/grid.svg';
 import '../scss/index.scss';
@@ -63,23 +63,20 @@ const Home: React.FC = () => {
     }
   };
 
-  const setMouseDown = (event: React.MouseEvent) => {
-
-    // Select
-    // if you clicked an object add it to the selected array
-    // if you click another node with Alt then push it into the array
-    // if you click another node without alt then clear the array and push it in
-    // if you dont click another object clear the array
-    const selectedNode = objectWasHit(event.nativeEvent);
-    if (selectedNode) {
+  const selectObject = (hitObject: ObjectInterface | null) => {
+    if (hitObject) {
       setDragBg(false);
-      dispatch({ type: SELECTED, value: selectedNode });
+      dispatch({ type: NEW_SELECTED, value: [hitObject] });
     } else {
       setDragBg(true);
-      dispatch({ type: SELECTED, value: selectedNode });
+      dispatch({ type: CLEAR_SELECTED, value: null });
     }
-    // END SELECT
+    // TODO: if you click another node with Shift then push it into the global selected array (PUSH_SELECTED)
+  };
 
+  const setMouseDown = (event: React.MouseEvent) => {
+    const hitObject = objectWasHit(event.nativeEvent);
+    selectObject(hitObject);
     const x = event.nativeEvent.offsetX;
     const y = event.nativeEvent.offsetY;
     if (canvas) canvas.style.cursor = 'grab';
@@ -146,13 +143,15 @@ const Home: React.FC = () => {
   const setMove = (event: MouseEvent) => {
     const x = event.offsetX;
     const y = event.offsetY;
-    const selected = global.objects.selected;
+    const selected = global.objects.selectedArray;
     const zoom = view.zoom;
-    if (selected) {
-      selected.updatePosition({
-        x: (x - view.x - (selected.size.x / 2) * zoom) / zoom,
-        y: (y - view.y - (selected.size.y / 2) * zoom) / zoom,
-      });
+    if (selected && selected.length > 0) {
+      for (const value of selected) {
+        value.updatePosition({
+          x: (x - view.x - (value.size.x / 2) * zoom) / zoom,
+          y: (y - view.y - (value.size.y / 2) * zoom) / zoom,
+        });
+      }
       setDraw(x + y);
     }
   };

@@ -16,13 +16,13 @@ export interface ObjectInterface {
 
 export interface ActionInterface {
   type: string;
-  value: ObjectInterface | null;
+  value: ObjectInterface | ObjectInterface[] | null;
 }
 
 export interface StateInterface {
   objects: {
     objectArray: ObjectInterface[];
-    selected: ObjectInterface | null;
+    selectedArray: ObjectInterface[] | null;
   };
 }
 

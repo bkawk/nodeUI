@@ -10,7 +10,7 @@ const Dispatch = createContext({
 const InitialState: StateInterface = {
   objects: {
     objectArray: [],
-    selected: null,
+    selectedArray: [],
   },
 };
 
@@ -18,25 +18,44 @@ const Global = createContext({
   global: InitialState,
 });
 
-const SELECTED = 'SELECTED';
+const NEW_SELECTED = 'NEW_SELECTED';
+const PUSH_SELECTED = 'PUSH_SELECTED';
+const CLEAR_SELECTED = 'CLEAR_SELECTED';
 const ADD_OBJECT = 'ADD_OBJECT';
 
 // tslint:disable-next-line: no-any
 const Reducer = (state: StateInterface, action: any) => {
   switch (action.type) {
-    case 'SELECTED':
+    case 'NEW_SELECTED':
       return {
         ...state,
-        objects: { ...state.objects, selected: action.value },
+        objects: { ...state.objects, selectedArray: action.value },
       };
+    case 'CLEAR_SELECTED':
+        return {
+          ...state,
+          objects: { ...state.objects, selectedArray: action.value },
+        };
     case 'ADD_OBJECT':
       return {
         ...state,
-        objects: { ...state.objects, objectArray: [...state.objects.objectArray, action.value]},
+        objects: {
+          ...state.objects,
+          objectArray: [...state.objects.objectArray, action.value],
+        },
       };
     default:
       return state;
   }
 };
 
-export { Dispatch, Global, InitialState, Reducer, SELECTED, ADD_OBJECT };
+export {
+  ADD_OBJECT,
+  CLEAR_SELECTED,
+  Dispatch,
+  Global,
+  InitialState,
+  NEW_SELECTED,
+  PUSH_SELECTED,
+  Reducer,
+};
