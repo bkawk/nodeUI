@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-
 import fullScreen from '../images/full-screen.svg';
+import pointer from '../images/pointer.svg';
+import snap from '../images/snap.svg';
 
 const Tools: React.FC = () => {
   const [state, setState] = useState({
@@ -25,6 +26,12 @@ const Tools: React.FC = () => {
   return (
     <div className='tools'>
       <div className='tools--container'>
+        <div className='tools--box'>
+          <img src={pointer} alt='pooiinter' />
+        </div>
+        <div className='tools--box'>
+          <img src={snap} alt='snap' />
+        </div>
         <div className='tools--box'>
           <img src={fullScreen} alt='full screen' onClick={goFullScreen} />
         </div>
