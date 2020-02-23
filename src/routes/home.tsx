@@ -35,7 +35,7 @@ const Home: React.FC = () => {
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [lastSelected, setLastSelected] = useState<ObjectInterface>();
+  const [lastHovered, setLastHovered] = useState<ObjectInterface | null>();
 
   const objectWasHit = (event: MouseEvent) => {
     const x = event.offsetX;
@@ -64,6 +64,12 @@ const Home: React.FC = () => {
   };
 
   const setMouseDown = (event: React.MouseEvent) => {
+
+    // Select
+    // if you clicked an object add it to the selected array
+    // if you click another node with Alt then push it into the array
+    // if you click another node without alt then clear the array and push it in
+    // if you dont click another object clear the array
     const selectedNode = objectWasHit(event.nativeEvent);
     if (selectedNode) {
       setDragBg(false);
@@ -72,6 +78,8 @@ const Home: React.FC = () => {
       setDragBg(true);
       dispatch({ type: SELECTED, value: selectedNode });
     }
+    // END SELECT
+
     const x = event.nativeEvent.offsetX;
     const y = event.nativeEvent.offsetY;
     if (canvas) canvas.style.cursor = 'grab';
@@ -91,21 +99,31 @@ const Home: React.FC = () => {
     }));
   };
 
+  const hoverObject = (hitObject: ObjectInterface | null) => {
+      if (!hitObject && lastHovered) {
+        lastHovered.toggleHovered(false);
+        setLastHovered(null);
+        if (canvas) canvas.style.cursor = 'crosshair';
+      }
+      if (lastHovered && hitObject && hitObject !== lastHovered) {
+        lastHovered.toggleHovered(false);
+        hitObject.toggleHovered(true);
+        setLastHovered(hitObject);
+        if (canvas) canvas.style.cursor = 'pointer';
+      }
+      if (!lastHovered && hitObject) {
+        hitObject.toggleHovered(true);
+        setLastHovered(hitObject);
+        if (canvas) canvas.style.cursor = 'pointer';
+      }
+      setDraw(Date.now());
+  };
+
   const setMouseMove = (event: React.MouseEvent) => {
     const x: number = event.nativeEvent.offsetX;
     const y: number = event.nativeEvent.offsetY;
-    const selectedNode = objectWasHit(event.nativeEvent);
-    if (selectedNode) {
-      if (canvas) canvas.style.cursor = 'pointer';
-      selectedNode.toggleSelected(true);
-      setLastSelected(selectedNode);
-      setDraw(x + y);
-    } else {
-      if (canvas) canvas.style.cursor = 'crosshair';
-      if (lastSelected) lastSelected.toggleSelected(false);
-      setDraw(x + y);
-    }
-    // TODO: save index to state then toggle select on global at that position
+    const hitObject = objectWasHit(event.nativeEvent);
+    hoverObject(hitObject);
     setMousePosition({ x, y });
     if (viewPos.isDragging && dragBg) setPan(event.nativeEvent);
     if (viewPos.isDragging && !dragBg) setMove(event.nativeEvent);
@@ -143,19 +161,19 @@ const Home: React.FC = () => {
     const x = event.nativeEvent.offsetX;
     const y = event.nativeEvent.offsetY;
     const { deltaY } = event;
-    const weigthed = { x: 0, y: 0 };
+    const weighted = { x: 0, y: 0 };
     const direction = deltaY > 0 ? -1 : 1;
     const factor = 0.05;
     const zoom = direction * factor;
     if (direction === 1 && canvas) canvas.style.cursor = 'zoom-in';
     if (direction === -1 && canvas) canvas.style.cursor = 'zoom-out';
     if (view.zoom + zoom < 3 && view.zoom + zoom > 0.8) {
-      weigthed.x = (x - view.x) / (windowSize.width * view.zoom);
-      weigthed.y = (y - view.y) / (windowSize.height * view.zoom);
+      weighted.x = (x - view.x) / (windowSize.x * view.zoom);
+      weighted.y = (y - view.y) / (windowSize.y * view.zoom);
       setview((prev) => ({
         ...prev,
-        x: Math.floor(view.x -= weigthed.x * windowSize.width * zoom),
-        y: Math.floor(view.y -= weigthed.y * windowSize.height * zoom),
+        x: Math.floor(view.x -= weighted.x * windowSize.x * zoom),
+        y: Math.floor(view.y -= weighted.y * windowSize.y * zoom),
         zoom: view.zoom += zoom,
       }));
     }
@@ -169,8 +187,8 @@ const Home: React.FC = () => {
       const initCanvas = canvasRef.current;
       if (initCanvas) {
         setCanvas(initCanvas);
-        initCanvas.width = windowSize.width;
-        initCanvas.height = windowSize.height;
+        initCanvas.width = windowSize.x;
+        initCanvas.height = windowSize.y;
         const initCtx = initCanvas.getContext('2d');
         setCtx(initCtx);
         setLoaded(true);
@@ -181,15 +199,11 @@ const Home: React.FC = () => {
   useEffect(() => {
     const paint = () => {
       if (canvas && ctx) {
-        const gridPatternBackground = ctx.createPattern(
-          canvasImage as CanvasImageSource,
-          'repeat'
-        );
         ctx.clearRect(
           0,
           0,
-          Math.floor(windowSize.width),
-          Math.floor(windowSize.height)
+          Math.floor(windowSize.x),
+          Math.floor(windowSize.y)
         );
         ctx.save();
         ctx.translate(Math.floor(view.x), Math.floor(view.y));
@@ -197,8 +211,12 @@ const Home: React.FC = () => {
         ctx.rect(
           0,
           0,
-          Math.floor(windowSize.width),
-          Math.floor(windowSize.height)
+          Math.floor(windowSize.x),
+          Math.floor(windowSize.y)
+        );
+        const gridPatternBackground = ctx.createPattern(
+          canvasImage as CanvasImageSource,
+          'repeat'
         );
         if (gridPatternBackground) ctx.fillStyle = gridPatternBackground;
         if (gridPatternBackground) ctx.fill();
@@ -207,7 +225,7 @@ const Home: React.FC = () => {
       }
     };
     requestAnimationFrame(paint);
-  }, [windowSize, view, loaded, global.objects.objectArray, draw]);
+  }, [windowSize, view, loaded, global.objects.objectArray, draw, canvas, canvasImage, ctx]);
 
   return (
     <div className='container'>
@@ -220,7 +238,7 @@ const Home: React.FC = () => {
         </div>
         <div className='container--canvas'>
           <div className='container--location'>
-            X: {mousePosition.x}, y: {mousePosition.y} | x:{' '}
+            x: {mousePosition.x}, y: {mousePosition.y} | x:{' '}
             {mousePosition.x - view.x}, y: {mousePosition.y - view.y}
           </div>
           <canvas

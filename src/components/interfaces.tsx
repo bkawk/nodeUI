@@ -11,6 +11,7 @@ export interface ObjectInterface {
   draw(ctx: CanvasRenderingContext2D): void;
   updatePosition(position: XYInterface): void;
   toggleSelected(toggle: boolean): void;
+  toggleHovered(toggle: boolean): void;
 }
 
 export interface ActionInterface {

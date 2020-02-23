@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 const useWindowSize = () => {
   function getSize() {
     return {
-      height: window.innerHeight - 139,
-      width: window.innerWidth - 540,
+      x: window.innerWidth - 540,
+      y: window.innerHeight - 139,
     };
   }
 
