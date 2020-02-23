@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>Group 4</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#A6282E" offset="0%"></stop>
+            <stop stop-color="#EE5D62" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-4" transform="translate(-2.260602, -3.000000)">
+            <path d="M9.38867491,8.6882483 L12.9340348,7.10611486 L10.8731494,3 L7.07302216,4.71726228 C3.36320087,6.83788413 2.0923215,11.534512 4.23395909,15.2073137 C6.37559668,18.8801155 11.0815126,20.0737535 14.7913339,17.9533569 L18.1936147,15.553694 L15.6325209,11.733827 L12.4759086,13.9828213 C10.9918891,14.8309799 9.12094178,14.3731184 8.26428674,12.9038175 C7.4076317,11.4345167 7.9046554,9.53640696 9.38867491,8.6882483 Z" id="Path" fill="url(#linearGradient-1)" fill-rule="nonzero" transform="translate(10.693615, 11.000000) rotate(-240.000000) translate(-10.693615, -11.000000) "></path>
+            <polygon id="Path-2" fill="#D8D8D8" points="3 15.2183435 3.45909774 18.7422547 8.06566643 18.3303062 7.58864869 14.9103048"></polygon>
+            <polygon id="Path-2" fill="#D8D8D8" transform="translate(14.956902, 16.814729) scale(-1, 1) translate(-14.956902, -16.814729) " points="12.3817543 15.1554816 12.9855617 18.7422547 17.5320505 18.393477 16.9681968 14.8872033"></polygon>
+        </g>
+    </g>
+</svg>
