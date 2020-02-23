@@ -13,7 +13,6 @@ import {
 import { useWindowSize } from '../hooks/useWindowSize';
 import gridImageBg from '../images/grid.svg';
 import '../scss/index.scss';
-import { ConsoleWriter } from 'istanbul-lib-report';
 
 interface ControlsInterface {
   prevX: number | null;
@@ -122,20 +121,22 @@ const Home: React.FC = () => {
     if (!hitObject && lastHovered) {
       lastHovered.toggleHovered(false);
       setLastHovered(null);
+      draw();
       if (canvas) canvas.style.cursor = 'crosshair';
     }
     if (lastHovered && hitObject && hitObject !== lastHovered) {
       lastHovered.toggleHovered(false);
       hitObject.toggleHovered(true);
       setLastHovered(hitObject);
+      draw();
       if (canvas) canvas.style.cursor = 'pointer';
     }
     if (!lastHovered && hitObject) {
       hitObject.toggleHovered(true);
       setLastHovered(hitObject);
+      draw();
       if (canvas) canvas.style.cursor = 'pointer';
     }
-    draw();
   };
 
   const setMouseMove = (event: React.MouseEvent) => {
@@ -174,8 +175,8 @@ const Home: React.FC = () => {
     if (selected && selected.length > 0) {
       for (const value of selected) {
         value.updatePosition({
-          x: (x - view.x - (value.size.x / 2) * zoom) / zoom,
-          y: (y - view.y - (value.size.y / 2) * zoom) / zoom,
+          x: Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom),
+          y: Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom),
         });
       }
       draw();
@@ -223,7 +224,6 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const paint = () => {
-      console.log('drawing');
       if (canvas && ctx) {
         ctx.clearRect(0, 0, Math.floor(windowSize.x), Math.floor(windowSize.y));
         ctx.save();
@@ -263,8 +263,10 @@ const Home: React.FC = () => {
         </div>
         <div className='container--canvas'>
           <div className='container--location'>
-            x: {mousePosition.x - view.x}, y: {mousePosition.y - view.y} z:{' '}
-            {view.zoom.toFixed(2)}
+            {/* //           x: Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom), */}
+            x: {Math.floor((mousePosition.x - view.x) / view.zoom)}{' '}
+            y: {Math.floor((mousePosition.y - view.y) / view.zoom)}{' '}
+            z: {view.zoom.toFixed(2)}
           </div>
           <canvas
             id='canvas'

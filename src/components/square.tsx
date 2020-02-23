@@ -13,8 +13,10 @@ class Square {
   selectedColor: string;
   size: XYInterface;
   locked: boolean;
+  category: string;
 
   constructor() {
+    this.category = 'Shape';
     this.color = '#2E2E2E';
     this.description = 'A black test square of 30x30 px';
     this.hoveredColor = 'rgba(0, 0, 0, 0.2)';
@@ -72,6 +74,9 @@ class Square {
       Math.floor(this.size.x),
       Math.floor(this.size.y)
     );
+    ctx.fillStyle = '#2E2E2E';
+    ctx.font = '18px Roboto';
+    ctx.fillText(this.category, this.position.x + this.size.x + 12, this.position.y + 10);
   }
 }
 
