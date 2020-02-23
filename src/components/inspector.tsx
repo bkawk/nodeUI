@@ -1,36 +1,49 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Global } from '../globalState';
+import { Dispatch, Global } from '../globalState';
+import { DRAW } from '../globalState';
 import colors from '../images/colors.svg';
-import { XYInterface } from './interfaces';
+import { ObjectInterface, XYInterface } from './interfaces';
 
 const Inspector: React.FC = () => {
   const { global } = useContext(Global);
+  const { dispatch } = useContext(Dispatch);
   const [size, setSize] = useState<XYInterface>({x: 0, y: 0});
   const [position, setPosition] = useState<XYInterface>({x: 0, y: 0});
+  const [selected, setSelected] = useState<ObjectInterface>();
+  const [showColors, setShowColors] = useState<boolean>(false);
 
-  const toggleColors = () => {
-    alert('colors');
+  const draw = () => {
+    dispatch({ type: DRAW, value: Date.now() });
   };
 
-  const setColor = () => {
-    alert('color');
+  const toggleColors = () => {
+    setShowColors(!showColors);
+  };
+
+  const setColor = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const color = event.currentTarget.id;
+    if (selected) selected.updateColor(color);
+    draw();
+    // push draw event to canvas by dispatching it to global state, then have the canvas use efect listen for changes
   };
 
   useEffect(() => {
     if (global.objects.selectedArray && global.objects.selectedArray.length > 0) {
-      const selected = global.objects.selectedArray[0];
-      setSize({x: selected.size.x, y: selected.size.y});
-      setPosition({x: selected.position.x, y: selected.position.y});
+      const selectedOne = global.objects.selectedArray[0];
+      setSize({x: selectedOne.size.x, y: selectedOne.size.y});
+      setPosition({x: selectedOne.position.x, y: selectedOne.position.y});
+      setSelected(selectedOne);
     }
-  }, [global.objects.selectedArray]);
+  }, [global.objects.selectedArray, global.draw]);
 
   return (
     <div className='inspector'>
       <div className='inspector--shelf'>
-        <img src={colors} alt='colors' onClick={toggleColors}/>
+        <img src={colors} alt='colors' onClick={toggleColors} className='inspector--colors-buutton'/>
       </div>
       <div className='inspector--container'>
-        <div className='inspector--colors'>
+        <div className={`${showColors === true ? 'inspector--colors' : 'inspector--colors-hidden'}`}>
+
           <div id='#C81B00' onClick={setColor} className='inspector--color' style={{backgroundColor: '#C81B00'}}></div>
           <div id='#FA2200' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FA2200'}}></div>
           <div id='#F54E44' onClick={setColor} className='inspector--color' style={{backgroundColor: '#F54E44'}}></div>

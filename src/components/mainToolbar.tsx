@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { ToolbarInterface } from '../components/interfaces';
 import { Square } from '../components/square';
-import { ADD_OBJECT, Dispatch, Global } from '../globalState';
+import { ADD_OBJECT, Dispatch } from '../globalState';
 
 const MainToolbar: React.FC  = () => {
   const { dispatch } = useContext(Dispatch);

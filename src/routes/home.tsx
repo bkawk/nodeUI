@@ -6,13 +6,14 @@ import { Tools } from '../components/tools';
 import {
   CLEAR_SELECTED,
   Dispatch,
+  DRAW,
   Global,
   NEW_SELECTED,
-  PUSH_SELECTED,
 } from '../globalState';
 import { useWindowSize } from '../hooks/useWindowSize';
 import gridImageBg from '../images/grid.svg';
 import '../scss/index.scss';
+import { ConsoleWriter } from 'istanbul-lib-report';
 
 interface ControlsInterface {
   prevX: number | null;
@@ -35,13 +36,16 @@ const Home: React.FC = () => {
     zoom: 1,
   });
   const [dragBg, setDragBg] = useState(true);
-  const [draw, setDraw] = useState(0);
   const [canvasImage, setCanvasImage] = useState<HTMLImageElement>();
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
   const [loaded, setLoaded] = useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [lastHovered, setLastHovered] = useState<ObjectInterface | null>();
+
+  const draw = () => {
+    dispatch({ type: DRAW, value: Date.now() });
+  };
 
   const objectWasHit = (event: MouseEvent) => {
     const x = event.offsetX;
@@ -72,17 +76,21 @@ const Home: React.FC = () => {
   const selectObject = (hitObject: ObjectInterface | null) => {
     if (hitObject) {
       setDragBg(false);
+      // TODO: unselect the item not all
+      for (const value of global.objects.objectArray) {
+        value.toggleSelected(false);
+      }
       hitObject.toggleSelected(true);
       dispatch({ type: NEW_SELECTED, value: [hitObject] });
-      setDraw(Date.now());
+      draw();
     } else {
       setDragBg(true);
       dispatch({ type: CLEAR_SELECTED, value: null });
       // TODO: unselect the item not all
       for (const value of global.objects.objectArray) {
         value.toggleSelected(false);
-        setDraw(Date.now());
       }
+      draw();
     }
     // TODO: if you click another node with Shift then push it into the global selected array (PUSH_SELECTED)
     // this opens up drag to select over multiple
@@ -127,7 +135,7 @@ const Home: React.FC = () => {
       setLastHovered(hitObject);
       if (canvas) canvas.style.cursor = 'pointer';
     }
-    setDraw(Date.now());
+    draw();
   };
 
   const setMouseMove = (event: React.MouseEvent) => {
@@ -170,7 +178,7 @@ const Home: React.FC = () => {
           y: (y - view.y - (value.size.y / 2) * zoom) / zoom,
         });
       }
-      setDraw(x + y);
+      draw();
     }
   };
 
@@ -215,6 +223,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const paint = () => {
+      console.log('drawing');
       if (canvas && ctx) {
         ctx.clearRect(0, 0, Math.floor(windowSize.x), Math.floor(windowSize.y));
         ctx.save();
@@ -237,7 +246,7 @@ const Home: React.FC = () => {
     view,
     loaded,
     global.objects.objectArray,
-    draw,
+    global.draw,
     canvas,
     canvasImage,
     ctx,

@@ -10,16 +10,18 @@ export interface ObjectInterface {
   size: XYInterface;
   draw(ctx: CanvasRenderingContext2D): void;
   updatePosition(position: XYInterface): void;
+  updateColor(color: string): void;
   toggleSelected(toggle: boolean): void;
   toggleHovered(toggle: boolean): void;
 }
 
 export interface ActionInterface {
   type: string;
-  value: ObjectInterface | ObjectInterface[] | null;
+  value: ObjectInterface | ObjectInterface[] | number | null;
 }
 
 export interface StateInterface {
+  draw: number;
   objects: {
     objectArray: ObjectInterface[];
     selectedArray: ObjectInterface[] | null;
