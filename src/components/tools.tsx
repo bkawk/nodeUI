@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import colors from '../images/colors.svg';
+
 import fullScreen from '../images/full-screen.svg';
 
 const Tools: React.FC = () => {
@@ -27,9 +27,6 @@ const Tools: React.FC = () => {
       <div className='tools--container'>
         <div className='tools--box'>
           <img src={fullScreen} alt='full screen' onClick={goFullScreen} />
-        </div>
-        <div className='tools--box'>
-          <img src={colors} alt='colors' />
         </div>
       </div>
     </div>

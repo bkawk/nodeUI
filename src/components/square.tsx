@@ -12,11 +12,12 @@ class Square {
   selected: boolean;
   selectedColor: string;
   size: XYInterface;
+  locked: boolean;
 
   constructor() {
     this.color = 'black';
     this.description = 'A black test square of 30x30 px';
-    this.hoveredColor = 'red';
+    this.hoveredColor = 'rgba(0, 0, 0, 0.6)';
     this.mainToolbarIcon = squareImg;
     this.name = 'Square';
     this.position = { x: 0, y: 0 };
@@ -24,8 +25,9 @@ class Square {
     this.position.y = Math.floor(Math.random() * 800);
     this.selected = false;
     this.hovered = false;
-    this.selectedColor = 'rgba(255, 252, 117, 0.3)';
+    this.selectedColor = 'white';
     this.size = { x: 30, y: 30 };
+    this.locked = false;
   }
   updatePosition(position: XYInterface) {
     this.position = position;
@@ -40,8 +42,6 @@ class Square {
     //
   }
   draw(ctx: CanvasRenderingContext2D) {
-    if (this.selected) ctx.fillStyle = this.selectedColor;
-    else ctx.fillStyle = this.color;
     if (this.hovered) ctx.fillStyle = this.hoveredColor;
     else ctx.fillStyle = this.color;
     ctx.fillRect(
@@ -50,6 +50,16 @@ class Square {
       Math.floor(this.size.x),
       Math.floor(this.size.y)
     );
+    if (this.selected) {
+    ctx.setLineDash([2]);
+    ctx.strokeStyle = this.selectedColor;
+    ctx.strokeRect(
+      Math.floor(this.position.x - 1),
+      Math.floor(this.position.y - 1),
+      Math.floor(this.size.x + 2),
+      Math.floor(this.size.y + 2)
+    );
+    }
   }
 }
 

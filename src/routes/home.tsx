@@ -3,7 +3,13 @@ import { Inspector } from '../components/inspector';
 import { ObjectInterface } from '../components/interfaces';
 import { MainToolbar } from '../components/mainToolbar';
 import { Tools } from '../components/tools';
-import { CLEAR_SELECTED, Dispatch, Global, NEW_SELECTED, PUSH_SELECTED} from '../globalState';
+import {
+  CLEAR_SELECTED,
+  Dispatch,
+  Global,
+  NEW_SELECTED,
+  PUSH_SELECTED,
+} from '../globalState';
 import { useWindowSize } from '../hooks/useWindowSize';
 import gridImageBg from '../images/grid.svg';
 import '../scss/index.scss';
@@ -66,12 +72,20 @@ const Home: React.FC = () => {
   const selectObject = (hitObject: ObjectInterface | null) => {
     if (hitObject) {
       setDragBg(false);
+      hitObject.toggleSelected(true);
       dispatch({ type: NEW_SELECTED, value: [hitObject] });
+      setDraw(Date.now());
     } else {
       setDragBg(true);
       dispatch({ type: CLEAR_SELECTED, value: null });
+      // TODO: unselect the item not all
+      for (const value of global.objects.objectArray) {
+        value.toggleSelected(false);
+        setDraw(Date.now());
+      }
     }
     // TODO: if you click another node with Shift then push it into the global selected array (PUSH_SELECTED)
+    // this opens up drag to select over multiple
   };
 
   const setMouseDown = (event: React.MouseEvent) => {
@@ -97,23 +111,23 @@ const Home: React.FC = () => {
   };
 
   const hoverObject = (hitObject: ObjectInterface | null) => {
-      if (!hitObject && lastHovered) {
-        lastHovered.toggleHovered(false);
-        setLastHovered(null);
-        if (canvas) canvas.style.cursor = 'crosshair';
-      }
-      if (lastHovered && hitObject && hitObject !== lastHovered) {
-        lastHovered.toggleHovered(false);
-        hitObject.toggleHovered(true);
-        setLastHovered(hitObject);
-        if (canvas) canvas.style.cursor = 'pointer';
-      }
-      if (!lastHovered && hitObject) {
-        hitObject.toggleHovered(true);
-        setLastHovered(hitObject);
-        if (canvas) canvas.style.cursor = 'pointer';
-      }
-      setDraw(Date.now());
+    if (!hitObject && lastHovered) {
+      lastHovered.toggleHovered(false);
+      setLastHovered(null);
+      if (canvas) canvas.style.cursor = 'crosshair';
+    }
+    if (lastHovered && hitObject && hitObject !== lastHovered) {
+      lastHovered.toggleHovered(false);
+      hitObject.toggleHovered(true);
+      setLastHovered(hitObject);
+      if (canvas) canvas.style.cursor = 'pointer';
+    }
+    if (!lastHovered && hitObject) {
+      hitObject.toggleHovered(true);
+      setLastHovered(hitObject);
+      if (canvas) canvas.style.cursor = 'pointer';
+    }
+    setDraw(Date.now());
   };
 
   const setMouseMove = (event: React.MouseEvent) => {
@@ -136,7 +150,11 @@ const Home: React.FC = () => {
     if (viewPos.prevX || viewPos.prevY) {
       if (dx !== 0) setview((prev) => ({ ...prev, x: view.x += dx }));
       if (dy !== 0) setview((prev) => ({ ...prev, y: view.y += dy }));
-      setViewPos(() => ({ isDragging: true, prevX: Math.floor(x), prevY: Math.floor(y) }));
+      setViewPos(() => ({
+        isDragging: true,
+        prevX: Math.floor(x),
+        prevY: Math.floor(y),
+      }));
     }
   };
 
@@ -171,8 +189,8 @@ const Home: React.FC = () => {
       weighted.y = (y - view.y) / (windowSize.y * view.zoom);
       setview((prev) => ({
         ...prev,
-        x: Math.floor(view.x -= weighted.x * windowSize.x * zoom),
-        y: Math.floor(view.y -= weighted.y * windowSize.y * zoom),
+        x: Math.floor((view.x -= weighted.x * windowSize.x * zoom)),
+        y: Math.floor((view.y -= weighted.y * windowSize.y * zoom)),
         zoom: view.zoom += zoom,
       }));
     }
@@ -198,21 +216,11 @@ const Home: React.FC = () => {
   useEffect(() => {
     const paint = () => {
       if (canvas && ctx) {
-        ctx.clearRect(
-          0,
-          0,
-          Math.floor(windowSize.x),
-          Math.floor(windowSize.y)
-        );
+        ctx.clearRect(0, 0, Math.floor(windowSize.x), Math.floor(windowSize.y));
         ctx.save();
         ctx.translate(Math.floor(view.x), Math.floor(view.y));
         ctx.scale(view.zoom, view.zoom);
-        ctx.rect(
-          0,
-          0,
-          Math.floor(windowSize.x),
-          Math.floor(windowSize.y)
-        );
+        ctx.rect(0, 0, Math.floor(windowSize.x), Math.floor(windowSize.y));
         const gridPatternBackground = ctx.createPattern(
           canvasImage as CanvasImageSource,
           'repeat'
@@ -224,7 +232,16 @@ const Home: React.FC = () => {
       }
     };
     requestAnimationFrame(paint);
-  }, [windowSize, view, loaded, global.objects.objectArray, draw, canvas, canvasImage, ctx]);
+  }, [
+    windowSize,
+    view,
+    loaded,
+    global.objects.objectArray,
+    draw,
+    canvas,
+    canvasImage,
+    ctx,
+  ]);
 
   return (
     <div className='container'>
@@ -237,8 +254,8 @@ const Home: React.FC = () => {
         </div>
         <div className='container--canvas'>
           <div className='container--location'>
-            x: {mousePosition.x}, y: {mousePosition.y} | x:{' '}
-            {mousePosition.x - view.x}, y: {mousePosition.y - view.y}
+            x: {mousePosition.x - view.x}, y: {mousePosition.y - view.y} z:{' '}
+            {view.zoom.toFixed(2)}
           </div>
           <canvas
             id='canvas'

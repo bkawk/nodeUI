@@ -1,46 +1,92 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Global } from '../globalState';
+import colors from '../images/colors.svg';
+import { XYInterface } from './interfaces';
 
 const Inspector: React.FC = () => {
   const { global } = useContext(Global);
-  const [state, setState] = useState({
-    offsetX: 0,
-    offsetY: 0,
-  });
+  const [size, setSize] = useState<XYInterface>({x: 0, y: 0});
+  const [position, setPosition] = useState<XYInterface>({x: 0, y: 0});
+
+  const toggleColors = () => {
+    alert('colors');
+  };
+
+  const setColor = () => {
+    alert('color');
+  };
 
   useEffect(() => {
-    const canvas = document.getElementById('canvas');
-    if (canvas) {
-      canvas.addEventListener(
-        'mouseup',
-        (event) => {
-          //
-        },
-        false
-      );
+    if (global.objects.selectedArray && global.objects.selectedArray.length > 0) {
+      const selected = global.objects.selectedArray[0];
+      setSize({x: selected.size.x, y: selected.size.y});
+      setPosition({x: selected.position.x, y: selected.position.y});
     }
-  }, []);
+  }, [global.objects.selectedArray]);
 
   return (
     <div className='inspector'>
-      <div className='inspector--container'>
-        <div className='inspector--description'>Cursor X</div>
-        <input type='text' value={0} />
+      <div className='inspector--shelf'>
+        <img src={colors} alt='colors' onClick={toggleColors}/>
       </div>
-
       <div className='inspector--container'>
-        <div className='inspector--description'>Cursor Y</div>
-        <input type='text' value={0} />
-      </div>
+        <div className='inspector--colors'>
+          <div id='#C81B00' onClick={setColor} className='inspector--color' style={{backgroundColor: '#C81B00'}}></div>
+          <div id='#FA2200' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FA2200'}}></div>
+          <div id='#F54E44' onClick={setColor} className='inspector--color' style={{backgroundColor: '#F54E44'}}></div>
+          <div id='#FBB0AE' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FBB0AE'}}></div>
+          <div id='#FB8AA0' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FB8AA0'}}></div>
+          <div id='#9D5666' onClick={setColor} className='inspector--color' style={{backgroundColor: '#9D5666'}}></div>
+          <div id='#8F5C00' onClick={setColor} className='inspector--color' style={{backgroundColor: '#8F5C00'}}></div>
+          <div id='#B28500' onClick={setColor} className='inspector--color' style={{backgroundColor: '#B28500'}}></div>
+          <div id='#F5C926' onClick={setColor} className='inspector--color' style={{backgroundColor: '#F5C926'}}></div>
+          <div id='#FCFAA3' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FCFAA3'}}></div>
+          <div id='#FAEF00' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FAEF00'}}></div>
+          <div id='#FABB00' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FABB00'}}></div>
+          <div id='#4D8600' onClick={setColor} className='inspector--color' style={{backgroundColor: '#4D8600'}}></div>
+          <div id='#78CF00' onClick={setColor} className='inspector--color' style={{backgroundColor: '#78CF00'}}></div>
+          <div id='#C2FF88' onClick={setColor} className='inspector--color' style={{backgroundColor: '#C2FF88'}}></div>
+          <div id='#9FDDC2' onClick={setColor} className='inspector--color' style={{backgroundColor: '#9FDDC2'}}></div>
+          <div id='#31A98C' onClick={setColor} className='inspector--color' style={{backgroundColor: '#31A98C'}}></div>
+          <div id='#368674' onClick={setColor} className='inspector--color' style={{backgroundColor: '#368674'}}></div>
+          <div id='#2D5CB4' onClick={setColor} className='inspector--color' style={{backgroundColor: '#2D5CB4'}}></div>
+          <div id='#578EE6' onClick={setColor} className='inspector--color' style={{backgroundColor: '#578EE6'}}></div>
+          <div id='#9BC5FF' onClick={setColor} className='inspector--color' style={{backgroundColor: '#9BC5FF'}}></div>
+          <div id='#B9C7FF' onClick={setColor} className='inspector--color' style={{backgroundColor: '#B9C7FF'}}></div>
+          <div id='#878EC0' onClick={setColor} className='inspector--color' style={{backgroundColor: '#878EC0'}}></div>
+          <div id='#63688F' onClick={setColor} className='inspector--color' style={{backgroundColor: '#63688F'}}></div>
+          <div id='#564198' onClick={setColor} className='inspector--color' style={{backgroundColor: '#564198'}}></div>
+          <div id='#785DD0' onClick={setColor} className='inspector--color' style={{backgroundColor: '#785DD0'}}></div>
+          <div id='#947DE0' onClick={setColor} className='inspector--color' style={{backgroundColor: '#947DE0'}}></div>
+          <div id='#E16CC6' onClick={setColor} className='inspector--color' style={{backgroundColor: '#E16CC6'}}></div>
+          <div id='#92377C' onClick={setColor} className='inspector--color' style={{backgroundColor: '#92377C'}}></div>
+          <div id='#613056' onClick={setColor} className='inspector--color' style={{backgroundColor: '#613056'}}></div>
+          <div id='#000000' onClick={setColor} className='inspector--color' style={{backgroundColor: '#000000'}}></div>
+          <div id='#4E4E4E' onClick={setColor} className='inspector--color' style={{backgroundColor: '#4E4E4E'}}></div>
+          <div id='#7A7A7A' onClick={setColor} className='inspector--color' style={{backgroundColor: '#7A7A7A'}}></div>
+          <div id='#7A7A7A' onClick={setColor} className='inspector--color' style={{backgroundColor: '#7A7A7A'}}></div>
+          <div id='#D6D6D6' onClick={setColor} className='inspector--color' style={{backgroundColor: '#D6D6D6'}}></div>
+          <div id='#FFFFFF' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FFFFFF'}}></div>
+        </div>
+        <div className='inspector--item'>
+          <div className='inspector--description'>Width</div>
+          <input type='text' value={size.x} />
+        </div>
 
-      <div className='inspector--container'>
-        <div className='inspector--description'>Canvas X</div>
-        <input type='text' value={0} />
-      </div>
+        <div className='inspector--item'>
+          <div className='inspector--description'>Height</div>
+          <input type='text' value={size.y} />
+        </div>
 
-      <div className='inspector--container'>
-        <div className='inspector--description'>Canvas Y</div>
-        <input type='text' value={0} />
+        <div className='inspector--item'>
+          <div className='inspector--description'>Position X</div>
+          <input type='text' value={position.x} />
+        </div>
+
+        <div className='inspector--item'>
+          <div className='inspector--description'>Position Y</div>
+          <input type='text' value={position.y} />
+        </div>
       </div>
     </div>
   );
