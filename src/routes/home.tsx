@@ -34,7 +34,7 @@ const Home: React.FC = () => {
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
   const [loaded, setLoaded] = useState<boolean>(false);
-  const [mousePosition, setMousePosition] = useState({x: 0, y: 0});
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [lastSelected, setLastSelected] = useState<ObjectInterface>();
 
   const objectWasHit = (event: MouseEvent) => {
@@ -77,8 +77,8 @@ const Home: React.FC = () => {
     if (canvas) canvas.style.cursor = 'grab';
     setViewPos(() => ({
       isDragging: true,
-      prevX: x,
-      prevY: y,
+      prevX: Math.floor(x),
+      prevY: Math.floor(y),
     }));
   };
 
@@ -106,7 +106,7 @@ const Home: React.FC = () => {
       setDraw(x + y);
     }
     // TODO: save index to state then toggle select on global at that position
-    setMousePosition({x, y});
+    setMousePosition({ x, y });
     if (viewPos.isDragging && dragBg) setPan(event.nativeEvent);
     if (viewPos.isDragging && !dragBg) setMove(event.nativeEvent);
   };
@@ -119,9 +119,9 @@ const Home: React.FC = () => {
     if (viewPos.prevX) dx = x - viewPos.prevX;
     if (viewPos.prevY) dy = y - viewPos.prevY;
     if (viewPos.prevX || viewPos.prevY) {
-    if (dx !== 0) setview((prev) => ({...prev, x: view.x += dx}));
-    if (dy !== 0) setview((prev) => ({...prev, y: view.y += dy}));
-    setViewPos(() => ({isDragging: true, prevX: x, prevY: y}));
+      if (dx !== 0) setview((prev) => ({ ...prev, x: view.x += dx }));
+      if (dy !== 0) setview((prev) => ({ ...prev, y: view.y += dy }));
+      setViewPos(() => ({ isDragging: true, prevX: Math.floor(x), prevY: Math.floor(y) }));
     }
   };
 
@@ -152,9 +152,10 @@ const Home: React.FC = () => {
     if (view.zoom + zoom < 3 && view.zoom + zoom > 0.8) {
       weigthed.x = (x - view.x) / (windowSize.width * view.zoom);
       weigthed.y = (y - view.y) / (windowSize.height * view.zoom);
-      setview((prev) => ({...prev,
-        x: view.x -= weigthed.x * windowSize.width * zoom,
-        y: view.y -= weigthed.y * windowSize.height * zoom,
+      setview((prev) => ({
+        ...prev,
+        x: Math.floor(view.x -= weigthed.x * windowSize.width * zoom),
+        y: Math.floor(view.y -= weigthed.y * windowSize.height * zoom),
         zoom: view.zoom += zoom,
       }));
     }
@@ -180,12 +181,25 @@ const Home: React.FC = () => {
   useEffect(() => {
     const paint = () => {
       if (canvas && ctx) {
-        const gridPatternBackground = ctx.createPattern(canvasImage as CanvasImageSource, 'repeat');
-        ctx.clearRect(0, 0, Math.floor(windowSize.width), Math.floor(windowSize.height));
+        const gridPatternBackground = ctx.createPattern(
+          canvasImage as CanvasImageSource,
+          'repeat'
+        );
+        ctx.clearRect(
+          0,
+          0,
+          Math.floor(windowSize.width),
+          Math.floor(windowSize.height)
+        );
         ctx.save();
         ctx.translate(Math.floor(view.x), Math.floor(view.y));
         ctx.scale(view.zoom, view.zoom);
-        ctx.rect(0, 0, Math.floor(windowSize.width), Math.floor(windowSize.height));
+        ctx.rect(
+          0,
+          0,
+          Math.floor(windowSize.width),
+          Math.floor(windowSize.height)
+        );
         if (gridPatternBackground) ctx.fillStyle = gridPatternBackground;
         if (gridPatternBackground) ctx.fill();
         global.objects.objectArray.forEach((object) => object.draw(ctx));
@@ -205,6 +219,10 @@ const Home: React.FC = () => {
           <Tools />
         </div>
         <div className='container--canvas'>
+          <div className='container--location'>
+            X: {mousePosition.x}, y: {mousePosition.y} | x:{' '}
+            {mousePosition.x - view.x}, y: {mousePosition.y - view.y}
+          </div>
           <canvas
             id='canvas'
             ref={canvasRef}
@@ -224,4 +242,4 @@ const Home: React.FC = () => {
   );
 };
 
-export { Home };;
+export { Home };
