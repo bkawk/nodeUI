@@ -1,39 +1,39 @@
 import React, { useState } from 'react';
-import fullScreen from '../images/full-screen.svg';
-import pointer from '../images/pointer.svg';
-import snap from '../images/snap.svg';
+import fullScreenImage from '../images/full-screen.svg';
+import pointerImage from '../images/pointer.svg';
+import snapImage from '../images/snap.svg';
 
 const Tools: React.FC = () => {
-  const [state, setState] = useState({
-    fullScreen: false,
-  });
+  const [fullScreen, setFullScreen] = useState(false);
+  const [selector, setSelector] = useState(false);
+  const [snap, setSnap] = useState(false);
 
-  const goFullScreen = () => {
-    setState((prev) => ({
-      ...prev,
-      fullScreen: !state.fullScreen,
-    }));
+  const toggleFullScreen = () => {
+    setFullScreen(!fullScreen);
     const elem = document.documentElement;
+    if (elem.requestFullscreen && !fullScreen) elem.requestFullscreen();
+    if (document.exitFullscreen && fullScreen) document.exitFullscreen();
+  };
 
-    if (elem.requestFullscreen && !state.fullScreen) {
-      elem.requestFullscreen();
-    }
-    if (document.exitFullscreen && state.fullScreen) {
-      document.exitFullscreen();
-    }
+  const toggleSelector = () => {
+    setSelector(!selector);
+  };
+
+  const toggleSnap = () => {
+    setSnap(!snap);
   };
 
   return (
     <div className='tools'>
       <div className='tools--container'>
-        <div className='tools--box'>
-          <img src={pointer} alt='pooiinter' />
+        <div className={`${selector ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSelector}>
+          <img src={pointerImage} alt='pooiinter' />
         </div>
-        <div className='tools--box'>
-          <img src={snap} alt='snap' />
+        <div className={`${snap ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSnap}>
+          <img src={snapImage} alt='snap' />
         </div>
-        <div className='tools--box'>
-          <img src={fullScreen} alt='full screen' onClick={goFullScreen} />
+        <div className={`${fullScreen ? 'tools--box-on' : 'tools--box'}`} onClick={toggleFullScreen}>
+          <img src={fullScreenImage} alt='full screen' />
         </div>
       </div>
     </div>
