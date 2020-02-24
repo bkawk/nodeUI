@@ -9,7 +9,7 @@ const MainToolbar: React.FC  = () => {
     shapes: [
       new Square(),
     ],
-    data: [new Square(), new Square(), ],
+    data: [new Square(), new Square(), ], // tslint:disable-line
   } as ToolbarInterface;
 
   const tabs = Object.keys(toolbar);

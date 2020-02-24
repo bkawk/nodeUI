@@ -34,4 +34,3 @@ export interface StateInterface {
 export interface ToolbarInterface {
   [key: string]: ObjectInterface[];
  }
-

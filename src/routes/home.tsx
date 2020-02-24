@@ -205,6 +205,12 @@ const Home: React.FC = () => {
     }
   };
 
+  const setKeyDown = (event: React.KeyboardEvent<Element>) => {
+    if (event.keyCode === 8) {
+      alert('Delete');
+    }
+  };
+
   useEffect(() => {
     const img = new Image();
     img.src = gridImageBg;
@@ -217,7 +223,7 @@ const Home: React.FC = () => {
         initCanvas.height = windowSize.y;
         const initCtx = initCanvas.getContext('2d');
         setCtx(initCtx);
-        setLoaded(true);
+        setLoaded(true); // TODO: change this to draw()
       }
     };
   }, [windowSize]);
@@ -272,10 +278,12 @@ const Home: React.FC = () => {
             id='canvas'
             ref={canvasRef}
             className='canvas'
+            tabIndex={0}
             onMouseDown={(e: React.MouseEvent) => setMouseDown(e)}
             onMouseUp={(e: React.MouseEvent) => setMouseUp(e)}
             onMouseMove={(e: React.MouseEvent) => setMouseMove(e)}
             onWheel={(e: React.WheelEvent) => setZoom(e)}
+            onKeyDown={(e: React.KeyboardEvent) => setKeyDown(e)}
           />
         </div>
         <div className='container--inspector'>
