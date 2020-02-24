@@ -27,7 +27,7 @@ class Square {
     this.hoveredColor = 'rgba(0, 0, 0, 0.2)';
     this.mainToolbarIcon = squareImg;
     this.name = 'Square';
-    this.named = 'test';
+    this.named = 'Square_001';
     this.position = { x: 0, y: 0 };
     this.position.x = Math.floor(Math.random() * 800);
     this.position.y = Math.floor(Math.random() * 800);

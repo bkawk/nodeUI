@@ -212,6 +212,13 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
+    // TODO: Get these values from local storage instead of asuming zoom 1 etc
+    setview((prev) => ({
+      ...prev,
+      x: 0,
+      y: 0,
+      zoom: 1,
+    }));
     const img = new Image();
     img.src = gridImageBg;
     img.onload = () => {
