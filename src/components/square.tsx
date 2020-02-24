@@ -1,19 +1,24 @@
 import { XYInterface } from '../components/interfaces';
+import shapesImage from '../images/shapes.svg';
 import squareImg from '../images/square.svg';
 
 class Square {
+  category: string;
+  categoryImage: HTMLImageElement;
+  categoryImageSrc: string;
   color: string;
+  ctx!: CanvasRenderingContext2D;
   description: string;
   hovered: boolean;
   hoveredColor: string;
+  locked: boolean;
   mainToolbarIcon: string;
   name: string;
+  named: string;
   position: XYInterface;
   selected: boolean;
   selectedColor: string;
   size: XYInterface;
-  locked: boolean;
-  category: string;
 
   constructor() {
     this.category = 'Shape';
@@ -22,6 +27,7 @@ class Square {
     this.hoveredColor = 'rgba(0, 0, 0, 0.2)';
     this.mainToolbarIcon = squareImg;
     this.name = 'Square';
+    this.named = 'test';
     this.position = { x: 0, y: 0 };
     this.position.x = Math.floor(Math.random() * 800);
     this.position.y = Math.floor(Math.random() * 800);
@@ -30,6 +36,12 @@ class Square {
     this.selectedColor = 'rgb(250, 253, 0)';
     this.size = { x: 90, y: 30 };
     this.locked = false;
+    this.categoryImageSrc = shapesImage;
+    this.categoryImage = new Image();
+    this.categoryImage.src = this.categoryImageSrc;
+    this.categoryImage.onload = () => {
+      if (this.ctx) this.draw(this.ctx);
+    };
   }
   updatePosition(position: XYInterface) {
     this.position = position;
@@ -47,6 +59,8 @@ class Square {
     //
   }
   draw(ctx: CanvasRenderingContext2D) {
+    this.ctx = ctx;
+    // Draw the background shape
     ctx.fillStyle = this.color;
     ctx.fillRect(
       Math.floor(this.position.x),
@@ -54,6 +68,7 @@ class Square {
       Math.floor(this.size.x),
       Math.floor(this.size.y)
     );
+    // Draw the hovered overlay
     if (this.hovered) {
       ctx.fillStyle = this.hoveredColor;
       ctx.fillRect(
@@ -63,6 +78,7 @@ class Square {
         Math.floor(this.size.y)
       );
     }
+    // Draw the border and change color if selected
     if (this.selected) {
     ctx.strokeStyle = this.selectedColor;
     } else {
@@ -74,9 +90,15 @@ class Square {
       Math.floor(this.size.x),
       Math.floor(this.size.y)
     );
+    // Add the category name as text
     ctx.fillStyle = '#2E2E2E';
-    ctx.font = '18px Roboto';
+    ctx.font = '14px Roboto';
     ctx.fillText(this.category, this.position.x + this.size.x + 12, this.position.y + 10);
+    ctx.fillStyle = '#000000';
+    ctx.font = '18px Roboto';
+    ctx.fillText(this.named, this.position.x + this.size.x + 12, this.position.y + 30);
+    // Add the category image
+    ctx.drawImage(this.categoryImage as CanvasImageSource, this.position.x + this.size.x / 2 - 7 , this.position.y + 7);
   }
 }
 

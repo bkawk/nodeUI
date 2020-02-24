@@ -7,17 +7,91 @@ import { ObjectInterface, XYInterface } from './interfaces';
 const Inspector: React.FC = () => {
   const { global } = useContext(Global);
   const { dispatch } = useContext(Dispatch);
-  const [size, setSize] = useState<XYInterface>({x: 0, y: 0});
-  const [position, setPosition] = useState<XYInterface>({x: 0, y: 0});
-  const [selected, setSelected] = useState<ObjectInterface>();
+  const [position, setPosition] = useState<XYInterface>({ x: 0, y: 0 });
+  const [selected, setSelected] = useState<ObjectInterface | null>();
   const [showColors, setShowColors] = useState<boolean>(false);
+  const [categoryImage, setCategoryImage] = useState<string>();
+  const [categoryName, setCategoryName] = useState<string>();
+  const [named, setNamed] = useState<string>();
 
+  const hexColors = [
+    '#C81B00',
+    '#FA2200',
+    '#F54E44',
+    '#FBB0AE',
+    '#FB8AA0',
+    '#9D5666',
+    '#8F5C00',
+    '#B28500',
+    '#F5C926',
+    '#FCFAA3',
+    '#FAEF00',
+    '#FABB00',
+    '#4D8600',
+    '#78CF00',
+    '#C2FF88',
+    '#9FDDC2',
+    '#31A98C',
+    '#368674',
+    '#2D5CB4',
+    '#578EE6',
+    '#9BC5FF',
+    '#B9C7FF',
+    '#878EC0',
+    '#63688F',
+    '#564198',
+    '#785DD0',
+    '#947DE0',
+    '#E16CC6',
+    '#92377C',
+    '#613056',
+    '#000000',
+    '#4E4E4E',
+    '#7A7A7A',
+    '#999999',
+    '#D6D6D6',
+    '#FFFFFF',
+  ];
   const draw = () => {
     dispatch({ type: DRAW, value: Date.now() });
   };
 
+  const changeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNamed(event.target.value.replace(' ', '_'));
+    if (selected) selected.named = event.target.value;
+    draw();
+  };
+  const changePosition = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.id === 'x') {
+      setPosition({x: +event.target.value , y: position.y});
+      if (selected) selected.position = {x: +event.target.value , y: position.y};
+      draw();
+    } else {
+      setPosition({x: position.x , y: +event.target.value});
+      if (selected) selected.position = {x: position.x , y: +event.target.value};
+      draw();
+    }
+  };
+
   const toggleColors = () => {
     setShowColors(!showColors);
+  };
+
+  const generateColors = () => {
+    const arr = [];
+    for (const value in hexColors) {
+      if (value) {
+        arr.push(
+          <div
+            id={hexColors[value]}
+            onClick={setColor}
+            className='inspector--color'
+            style={{ backgroundColor: `${hexColors[value]}` }}
+          ></div>
+        );
+      }
+    }
+    return arr;
   };
 
   const setColor = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -28,79 +102,60 @@ const Inspector: React.FC = () => {
   };
 
   useEffect(() => {
-    if (global.objects.selectedArray && global.objects.selectedArray.length > 0) {
+    setSelected(null);
+    if (
+      global.objects.selectedArray &&
+      global.objects.selectedArray.length === 1
+    ) {
       const selectedOne = global.objects.selectedArray[0];
-      setSize({x: selectedOne.size.x, y: selectedOne.size.y});
-      setPosition({x: selectedOne.position.x, y: selectedOne.position.y});
+      setPosition({ x: selectedOne.position.x, y: selectedOne.position.y });
       setSelected(selectedOne);
+      setCategoryImage(selectedOne.categoryImageSrc);
+      setCategoryName(selectedOne.category);
+      setNamed(selectedOne.named);
     }
   }, [global.objects.selectedArray, global.draw]);
 
   return (
     <div className='inspector'>
-      <div className='inspector--shelf'>
-        <img src={colors} alt='colors' onClick={toggleColors} className='inspector--colors-buutton'/>
-      </div>
-      <div className='inspector--container'>
-        <div className={`${showColors === true ? 'inspector--colors' : 'inspector--colors-hidden'}`}>
+      {selected && (
+        <React.Fragment>
+          <div className='inspector--shelf'>
+            <img src={categoryImage} className='inspector--category-icon' />
+            <p className='inspector--category-name'>{categoryName}</p>
+            <input
+              type='text'
+              className='inspector--name-input'
+              spellCheck='false'
+              onChange={changeName}
+              value={named}
+            />
+            <img
+              src={colors}
+              alt='colors'
+              onClick={toggleColors}
+              className='inspector--colors-buutton'
+            />
+          </div>
+          <div className='inspector--container'>
+            <div
+              className={`${
+                showColors === true
+                  ? 'inspector--colors'
+                  : 'inspector--colors-hidden'
+              }`}
+            >
+              {generateColors()}
+            </div>
 
-          <div id='#C81B00' onClick={setColor} className='inspector--color' style={{backgroundColor: '#C81B00'}}></div>
-          <div id='#FA2200' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FA2200'}}></div>
-          <div id='#F54E44' onClick={setColor} className='inspector--color' style={{backgroundColor: '#F54E44'}}></div>
-          <div id='#FBB0AE' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FBB0AE'}}></div>
-          <div id='#FB8AA0' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FB8AA0'}}></div>
-          <div id='#9D5666' onClick={setColor} className='inspector--color' style={{backgroundColor: '#9D5666'}}></div>
-          <div id='#8F5C00' onClick={setColor} className='inspector--color' style={{backgroundColor: '#8F5C00'}}></div>
-          <div id='#B28500' onClick={setColor} className='inspector--color' style={{backgroundColor: '#B28500'}}></div>
-          <div id='#F5C926' onClick={setColor} className='inspector--color' style={{backgroundColor: '#F5C926'}}></div>
-          <div id='#FCFAA3' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FCFAA3'}}></div>
-          <div id='#FAEF00' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FAEF00'}}></div>
-          <div id='#FABB00' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FABB00'}}></div>
-          <div id='#4D8600' onClick={setColor} className='inspector--color' style={{backgroundColor: '#4D8600'}}></div>
-          <div id='#78CF00' onClick={setColor} className='inspector--color' style={{backgroundColor: '#78CF00'}}></div>
-          <div id='#C2FF88' onClick={setColor} className='inspector--color' style={{backgroundColor: '#C2FF88'}}></div>
-          <div id='#9FDDC2' onClick={setColor} className='inspector--color' style={{backgroundColor: '#9FDDC2'}}></div>
-          <div id='#31A98C' onClick={setColor} className='inspector--color' style={{backgroundColor: '#31A98C'}}></div>
-          <div id='#368674' onClick={setColor} className='inspector--color' style={{backgroundColor: '#368674'}}></div>
-          <div id='#2D5CB4' onClick={setColor} className='inspector--color' style={{backgroundColor: '#2D5CB4'}}></div>
-          <div id='#578EE6' onClick={setColor} className='inspector--color' style={{backgroundColor: '#578EE6'}}></div>
-          <div id='#9BC5FF' onClick={setColor} className='inspector--color' style={{backgroundColor: '#9BC5FF'}}></div>
-          <div id='#B9C7FF' onClick={setColor} className='inspector--color' style={{backgroundColor: '#B9C7FF'}}></div>
-          <div id='#878EC0' onClick={setColor} className='inspector--color' style={{backgroundColor: '#878EC0'}}></div>
-          <div id='#63688F' onClick={setColor} className='inspector--color' style={{backgroundColor: '#63688F'}}></div>
-          <div id='#564198' onClick={setColor} className='inspector--color' style={{backgroundColor: '#564198'}}></div>
-          <div id='#785DD0' onClick={setColor} className='inspector--color' style={{backgroundColor: '#785DD0'}}></div>
-          <div id='#947DE0' onClick={setColor} className='inspector--color' style={{backgroundColor: '#947DE0'}}></div>
-          <div id='#E16CC6' onClick={setColor} className='inspector--color' style={{backgroundColor: '#E16CC6'}}></div>
-          <div id='#92377C' onClick={setColor} className='inspector--color' style={{backgroundColor: '#92377C'}}></div>
-          <div id='#613056' onClick={setColor} className='inspector--color' style={{backgroundColor: '#613056'}}></div>
-          <div id='#000000' onClick={setColor} className='inspector--color' style={{backgroundColor: '#000000'}}></div>
-          <div id='#4E4E4E' onClick={setColor} className='inspector--color' style={{backgroundColor: '#4E4E4E'}}></div>
-          <div id='#7A7A7A' onClick={setColor} className='inspector--color' style={{backgroundColor: '#7A7A7A'}}></div>
-          <div id='#7A7A7A' onClick={setColor} className='inspector--color' style={{backgroundColor: '#7A7A7A'}}></div>
-          <div id='#D6D6D6' onClick={setColor} className='inspector--color' style={{backgroundColor: '#D6D6D6'}}></div>
-          <div id='#FFFFFF' onClick={setColor} className='inspector--color' style={{backgroundColor: '#FFFFFF'}}></div>
-        </div>
-        <div className='inspector--item'>
-          <div className='inspector--description'>Width</div>
-          <input type='text' value={size.x} />
-        </div>
-
-        <div className='inspector--item'>
-          <div className='inspector--description'>Height</div>
-          <input type='text' value={size.y} />
-        </div>
-
-        <div className='inspector--item'>
-          <div className='inspector--description'>Position X</div>
-          <input type='text' value={position.x} />
-        </div>
-
-        <div className='inspector--item'>
-          <div className='inspector--description'>Position Y</div>
-          <input type='text' value={position.y} />
-        </div>
-      </div>
+            <div className='inspector--item-two'>
+              <div className='inspector--description'>Position</div>
+              <input type='number' value={position.x} id='x' onChange={changePosition} />
+              <input type='number' value={position.y} id='y' onChange={changePosition} />
+            </div>
+          </div>
+        </React.Fragment>
+      )}
     </div>
   );
 };

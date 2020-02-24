@@ -4,7 +4,10 @@ export interface XYInterface {
 }
 
 export interface ObjectInterface {
+  categoryImageSrc: string;
   name: string;
+  named: string;
+  category: string;
   mainToolbarIcon: string;
   position: XYInterface;
   size: XYInterface;

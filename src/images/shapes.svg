@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="16px" viewBox="0 0 20 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>Group 6</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#8EA7BD" offset="0%"></stop>
+            <stop stop-color="#26427D" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#DC7851" offset="0%"></stop>
+            <stop stop-color="#841B07" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#D5D8C4" offset="0%"></stop>
+            <stop stop-color="#D7CD00" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-6" transform="translate(1.000000, 1.000000)">
+            <g id="Group-5" opacity="0.496279762" fill="#000000" stroke="#000000">
+                <path d="M7.00834807,8.23952058 L6.39566033,9.20636367 L7.318,9.47402262 L7.31818182,5.45456807 L6.31818182,5.45454545 C6.31818182,6.43933757 6.55797709,7.38996354 7.00834807,8.23952058 Z M7.31818182,2.15051936 C8.3860075,0.552445301 10.2064615,-0.5 12.2727273,-0.5 C15.5613319,-0.5 18.2272727,2.16594081 18.2272727,5.45454545 C18.2272727,7.90404907 16.7352212,10.0615084 14.5353484,10.9642535 L16.3406171,14.2822529 L3.19044361,14.2822529 L3.28148575,14.1360783 L-0.5,14.1364071 L-0.5,-0.5 L7.31818182,-0.5 L7.31818182,2.15051936 Z" id="Combined-Shape"></path>
+            </g>
+            <g id="Group-5">
+                <rect id="Rectangle" fill="url(#linearGradient-1)" x="0" y="0" width="6.81818182" height="13.6363636"></rect>
+                <circle id="Oval" fill="url(#linearGradient-2)" cx="12.2727273" cy="5.45454545" r="5.45454545"></circle>
+                <polygon id="Path-3" fill="url(#linearGradient-3)" points="10.2272727 4.09090909 4.09090909 13.7822529 15.4993595 13.7822529"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>
