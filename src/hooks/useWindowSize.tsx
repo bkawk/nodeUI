@@ -16,11 +16,15 @@ const useWindowSize = () => {
     };
 
     let debounceResize: ReturnType<typeof setTimeout>;
+    window.addEventListener('fullscreenchange', handleResize);
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', () => {
-      clearTimeout(debounceResize);
-      debounceResize = setTimeout(handleResize, 1000);
-    });
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', () => {
+        clearTimeout(debounceResize);
+        debounceResize = setTimeout(handleResize, 1000);
+      });
+    };
   }, []);
 
   return windowSize;
