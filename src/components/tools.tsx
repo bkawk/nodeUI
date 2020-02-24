@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { Dispatch, TOGGLE_SELECTOR, TOGGLE_SNAP } from '../globalState';
 import fullScreenImage from '../images/full-screen.svg';
 import pointerImage from '../images/pointer.svg';
 import snapImage from '../images/snap.svg';
 
 const Tools: React.FC = () => {
+  const { dispatch } = useContext(Dispatch);
   const [fullScreen, setFullScreen] = useState(false);
   const [selector, setSelector] = useState(false);
   const [snap, setSnap] = useState(false);
@@ -16,11 +18,15 @@ const Tools: React.FC = () => {
   };
 
   const toggleSelector = () => {
-    setSelector(!selector);
+    const value = !selector;
+    dispatch({ type: TOGGLE_SELECTOR, value });
+    setSelector(value);
   };
 
   const toggleSnap = () => {
-    setSnap(!snap);
+    const value = !snap;
+    dispatch({ type: TOGGLE_SNAP, value });
+    setSnap(value);
   };
 
   return (

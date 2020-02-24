@@ -20,7 +20,7 @@ export interface ObjectInterface {
 
 export interface ActionInterface {
   type: string;
-  value: ObjectInterface | ObjectInterface[] | number | null;
+  value: ObjectInterface | ObjectInterface[] | number | null | boolean;
 }
 
 export interface StateInterface {
@@ -28,6 +28,10 @@ export interface StateInterface {
   objects: {
     objectArray: ObjectInterface[];
     selectedArray: ObjectInterface[] | null;
+  };
+  tools: {
+    snap: boolean;
+    selector: boolean;
   };
 }
 

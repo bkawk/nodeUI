@@ -13,6 +13,10 @@ const InitialState: StateInterface = {
     objectArray: [],
     selectedArray: [],
   },
+  tools: {
+    selector: false,
+    snap: false,
+  },
 };
 
 const Global = createContext({
@@ -24,6 +28,8 @@ const PUSH_SELECTED = 'PUSH_SELECTED';
 const CLEAR_SELECTED = 'CLEAR_SELECTED';
 const ADD_OBJECT = 'ADD_OBJECT';
 const DRAW = 'DRAW';
+const TOGGLE_SNAP = 'TOGGLE_SNAP';
+const TOGGLE_SELECTOR = 'TOGGLE_SELECTOR';
 
 // tslint:disable-next-line: no-any
 const Reducer = (state: StateInterface, action: any) => {
@@ -37,6 +43,17 @@ const Reducer = (state: StateInterface, action: any) => {
       return {
         ...state,
         objects: { ...state.objects, selectedArray: action.value },
+      };
+    case 'TOGGLE_SNAP':
+      console.log('fire');
+      return {
+        ...state,
+        tools: { ...state.tools, snap: action.value },
+      };
+    case 'TOGGLE_SELECTOR':
+      return {
+        ...state,
+        tools: { ...state.tools, selector: action.value },
       };
     case 'ADD_OBJECT':
       return {
@@ -66,4 +83,6 @@ export {
   NEW_SELECTED,
   PUSH_SELECTED,
   Reducer,
+  TOGGLE_SNAP,
+  TOGGLE_SELECTOR,
 };

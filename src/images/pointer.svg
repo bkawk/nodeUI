@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="14px" height="21px" viewBox="0 0 14 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="16px" height="21px" viewBox="0 0 16 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
-    <title>Group</title>
+    <title>Group 8</title>
     <desc>Created with Sketch.</desc>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group" transform="translate(1.000000, 3.000000)" fill="#FFFFFF" fill-rule="nonzero" stroke="#2C3845">
-            <path d="M6.35679805,9.84669171 L8.89344244,15.3898389 L5.97524115,16.6534755 L3.44059276,11.11469 L-0.5,13.9133634 L-0.5,-1.08426457 L11.0900185,8.81005934 L6.35679805,9.84669171 Z" id="Path"></path>
+        <g id="Group-8" transform="translate(-0.022980, 3.000000)">
+            <g id="Group" transform="translate(3.022980, 0.000000)" fill="#FFFFFF" fill-rule="nonzero" stroke="#2C3845">
+                <path d="M6.35679805,9.84669171 L8.89344244,15.3898389 L5.97524115,16.6534755 L3.44059276,11.11469 L-0.5,13.9133634 L-0.5,-1.08426457 L11.0900185,8.81005934 L6.35679805,9.84669171 Z" id="Path"></path>
+            </g>
+            <rect id="Rectangle" fill-opacity="0.00647399476" fill="#D8D8D8" x="0.0229798265" y="13" width="1" height="1"></rect>
         </g>
     </g>
 </svg>

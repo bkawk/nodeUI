@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Dispatch, Global } from '../globalState';
-import { DRAW } from '../globalState';
+import { Dispatch, DRAW, Global } from '../globalState';
 import colors from '../images/colors.svg';
 import { ObjectInterface, XYInterface } from './interfaces';
 
