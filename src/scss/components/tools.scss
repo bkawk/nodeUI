@@ -1,31 +1,51 @@
 .tools {
-    padding: 3px;
-    padding-top: 3px;
-    cursor: pointer;
-    &--container {
-        display: grid;
-        justify-content: center;
-        align-items: center;
-    }
-    &--box {
-        width: 34px;
-        height: 34px;
-        padding: 4px;
-        display: grid;
-        justify-content: center;
-        align-items: center;
-    }
-    &--box-on {
-        width: 34px;
-        height: 34px;
-        padding: 4px;
-        display: grid;
-        justify-content: center;
-        align-items: center;
-        background-image: linear-gradient(180deg, #677880 0%, #909697 100%);
-        border: 1px solid #3D474C;
-    }
-    &--box:hover {
-        background-color: #939393;
-    }
+  padding: 3px;
+  padding-top: 3px;
+  cursor: pointer;
+  &--container {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+  }
+  &--box {
+    width: 34px;
+    height: 34px;
+    padding: 4px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  &--box:hover &--help {
+    visibility: visible;
+    transition-delay: 1.5s;
+  }
+  &--box-on:hover &--help {
+    visibility: visible;
+    transition-delay: 1.5s;
+  }
+  &--help {
+    visibility: hidden;
+    transition: 0.2s 0s;
+    position: absolute;
+    background-color: black;
+    padding: 6px 10px;
+    color: $not-white;
+    left: 37px;
+    z-index: 100;
+    white-space: nowrap;
+  }
+  &--box-on {
+    width: 34px;
+    height: 34px;
+    padding: 4px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    background-image: linear-gradient(180deg, #677880 0%, #909697 100%);
+    border: 1px solid #3d474c;
+  }
+  &--box:hover {
+    background-color: #939393;
+  }
 }

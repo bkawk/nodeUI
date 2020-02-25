@@ -58,37 +58,46 @@ const Tools: React.FC = () => {
     <div className='tools'>
       <div className='tools--container'>
         <div className={`${selector ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSelector}>
-          <img src={pointerImage} alt='Pointer' />
+          <img src={pointerImage} alt='Select' />
+          <div className='tools--help'>Select</div>
         </div>
 
         <div className='tools--box' onClick={alignLeft}>
-          <img src={leftImage} alt='Align Left' />
+          <img src={leftImage} alt='Align left' />
+          <div className='tools--help'>Align left</div>
         </div>
 
         <div className='tools--box' onClick={alignCenter}>
-          <img src={centerImage} alt='Align Center' />
+          <img src={centerImage} alt='Align center' />
+          <div className='tools--help'>Align center</div>
         </div>
 
         <div className='tools--box' onClick={alignRight}>
-          <img src={rightImage} alt='Align Right' />
+          <img src={rightImage} alt='Align right' />
+          <div className='tools--help'>Align right</div>
         </div>
 
         <div className='tools--box' onClick={alignTop}>
           <img src={topImage} alt='Align Top' />
+          <div className='tools--help'>Align top</div>
         </div>
 
         <div className='tools--box' onClick={alignMiddle}>
-          <img src={middleImage} alt='Align MIddle' />
+          <img src={middleImage} alt='Align Middle' />
+          <div className='tools--help'>Align middle</div>
         </div>
         <div className='tools--box' onClick={alignBottom}>
-          <img src={bottomImage} alt='Align Bottom' />
+          <img src={bottomImage} alt='Align bottom' />
+          <div className='tools--help'>Align bottom</div>
         </div>
 
         <div className={`${snap ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSnap}>
           <img src={snapImage} alt='Snap to grid' />
+          <div className='tools--help'>Snap to grid</div>
         </div>
         <div className={`${fullScreen ? 'tools--box-on' : 'tools--box'}`} onClick={toggleFullScreen}>
           <img src={fullScreenImage} alt='Full Screen' />
+          <div className='tools--help'>Full screen</div>
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ const MainToolbar: React.FC  = () => {
   const nodes = (tab: string) => {
     const arr = [];
     for (const value of toolbar[tab]) {
-      arr.push({ name: value.name, mainToolbarIcon: value.mainToolbarIcon });
+      arr.push({ name: value.name, mainToolbarIcon: value.mainToolbarIcon, description: value.description });
     }
     return arr;
   };
@@ -76,6 +76,10 @@ const MainToolbar: React.FC  = () => {
                 <img src={item.mainToolbarIcon} alt={item.name} />
               </div>
               <div className='main-toolbar--button-txt'>{item.name}</div>
+              <div className='main-toolbar--help'>
+                <div className='main-toolbar--help-title'>{item.name}</div>
+                <div>{item.description}</div>
+              </div>
             </div>
           ))
         )}

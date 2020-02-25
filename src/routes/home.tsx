@@ -192,14 +192,8 @@ const Home: React.FC = () => {
           });
         } else {
           value.updatePosition({
-            x:
-              Math.round(
-                Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom) / 10
-              ) * 10,
-            y:
-              Math.round(
-                Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom) / 10
-              ) * 10,
+            x: Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom / 10) * 10,
+            y: Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom / 10) * 10,
           });
         }
       }

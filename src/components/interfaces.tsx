@@ -4,6 +4,7 @@ export interface XYInterface {
 }
 
 export interface ObjectInterface {
+  description: string;
   categoryImage: string;
   name: string;
   named: string;

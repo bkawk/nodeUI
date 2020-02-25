@@ -54,6 +54,26 @@
     grid-template-rows: 30px auto;
     cursor: pointer;
     padding: 0 12px;
+    position: relative;
+  }
+  &--button:hover &--help {
+    visibility: visible;
+    transition-delay: 1.5s;
+  }
+  &--help {
+    visibility: hidden;
+    transition: 0.2s 0s;
+    position: absolute;
+    background-color: black;
+    padding: 6px 10px;
+    color: $not-white;
+    bottom: -43px;
+    left: 8px;
+    z-index: 100;
+    white-space: nowrap;
+  }
+  &--help-title {
+    font-weight: 700;
   }
   &--button:hover {
     background-color: rgba(0, 0, 0, 0.05);
@@ -70,4 +90,5 @@
     pointer-events: none;
     user-select: none;
   }
+
 }
