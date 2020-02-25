@@ -32,7 +32,7 @@ class Square {
     this.selected = false;
     this.hovered = false;
     this.selectedColor = 'rgb(250, 253, 0)';
-    this.size = { x: 90, y: 30 };
+    this.size = { x: 100, y: 30 };
     this.locked = false;
     this.categoryImage = shapesImage;
   }

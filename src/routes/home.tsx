@@ -11,10 +11,10 @@ import {
   NEW_SELECTED,
 } from '../globalState';
 import { useWindowSize } from '../hooks/useWindowSize';
-import gridImageBg from '../images/grid.svg';
 import '../scss/index.scss';
 
 // IMAGES TO CACHE
+import gridImageBg from '../images/grid.svg';
 import shapesImage from '../images/shapes.svg';
 
 interface ControlsInterface {
@@ -38,7 +38,7 @@ const Home: React.FC = () => {
     zoom: 1,
   });
   const [dragBg, setDragBg] = useState(true);
-  const [canvasImage, setCanvasImage] = useState<HTMLImageElement>();
+  const [canvasImage, setCanvasImage] = useState<HTMLImageElement>(); // TODO: move to image cache
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -98,12 +98,18 @@ const Home: React.FC = () => {
     // this opens up drag to select over multiple
   };
 
+  const drawSelection = () => {
+    setDragBg(false);
+  };
+
   const setMouseDown = (event: React.MouseEvent) => {
     const hitObject = objectWasHit(event.nativeEvent);
-    selectObject(hitObject);
+    if (!global.tools.selector) selectObject(hitObject);
+    else drawSelection();
     const x = event.nativeEvent.offsetX;
     const y = event.nativeEvent.offsetY;
-    if (canvas) canvas.style.cursor = 'grab';
+    if (canvas && !global.tools.selector) canvas.style.cursor = 'grab';
+    if (canvas && global.tools.selector) canvas.style.cursor = 'default';
     setViewPos(() => ({
       isDragging: true,
       prevX: Math.floor(x),
@@ -112,7 +118,8 @@ const Home: React.FC = () => {
   };
 
   const setMouseUp = (event: React.MouseEvent) => {
-    if (canvas) canvas.style.cursor = 'crosshair';
+    if (canvas && !global.tools.selector) canvas.style.cursor = 'crosshair';
+    else if (canvas && global.tools.selector) canvas.style.cursor = 'default';
     setViewPos(() => ({
       isDragging: false,
       prevX: null,
@@ -146,7 +153,7 @@ const Home: React.FC = () => {
     const x: number = event.nativeEvent.offsetX;
     const y: number = event.nativeEvent.offsetY;
     const hitObject = objectWasHit(event.nativeEvent);
-    hoverObject(hitObject);
+    if (!global.tools.selector) hoverObject(hitObject);
     setMousePosition({ x, y });
     if (viewPos.isDragging && dragBg) setPan(event.nativeEvent);
     if (viewPos.isDragging && !dragBg) setMove(event.nativeEvent);
@@ -244,6 +251,7 @@ const Home: React.FC = () => {
     img.onload = () => {
       setCanvasImage(img);
       const initCanvas = canvasRef.current;
+      if (initCanvas) initCanvas.style.cursor = 'crosshair';
       if (initCanvas) {
         setCanvas(initCanvas);
         initCanvas.width = windowSize.x;
@@ -254,6 +262,18 @@ const Home: React.FC = () => {
       }
     };
   }, [windowSize]);
+
+  useEffect(() => {
+    if (canvas && global.tools.selector) {
+      canvas.style.cursor = 'default';
+      dispatch({ type: CLEAR_SELECTED, value: null });
+      // TODO: unselect the item not all
+      for (const value of global.objects.objectArray) {
+        value.toggleSelected(false);
+      }
+      draw();
+    } else if (canvas && !global.tools.selector) canvas.style.cursor = 'crosshair';
+  }, [global.tools.selector]);
 
   useEffect(() => {
     const paint = () => {
