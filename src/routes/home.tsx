@@ -213,7 +213,7 @@ const Home: React.FC = () => {
     const { deltaY } = event;
     const weighted = { x: 0, y: 0 };
     const direction = deltaY > 0 ? -1 : 1;
-    const factor = 0.05;
+    const factor = 0.02;
     const zoom = direction * factor;
     if (direction === 1 && canvas) canvas.style.cursor = 'zoom-in';
     if (direction === -1 && canvas) canvas.style.cursor = 'zoom-out';
@@ -260,9 +260,12 @@ const Home: React.FC = () => {
       if (initCanvas) initCanvas.style.cursor = 'crosshair';
       if (initCanvas) {
         setCanvas(initCanvas);
-        initCanvas.width = windowSize.x;
-        initCanvas.height = windowSize.y;
+        const dpr = window.devicePixelRatio || 1;
+        // TODO: looko at using.. const rect = initCanvas.getBoundingClientRect();
+        initCanvas.width = windowSize.x * dpr;
+        initCanvas.height = windowSize.y * dpr;
         const initCtx = initCanvas.getContext('2d');
+        if (initCtx) initCtx.scale(dpr, dpr);
         setCtx(initCtx);
         dispatch({ type: DRAW, value: Date.now() });
       }
