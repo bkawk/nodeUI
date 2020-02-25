@@ -5,15 +5,15 @@
     <desc>Created with Sketch.</desc>
     <defs>
         <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="linearGradient-1">
-            <stop stop-color="#B91A00" offset="0%"></stop>
-            <stop stop-color="#D76500" offset="50.4856419%"></stop>
-            <stop stop-color="#B91A00" offset="100%"></stop>
+            <stop stop-color="#B79A00" offset="0%"></stop>
+            <stop stop-color="#DACD59" offset="50.4856419%"></stop>
+            <stop stop-color="#B79A00" offset="100%"></stop>
         </linearGradient>
     </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="Group-17" transform="translate(0.000000, 1.000000)">
             <rect id="Rectangle" fill="#D8D8D8" transform="translate(10.000000, 18.000000) rotate(-270.000000) translate(-10.000000, -18.000000) " x="9" y="8" width="2" height="20"></rect>
-            <rect id="Rectangle" stroke="#63251E" stroke-width="0.6" fill="url(#linearGradient-1)" fill-rule="nonzero" stroke-linejoin="round" x="5.7" y="-0.3" width="8.6" height="13.6"></rect>
+            <rect id="Rectangle" stroke="#54441E" stroke-width="0.6" fill="url(#linearGradient-1)" fill-rule="nonzero" stroke-linejoin="round" x="5.7" y="-0.3" width="8.6" height="13.6"></rect>
         </g>
     </g>
 </svg>
