@@ -175,12 +175,20 @@ const Home: React.FC = () => {
     const y = event.offsetY;
     const selected = global.objects.selectedArray;
     const zoom = view.zoom;
+    const snap = global.tools.snap;
     if (selected && selected.length > 0) {
       for (const value of selected) {
-        value.updatePosition({
-          x: Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom),
-          y: Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom),
-        });
+        if (!snap) {
+          value.updatePosition({
+            x: Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom),
+            y: Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom),
+          });
+        } else {
+          value.updatePosition({
+            x: Math.round(Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom) / 10) * 10,
+            y: Math.round(Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom) / 10) * 10,
+          });
+        }
       }
       draw();
     }

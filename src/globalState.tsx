@@ -45,7 +45,6 @@ const Reducer = (state: StateInterface, action: any) => {
         objects: { ...state.objects, selectedArray: action.value },
       };
     case 'TOGGLE_SNAP':
-      console.log('fire');
       return {
         ...state,
         tools: { ...state.tools, snap: action.value },
