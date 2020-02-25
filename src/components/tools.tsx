@@ -35,41 +35,60 @@ const Tools: React.FC = () => {
     setSnap(value);
   };
 
+  const alignLeft = () => {
+    //
+  };
+  const alignCenter = () => {
+    //
+  };
+  const alignRight = () => {
+    //
+  };
+  const alignTop = () => {
+    //
+  };
+  const alignMiddle = () => {
+    //
+  };
+  const alignBottom = () => {
+    //
+  };
+
   return (
     <div className='tools'>
       <div className='tools--container'>
         <div className={`${selector ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSelector}>
-          <img src={pointerImage} alt='pooiinter' />
+          <img src={pointerImage} alt='Pointer' />
         </div>
 
-        <div className={`${selector ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSelector}>
-          <img src={leftImage} alt='pooiinter' />
+        <div className='tools--box' onClick={alignLeft}>
+          <img src={leftImage} alt='Align Left' />
         </div>
 
-        <div className={`${selector ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSelector}>
-          <img src={centerImage} alt='pooiinter' />
+        <div className='tools--box' onClick={alignCenter}>
+          <img src={centerImage} alt='Align Center' />
         </div>
 
-        <div className={`${selector ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSelector}>
-          <img src={rightImage} alt='pooiinter' />
+        <div className='tools--box' onClick={alignRight}>
+          <img src={rightImage} alt='Align Right' />
         </div>
 
-        <div className={`${selector ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSelector}>
-          <img src={topImage} alt='pooiinter' />
+        <div className='tools--box' onClick={alignTop}>
+          <img src={topImage} alt='Align Top' />
         </div>
 
-        <div className={`${selector ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSelector}>
-          <img src={middleImage} alt='pooiinter' />
+        <div className='tools--box' onClick={alignMiddle}>
+          <img src={middleImage} alt='Align MIddle' />
         </div>
-        <div className={`${selector ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSelector}>
-          <img src={bottomImage} alt='pooiinter' />
+        <div className='tools--box' onClick={alignBottom}>
+          <img src={bottomImage} alt='Align Bottom' />
         </div>
 
         <div className={`${snap ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSnap}>
-          <img src={snapImage} alt='snap' />
+          <img src={snapImage} alt='Snap to grid' />
         </div>
         <div className={`${fullScreen ? 'tools--box-on' : 'tools--box'}`} onClick={toggleFullScreen}>
-          <img src={fullScreenImage} alt='full screen' />
+          <img src={fullScreenImage} alt='Full Screen' />
         </div>
       </div>
     </div>

@@ -27,6 +27,13 @@ const Home: React.FC = () => {
   const { dispatch } = useContext(Dispatch);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const windowSize = useWindowSize();
+  const [dragBg, setDragBg] = useState(true);
+  const [canvasImage, setCanvasImage] = useState<HTMLImageElement>(); // TODO: move to image cache
+  const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
+  const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [lastHovered, setLastHovered] = useState<ObjectInterface | null>();
+  const [imageCache, setImageCache] = useState<HTMLImageElement[]>();
   const [viewPos, setViewPos] = useState<ControlsInterface>({
     isDragging: true,
     prevX: 0,
@@ -37,13 +44,6 @@ const Home: React.FC = () => {
     y: 0,
     zoom: 1,
   });
-  const [dragBg, setDragBg] = useState(true);
-  const [canvasImage, setCanvasImage] = useState<HTMLImageElement>(); // TODO: move to image cache
-  const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
-  const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [lastHovered, setLastHovered] = useState<ObjectInterface | null>();
-  const [imageCache, setImageCache] = useState<HTMLImageElement[]>();
 
   const draw = () => {
     dispatch({ type: DRAW, value: Date.now() });
@@ -192,8 +192,14 @@ const Home: React.FC = () => {
           });
         } else {
           value.updatePosition({
-            x: Math.round(Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom) / 10) * 10,
-            y: Math.round(Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom) / 10) * 10,
+            x:
+              Math.round(
+                Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom) / 10
+              ) * 10,
+            y:
+              Math.round(
+                Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom) / 10
+              ) * 10,
           });
         }
       }
@@ -211,7 +217,7 @@ const Home: React.FC = () => {
     const zoom = direction * factor;
     if (direction === 1 && canvas) canvas.style.cursor = 'zoom-in';
     if (direction === -1 && canvas) canvas.style.cursor = 'zoom-out';
-    if (view.zoom + zoom < 3 && view.zoom + zoom > 0.8) {
+    if (view.zoom + zoom < 1.5 && view.zoom + zoom > 0.5) {
       weighted.x = (x - view.x) / (windowSize.x * view.zoom);
       weighted.y = (y - view.y) / (windowSize.y * view.zoom);
       setview((prev) => ({
@@ -258,10 +264,10 @@ const Home: React.FC = () => {
         initCanvas.height = windowSize.y;
         const initCtx = initCanvas.getContext('2d');
         setCtx(initCtx);
-        draw();
+        dispatch({ type: DRAW, value: Date.now() });
       }
     };
-  }, [windowSize]);
+  }, [windowSize, dispatch]);
 
   useEffect(() => {
     if (canvas && global.tools.selector) {
@@ -271,9 +277,9 @@ const Home: React.FC = () => {
       for (const value of global.objects.objectArray) {
         value.toggleSelected(false);
       }
-      draw();
-    } else if (canvas && !global.tools.selector) canvas.style.cursor = 'crosshair';
-  }, [global.tools.selector]);
+      dispatch({ type: DRAW, value: Date.now() });
+    } else if (canvas && !global.tools.selector) { canvas.style.cursor = 'crosshair'; }
+  }, [global.tools.selector, canvas, dispatch, global.objects.objectArray]);
 
   useEffect(() => {
     const paint = () => {
@@ -289,12 +295,15 @@ const Home: React.FC = () => {
         );
         if (gridPatternBackground) ctx.fillStyle = gridPatternBackground;
         if (gridPatternBackground) ctx.fill();
-        global.objects.objectArray.forEach((object) => object.draw(ctx, imageCache));
+        global.objects.objectArray.forEach((object) =>
+          object.draw(ctx, imageCache)
+        );
         ctx.restore();
       }
     };
     requestAnimationFrame(paint);
   }, [
+    imageCache,
     windowSize,
     view,
     global.objects.objectArray,
@@ -316,9 +325,9 @@ const Home: React.FC = () => {
         <div className='container--canvas'>
           <div className='container--location'>
             {/* //           x: Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom), */}
-            x: {Math.floor((mousePosition.x - view.x) / view.zoom)}{' '}
-            y: {Math.floor((mousePosition.y - view.y) / view.zoom)}{' '}
-            z: {view.zoom.toFixed(2)}
+            x: {Math.floor((mousePosition.x - view.x) / view.zoom)} y:{' '}
+            {Math.floor((mousePosition.y - view.y) / view.zoom)} z:{' '}
+            {view.zoom.toFixed(2)}
           </div>
           <canvas
             id='canvas'

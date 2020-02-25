@@ -82,6 +82,7 @@ const Inspector: React.FC = () => {
       if (value) {
         arr.push(
           <div
+            key={hexColors[value]}
             id={hexColors[value]}
             onClick={setColor}
             className='inspector--color'
@@ -120,7 +121,7 @@ const Inspector: React.FC = () => {
       {selected && (
         <React.Fragment>
           <div className='inspector--shelf'>
-            <img src={categoryImage} className='inspector--category-icon' />
+            <img src={categoryImage} className='inspector--category-icon' alt={categoryName}/>
             <p className='inspector--category-name'>{categoryName}</p>
             <input
               type='text'
