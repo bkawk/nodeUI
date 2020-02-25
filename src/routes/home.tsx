@@ -14,6 +14,9 @@ import { useWindowSize } from '../hooks/useWindowSize';
 import gridImageBg from '../images/grid.svg';
 import '../scss/index.scss';
 
+// IMAGES TO CACHE
+import shapesImage from '../images/shapes.svg';
+
 interface ControlsInterface {
   prevX: number | null;
   prevY: number | null;
@@ -38,9 +41,9 @@ const Home: React.FC = () => {
   const [canvasImage, setCanvasImage] = useState<HTMLImageElement>();
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
-  const [loaded, setLoaded] = useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [lastHovered, setLastHovered] = useState<ObjectInterface | null>();
+  const [imageCache, setImageCache] = useState<HTMLImageElement[]>();
 
   const draw = () => {
     dispatch({ type: DRAW, value: Date.now() });
@@ -212,6 +215,15 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
+    // TODO: Add an index to the image cache so when we have many objects we have a key for the image
+    const cachedShapesImage = new Image();
+    cachedShapesImage.src = shapesImage;
+    cachedShapesImage.onload = () => {
+      setImageCache([cachedShapesImage]);
+    };
+  }, []);
+
+  useEffect(() => {
     // TODO: Get these values from local storage instead of asuming zoom 1 etc
     setview((prev) => ({
       ...prev,
@@ -230,7 +242,7 @@ const Home: React.FC = () => {
         initCanvas.height = windowSize.y;
         const initCtx = initCanvas.getContext('2d');
         setCtx(initCtx);
-        setLoaded(true); // TODO: change this to draw()
+        draw();
       }
     };
   }, [windowSize]);
@@ -249,7 +261,7 @@ const Home: React.FC = () => {
         );
         if (gridPatternBackground) ctx.fillStyle = gridPatternBackground;
         if (gridPatternBackground) ctx.fill();
-        global.objects.objectArray.forEach((object) => object.draw(ctx));
+        global.objects.objectArray.forEach((object) => object.draw(ctx, imageCache));
         ctx.restore();
       }
     };
@@ -257,7 +269,6 @@ const Home: React.FC = () => {
   }, [
     windowSize,
     view,
-    loaded,
     global.objects.objectArray,
     global.draw,
     canvas,

@@ -4,10 +4,8 @@ import squareImg from '../images/square.svg';
 
 class Square {
   category: string;
-  categoryImage: HTMLImageElement;
-  categoryImageSrc: string;
+  categoryImage: string;
   color: string;
-  ctx!: CanvasRenderingContext2D;
   description: string;
   hovered: boolean;
   hoveredColor: string;
@@ -36,12 +34,7 @@ class Square {
     this.selectedColor = 'rgb(250, 253, 0)';
     this.size = { x: 90, y: 30 };
     this.locked = false;
-    this.categoryImageSrc = shapesImage;
-    this.categoryImage = new Image();
-    this.categoryImage.src = this.categoryImageSrc;
-    this.categoryImage.onload = () => {
-      if (this.ctx) this.draw(this.ctx);
-    };
+    this.categoryImage = shapesImage;
   }
   updatePosition(position: XYInterface) {
     this.position = position;
@@ -58,8 +51,7 @@ class Square {
   update(tick: number) {
     //
   }
-  draw(ctx: CanvasRenderingContext2D) {
-    this.ctx = ctx;
+  draw(ctx: CanvasRenderingContext2D, imageCache: HTMLImageElement[]) {
     // Draw the background shape
     ctx.fillStyle = this.color;
     ctx.fillRect(
@@ -97,8 +89,8 @@ class Square {
     ctx.fillStyle = '#000000';
     ctx.font = '18px Roboto';
     ctx.fillText(this.named, this.position.x + this.size.x + 12, this.position.y + 30);
-    // Add the category image
-    ctx.drawImage(this.categoryImage as CanvasImageSource, this.position.x + this.size.x / 2 - 7 , this.position.y + 7);
+    // Add the category image from the cache
+    ctx.drawImage(imageCache[0] as CanvasImageSource, this.position.x + this.size.x / 2 - 7 , this.position.y + 7);
   }
 }
 

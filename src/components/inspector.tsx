@@ -109,7 +109,7 @@ const Inspector: React.FC = () => {
       const selectedOne = global.objects.selectedArray[0];
       setPosition({ x: selectedOne.position.x, y: selectedOne.position.y });
       setSelected(selectedOne);
-      setCategoryImage(selectedOne.categoryImageSrc);
+      setCategoryImage(selectedOne.categoryImage);
       setCategoryName(selectedOne.category);
       setNamed(selectedOne.named);
     }

@@ -4,14 +4,14 @@ export interface XYInterface {
 }
 
 export interface ObjectInterface {
-  categoryImageSrc: string;
+  categoryImage: string;
   name: string;
   named: string;
   category: string;
   mainToolbarIcon: string;
   position: XYInterface;
   size: XYInterface;
-  draw(ctx: CanvasRenderingContext2D): void;
+  draw(ctx: CanvasRenderingContext2D, imageCache: HTMLImageElement[] | undefined): void;
   updatePosition(position: XYInterface): void;
   updateColor(color: string): void;
   toggleSelected(toggle: boolean): void;
