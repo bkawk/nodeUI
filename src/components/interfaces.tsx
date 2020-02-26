@@ -4,6 +4,7 @@ export interface XYInterface {
 }
 
 export interface ObjectInterface {
+  selected: boolean;
   description: string;
   categoryImage: string;
   name: string;

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Inspector } from '../components/inspector';
-import { ObjectInterface } from '../components/interfaces';
+import { ObjectInterface, XYInterface } from '../components/interfaces';
 import { MainToolbar } from '../components/mainToolbar';
 import { Selection } from '../components/selection';
 import { Tools } from '../components/tools';
@@ -103,6 +103,10 @@ const Home: React.FC = () => {
 
   const startSelection = () => {
     setDragBg(false);
+    dispatch({ type: CLEAR_SELECTED, value: null });
+    for (const value of global.objects.objectArray) {
+      value.toggleSelected(false);
+    }
     const x = Math.floor((mousePosition.x - view.x) / view.zoom);
     const y = Math.floor((mousePosition.y - view.y) / view.zoom);
     dispatch({ type: ADD_OBJECT, value: new Selection({ x, y }) });
@@ -123,21 +127,48 @@ const Home: React.FC = () => {
     }));
   };
 
-  const removeSelection = () => {
+  const dropSelection = () => {
     if (canvas) canvas.style.cursor = 'default';
     const objectArray = global.objects.objectArray;
+    const selected: ObjectInterface[] = [];
+    let selctedPosition: XYInterface = { x: 0, y: 0 };
+    let selectedSize: XYInterface = { x: 0, y: 0 };
+    // TODO: change the first for loop below for a filter
     for (const value in objectArray) {
-      if (value) {
-        if (objectArray[value].name === 'Selection') {
-          dispatch({ type: REMOVE_OBJECT, value: objectArray[value] });
+      if (value && objectArray[value].name === 'Selection') {
+        selctedPosition = objectArray[value].position;
+        selectedSize = objectArray[value].size;
+      }
+    }
+    for (const value in objectArray) {
+      if (value && objectArray[value].name !== 'Selection') {
+        const targetPosition = objectArray[value].position;
+        const targetSize = objectArray[value].size;
+        if (
+          selctedPosition.x > targetPosition.x + targetSize.x ||
+          selctedPosition.x + selectedSize.x < targetPosition.x ||
+          selctedPosition.y > targetPosition.y + targetSize.y ||
+          selctedPosition.y + selectedSize.y < targetPosition.y
+        ) {
+          //
+        } else {
+          objectArray[value].selected = true;
+          selected.push(objectArray[value]);
+          draw();
         }
+      }
+    }
+    for (const value in objectArray) {
+      if (value && objectArray[value].name === 'Selection') {
+        dispatch({ type: REMOVE_OBJECT, value: objectArray[value] });
+        dispatch({ type: NEW_SELECTED, value: selected });
       }
     }
   };
 
   const setMouseUp = (event: React.MouseEvent) => {
     if (canvas && !global.tools.selector) canvas.style.cursor = 'crosshair';
-    else if (canvas && global.tools.selector) removeSelection();
+    else if (canvas && global.tools.selector) dropSelection();
     setViewPos(() => ({
       isDragging: false,
       prevX: null,
@@ -174,7 +205,7 @@ const Home: React.FC = () => {
     for (const value in objectArray) {
       if (value) {
         if (objectArray[value].name === 'Selection') {
-          objectArray[value].updateSize({x, y});
+          objectArray[value].updateSize({ x, y });
           draw();
         }
       }
@@ -225,8 +256,12 @@ const Home: React.FC = () => {
           });
         } else {
           value.updatePosition({
-            x: Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom / 10) * 10,
-            y: Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom / 10) * 10,
+            x:
+              Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom / 10) *
+              10,
+            y:
+              Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom / 10) *
+              10,
           });
         }
       }
@@ -302,14 +337,10 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (canvas && global.tools.selector) {
       canvas.style.cursor = 'default';
-      dispatch({ type: CLEAR_SELECTED, value: null });
-      // TODO: unselect the item not all
-      for (const value of global.objects.objectArray) {
-        value.toggleSelected(false);
-      }
-      dispatch({ type: DRAW, value: Date.now() });
-    } else if (canvas && !global.tools.selector) { canvas.style.cursor = 'crosshair'; }
-  }, [global.tools.selector, canvas, dispatch, global.objects.objectArray]);
+    } else if (canvas && !global.tools.selector) {
+      canvas.style.cursor = 'crosshair';
+    }
+  }, [global.tools.selector, canvas, dispatch]);
 
   useEffect(() => {
     const paint = () => {

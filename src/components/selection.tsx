@@ -40,7 +40,7 @@ class Selection {
   updateSize(size: XYInterface) {
     const x = size.x - this.position.x;
     const y = size.y - this.position.y;
-    this.size = {x, y};
+    this.size = { x, y };
   }
   toggleSelected(toggle: boolean) {
     this.selected = toggle;
@@ -55,17 +55,18 @@ class Selection {
     //
   }
   draw(ctx: CanvasRenderingContext2D, imageCache: HTMLImageElement[]) {
-    // Draw the background shape
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-    if (this.size.x > 0 && this.size.y > 0) {
-      ctx.strokeStyle = '#8EAEB2';
-      ctx.lineWidth = 3;
+    if (this.size.x !== 0 && this.size.y !== 0) {
+      // Draw the outline
+      ctx.strokeStyle = '#00E3FF';
+      ctx.lineWidth = 1;
       ctx.strokeRect(
         Math.floor(this.position.x),
         Math.floor(this.position.y),
         Math.floor(this.size.x),
         Math.floor(this.size.y)
       );
+      // Draw the fill
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
       ctx.fillRect(
         Math.floor(this.position.x),
         Math.floor(this.position.y),
