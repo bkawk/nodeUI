@@ -31,13 +31,16 @@ class Square {
     this.position.y = Math.floor(Math.random() * 800);
     this.selected = false;
     this.hovered = false;
-    this.selectedColor = 'rgb(250, 253, 0)';
+    this.selectedColor = '#EDD02E';
     this.size = { x: 100, y: 30 };
     this.locked = false;
     this.categoryImage = shapesImage;
   }
   updatePosition(position: XYInterface) {
     this.position = position;
+  }
+  updateSize(size: XYInterface) {
+    this.size = size;
   }
   toggleSelected(toggle: boolean) {
     this.selected = toggle;

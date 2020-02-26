@@ -14,6 +14,7 @@ export interface ObjectInterface {
   size: XYInterface;
   draw(ctx: CanvasRenderingContext2D, imageCache: HTMLImageElement[] | undefined): void;
   updatePosition(position: XYInterface): void;
+  updateSize(position: XYInterface): void;
   updateColor(color: string): void;
   toggleSelected(toggle: boolean): void;
   toggleHovered(toggle: boolean): void;

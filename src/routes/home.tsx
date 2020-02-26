@@ -2,13 +2,16 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Inspector } from '../components/inspector';
 import { ObjectInterface } from '../components/interfaces';
 import { MainToolbar } from '../components/mainToolbar';
+import { Selection } from '../components/selection';
 import { Tools } from '../components/tools';
 import {
+  ADD_OBJECT,
   CLEAR_SELECTED,
   Dispatch,
   DRAW,
   Global,
   NEW_SELECTED,
+  REMOVE_OBJECT,
 } from '../globalState';
 import { useWindowSize } from '../hooks/useWindowSize';
 import '../scss/index.scss';
@@ -98,14 +101,17 @@ const Home: React.FC = () => {
     // this opens up drag to select over multiple
   };
 
-  const drawSelection = () => {
+  const startSelection = () => {
     setDragBg(false);
+    const x = Math.floor((mousePosition.x - view.x) / view.zoom);
+    const y = Math.floor((mousePosition.y - view.y) / view.zoom);
+    dispatch({ type: ADD_OBJECT, value: new Selection({ x, y }) });
   };
 
   const setMouseDown = (event: React.MouseEvent) => {
     const hitObject = objectWasHit(event.nativeEvent);
     if (!global.tools.selector) selectObject(hitObject);
-    else drawSelection();
+    else if (canvas && global.tools.selector) startSelection();
     const x = event.nativeEvent.offsetX;
     const y = event.nativeEvent.offsetY;
     if (canvas && !global.tools.selector) canvas.style.cursor = 'grab';
@@ -117,9 +123,21 @@ const Home: React.FC = () => {
     }));
   };
 
+  const removeSelection = () => {
+    if (canvas) canvas.style.cursor = 'default';
+    const objectArray = global.objects.objectArray;
+    for (const value in objectArray) {
+      if (value) {
+        if (objectArray[value].name === 'Selection') {
+          dispatch({ type: REMOVE_OBJECT, value: objectArray[value] });
+        }
+      }
+    }
+  };
+
   const setMouseUp = (event: React.MouseEvent) => {
     if (canvas && !global.tools.selector) canvas.style.cursor = 'crosshair';
-    else if (canvas && global.tools.selector) canvas.style.cursor = 'default';
+    else if (canvas && global.tools.selector) removeSelection();
     setViewPos(() => ({
       isDragging: false,
       prevX: null,
@@ -149,6 +167,20 @@ const Home: React.FC = () => {
     }
   };
 
+  const drawSelection = (event: React.MouseEvent) => {
+    const objectArray = global.objects.objectArray;
+    const x = Math.floor((mousePosition.x - view.x) / view.zoom);
+    const y = Math.floor((mousePosition.y - view.y) / view.zoom);
+    for (const value in objectArray) {
+      if (value) {
+        if (objectArray[value].name === 'Selection') {
+          objectArray[value].updateSize({x, y});
+          draw();
+        }
+      }
+    }
+  };
+
   const setMouseMove = (event: React.MouseEvent) => {
     const x: number = event.nativeEvent.offsetX;
     const y: number = event.nativeEvent.offsetY;
@@ -157,6 +189,7 @@ const Home: React.FC = () => {
     setMousePosition({ x, y });
     if (viewPos.isDragging && dragBg) setPan(event.nativeEvent);
     if (viewPos.isDragging && !dragBg) setMove(event.nativeEvent);
+    if (viewPos.isDragging && global.tools.selector) drawSelection(event);
   };
 
   const setPan = (event: MouseEvent) => {
@@ -321,7 +354,6 @@ const Home: React.FC = () => {
         </div>
         <div className='container--canvas'>
           <div className='container--location'>
-            {/* //           x: Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom), */}
             x: {Math.floor((mousePosition.x - view.x) / view.zoom)} y:{' '}
             {Math.floor((mousePosition.y - view.y) / view.zoom)} z:{' '}
             {view.zoom.toFixed(2)}
