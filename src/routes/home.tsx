@@ -53,17 +53,16 @@ const Home: React.FC = () => {
   };
 
   const objectWasHit = (event: MouseEvent) => {
-    const zoom = view.zoom;
     let index = 0;
     let objectHit = false;
     let nodeObjects = 0;
-    for (const value of global.objects.objectArray) {
+    for (const target of global.objects.objectArray) {
       index++;
       if (
-        mousePosition.x > value.position.x * zoom &&
-        mousePosition.x < value.position.x * zoom + value.size.x * zoom &&
-        mousePosition.y > value.position.y * zoom &&
-        mousePosition.y < value.position.y * zoom + value.size.y * zoom
+        mousePosition.x > target.position.x &&
+        mousePosition.x < target.position.x + target.size.x * view.zoom &&
+        mousePosition.y > target.position.y &&
+        mousePosition.y < target.position.y + target.size.y * view.zoom
       ) {
         nodeObjects = index;
         objectHit = true;
@@ -108,15 +107,15 @@ const Home: React.FC = () => {
       for (const value of global.objects.objectArray) {
         value.toggleSelected(false);
       }
-      const x = mousePosition.x / view.zoom;
-      const y = mousePosition.y / view.zoom;
+      const x = mousePosition.x;
+      const y = mousePosition.y;
       dispatch({ type: ADD_OBJECT, value: new Selection({ x, y }) });
     }
   };
 
   const setMouseDown = (event: React.MouseEvent) => {
-    const cx = mousePosition.x / view.zoom;
-    const cy = mousePosition.y / view.zoom;
+    const cx = mousePosition.x;
+    const cy = mousePosition.y;
     const hitObject = objectWasHit(event.nativeEvent);
     if (!global.tools.selector) selectObject(hitObject);
     else if (canvas && global.tools.selector) {
@@ -141,8 +140,8 @@ const Home: React.FC = () => {
   };
 
   const dropSelection = (event: React.MouseEvent) => {
-    const droppedX = mousePosition.x / view.zoom;
-    const droppedY = mousePosition.y / view.zoom;
+    const droppedX = mousePosition.x;
+    const droppedY = mousePosition.y;
     if (canvas) canvas.style.cursor = 'default';
     const objectArray = global.objects.objectArray;
     const selected: ObjectInterface[] = [];
@@ -214,8 +213,8 @@ const Home: React.FC = () => {
 
   const drawSelection = (event: React.MouseEvent) => {
     const objectArray = global.objects.objectArray;
-    const x = mousePosition.x / view.zoom;
-    const y = mousePosition.y / view.zoom;
+    const x = mousePosition.x;
+    const y = mousePosition.y;
     for (const value in objectArray) {
       if (value) {
         if (objectArray[value].name === 'Selection') {
@@ -227,8 +226,8 @@ const Home: React.FC = () => {
   };
 
   const setMouseMove = (event: React.MouseEvent) => {
-    const x: number = event.nativeEvent.offsetX - view.x;
-    const y: number = event.nativeEvent.offsetY - view.y;
+    const x: number = (event.nativeEvent.offsetX - view.x) / view.zoom;
+    const y: number = (event.nativeEvent.offsetY - view.y) / view.zoom;
     setMousePosition({ x, y });
     const hitObject = objectWasHit(event.nativeEvent);
     if (!global.tools.selector) hoverObject(hitObject);
@@ -413,8 +412,8 @@ const Home: React.FC = () => {
         </div>
         <div className='container--canvas'>
           <div className='container--location'>
-            x: {Math.floor(mousePosition.x / view.zoom)} y:{' '}
-            {Math.floor(mousePosition.y / view.zoom)} z:{' '}
+            x: {Math.floor(mousePosition.x)} y:{' '}
+            {Math.floor(mousePosition.y)} z:{' '}
             {view.zoom.toFixed(2)}
           </div>
           <canvas
