@@ -17,8 +17,10 @@ class Square {
   selected: boolean;
   selectedColor: string;
   size: XYInterface;
+  offSet: XYInterface;
 
   constructor() {
+    this.offSet = { x: 0, y: 0 };
     this.category = 'Shape';
     this.color = '#2E2E2E';
     this.description = 'A black test square of 30x30 px';

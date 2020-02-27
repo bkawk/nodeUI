@@ -101,21 +101,36 @@ const Home: React.FC = () => {
     // this opens up drag to select over multiple
   };
 
-  const startSelection = () => {
+  const startSelection = (hitObject: ObjectInterface | null) => {
     setDragBg(false);
-    dispatch({ type: CLEAR_SELECTED, value: null });
-    for (const value of global.objects.objectArray) {
-      value.toggleSelected(false);
+    if (hitObject) {
+      console.log('move');
+    } else {
+      dispatch({ type: CLEAR_SELECTED, value: null });
+      for (const value of global.objects.objectArray) {
+        value.toggleSelected(false);
+      }
+      const x = Math.floor((mousePosition.x - view.x) / view.zoom);
+      const y = Math.floor((mousePosition.y - view.y) / view.zoom);
+      dispatch({ type: ADD_OBJECT, value: new Selection({ x, y }) });
     }
-    const x = Math.floor((mousePosition.x - view.x) / view.zoom);
-    const y = Math.floor((mousePosition.y - view.y) / view.zoom);
-    dispatch({ type: ADD_OBJECT, value: new Selection({ x, y }) });
   };
 
   const setMouseDown = (event: React.MouseEvent) => {
+    const cx = Math.floor((event.nativeEvent.offsetX - view.x) / view.zoom);
+    const cy = Math.floor((event.nativeEvent.offsetY - view.y) / view.zoom);
     const hitObject = objectWasHit(event.nativeEvent);
     if (!global.tools.selector) selectObject(hitObject);
-    else if (canvas && global.tools.selector) startSelection();
+    else if (canvas && global.tools.selector) {
+      startSelection(hitObject);
+      const selectedArray = global.objects.selectedArray;
+      for (const value in selectedArray) {
+        if (value) {
+          const object = selectedArray[value];
+          object.offSet = {x: cx - object.position.x , y: cy - object.position.y};
+        }
+      }
+    }
     const x = event.nativeEvent.offsetX;
     const y = event.nativeEvent.offsetY;
     if (canvas && !global.tools.selector) canvas.style.cursor = 'grab';
@@ -127,48 +142,53 @@ const Home: React.FC = () => {
     }));
   };
 
-  const dropSelection = () => {
+  const dropSelection = (event: React.MouseEvent) => {
+    const droppedX = Math.floor(
+      (event.nativeEvent.offsetX - view.x) / view.zoom
+    );
+    const droppedY = Math.floor(
+      (event.nativeEvent.offsetY - view.y) / view.zoom
+    );
     if (canvas) canvas.style.cursor = 'default';
     const objectArray = global.objects.objectArray;
     const selected: ObjectInterface[] = [];
-    let selctedPosition: XYInterface = { x: 0, y: 0 };
-    let selectedSize: XYInterface = { x: 0, y: 0 };
-    // TODO: change the first for loop below for a filter
-    for (const value in objectArray) {
-      if (value && objectArray[value].name === 'Selection') {
-        selctedPosition = objectArray[value].position;
-        selectedSize = objectArray[value].size;
-      }
-    }
-    for (const value in objectArray) {
-      if (value && objectArray[value].name !== 'Selection') {
-        const targetPosition = objectArray[value].position;
-        const targetSize = objectArray[value].size;
-        if (
-          selctedPosition.x > targetPosition.x + targetSize.x ||
-          selctedPosition.x + selectedSize.x < targetPosition.x ||
-          selctedPosition.y > targetPosition.y + targetSize.y ||
-          selctedPosition.y + selectedSize.y < targetPosition.y
-        ) {
-          //
-        } else {
-          objectArray[value].selected = true;
-          selected.push(objectArray[value]);
-          draw();
+    let selectionPosition: XYInterface = { x: 0, y: 0 };
+    let selectionSize: XYInterface = { x: 0, y: 0 };
+    const selection = objectArray.filter((obj) => obj.name === 'Selection')[0];
+    if (selection) {
+      selectionPosition = selection.position;
+      selectionSize = selection.size;
+      for (const value in objectArray) {
+        if (value && objectArray[value].name !== 'Selection') {
+          const targetPosition = objectArray[value].position;
+          const targetSize = objectArray[value].size;
+          const x1 = selectionPosition.x > droppedX ? selectionPosition.x : droppedX;
+          const x2 = selectionPosition.x > droppedX ? droppedX : selectionPosition.x;
+          const y1 = selectionPosition.y > droppedY ? selectionPosition.y : droppedY;
+          const y2 = selectionPosition.y > droppedY ? droppedY : selectionPosition.y;
+          const targetX1 = targetPosition.x;
+          const targetX2 = targetPosition.x + targetSize.x;
+          const targetY1 = targetPosition.y;
+          const targetY2 = targetPosition.y + targetSize.y;
+          if (
+            x1 > targetX1 &&
+            x2 < targetX2 &&
+            y1 > targetY1 && y2 < targetY2
+          ) {
+            objectArray[value].selected = true;
+            selected.push(objectArray[value]);
+            draw();
+          }
         }
       }
-    }
-    for (const value in objectArray) {
-      if (value && objectArray[value].name === 'Selection') {
-        dispatch({ type: REMOVE_OBJECT, value: objectArray[value] });
-        dispatch({ type: NEW_SELECTED, value: selected });
-      }
+      dispatch({ type: REMOVE_OBJECT, value: selection });
+      dispatch({ type: NEW_SELECTED, value: selected });
     }
   };
 
   const setMouseUp = (event: React.MouseEvent) => {
     if (canvas && !global.tools.selector) canvas.style.cursor = 'crosshair';
-    else if (canvas && global.tools.selector) dropSelection();
+    else if (canvas && global.tools.selector) dropSelection(event);
     setViewPos(() => ({
       isDragging: false,
       prevX: null,
@@ -215,9 +235,9 @@ const Home: React.FC = () => {
   const setMouseMove = (event: React.MouseEvent) => {
     const x: number = event.nativeEvent.offsetX;
     const y: number = event.nativeEvent.offsetY;
+    setMousePosition({ x, y });
     const hitObject = objectWasHit(event.nativeEvent);
     if (!global.tools.selector) hoverObject(hitObject);
-    setMousePosition({ x, y });
     if (viewPos.isDragging && dragBg) setPan(event.nativeEvent);
     if (viewPos.isDragging && !dragBg) setMove(event.nativeEvent);
     if (viewPos.isDragging && global.tools.selector) drawSelection(event);
@@ -242,12 +262,14 @@ const Home: React.FC = () => {
   };
 
   const setMove = (event: MouseEvent) => {
+    console.log(event)
     const x = event.offsetX;
     const y = event.offsetY;
     const selected = global.objects.selectedArray;
     const zoom = view.zoom;
     const snap = global.tools.snap;
-    if (selected && selected.length > 0) {
+    if (selected && selected.length > 0 && selected.length <= 1) {
+      console.log('single move');
       for (const value of selected) {
         if (!snap) {
           value.updatePosition({
@@ -264,6 +286,15 @@ const Home: React.FC = () => {
               10,
           });
         }
+      }
+      draw();
+    } else if (selected && selected.length > 1 ) {
+      const mx = ((x - view.x) * zoom) / zoom;
+      const my = ((y - view.y) * zoom) / zoom;
+      for (const value of selected) {
+        const rx = (mx - value.offSet.x * zoom) / zoom;
+        const ry = (my - value.offSet.y * zoom) / zoom;
+        value.updatePosition({x: rx, y: ry});
       }
       draw();
     }
@@ -292,8 +323,13 @@ const Home: React.FC = () => {
   };
 
   const setKeyDown = (event: React.KeyboardEvent<Element>) => {
-    if (event.keyCode === 8) {
-      alert('Delete');
+    // Delete an object
+    if (event.keyCode === 8) alert('Delete');
+    // Drop selection on escape
+    const objectArray = global.objects.objectArray;
+    const selection = objectArray.filter((obj) => obj.name === 'Selection')[0];
+    if (event.keyCode === 27 && selection) {
+      dispatch({ type: REMOVE_OBJECT, value: selection });
     }
   };
 

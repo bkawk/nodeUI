@@ -17,8 +17,10 @@ class Selection {
   selected: boolean;
   selectedColor: string;
   size: XYInterface;
+  offSet: XYInterface;
 
   constructor(position: XYInterface) {
+    this.offSet = { x: 0, y: 0 };
     this.category = 'Tools';
     this.color = '#2E2E2E';
     this.description = 'Draws a selection';

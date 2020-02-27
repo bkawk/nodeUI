@@ -4,6 +4,7 @@ export interface XYInterface {
 }
 
 export interface ObjectInterface {
+  offSet: XYInterface;
   selected: boolean;
   description: string;
   categoryImage: string;
@@ -30,7 +31,7 @@ export interface StateInterface {
   draw: number;
   objects: {
     objectArray: ObjectInterface[];
-    selectedArray: ObjectInterface[] | null;
+    selectedArray: ObjectInterface[];
   };
   tools: {
     snap: boolean;
