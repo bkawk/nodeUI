@@ -3,6 +3,12 @@ export interface XYInterface {
   y: number;
 }
 
+export interface ControlsInterface {
+  prevX: number | null;
+  prevY: number | null;
+  isDragging: boolean;
+}
+
 export interface ObjectInterface {
   offSet: XYInterface;
   selected: boolean;
