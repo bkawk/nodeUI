@@ -114,19 +114,20 @@ const Home: React.FC = () => {
   };
 
   const setMouseDown = (event: React.MouseEvent) => {
-    const cx = mousePosition.x;
-    const cy = mousePosition.y;
+    const selectedArray = global.objects.objectArray;
+    for (const value in selectedArray) {
+      if (value) {
+        const object = selectedArray[value];
+        object.offSet = {
+          x: mousePosition.x - object.position.x,
+          y: mousePosition.y - object.position.y,
+        };
+      }
+    }
     const hitObject = objectWasHit(event.nativeEvent);
     if (!global.tools.selector) selectObject(hitObject);
     else if (canvas && global.tools.selector) {
       startSelection(hitObject);
-      const selectedArray = global.objects.selectedArray;
-      for (const value in selectedArray) {
-        if (value) {
-          const object = selectedArray[value];
-          object.offSet = {x: cx - object.position.x , y: cy - object.position.y};
-        }
-      }
     }
     if (canvas && !global.tools.selector) canvas.style.cursor = 'grab';
     if (canvas && global.tools.selector) canvas.style.cursor = 'default';
@@ -155,10 +156,14 @@ const Home: React.FC = () => {
         if (value && objectArray[value].name !== 'Selection') {
           const targetPosition = objectArray[value].position;
           const targetSize = objectArray[value].size;
-          const x1 = selectionPosition.x > droppedX ? selectionPosition.x : droppedX;
-          const x2 = selectionPosition.x > droppedX ? droppedX : selectionPosition.x;
-          const y1 = selectionPosition.y > droppedY ? selectionPosition.y : droppedY;
-          const y2 = selectionPosition.y > droppedY ? droppedY : selectionPosition.y;
+          const x1 =
+            selectionPosition.x > droppedX ? selectionPosition.x : droppedX;
+          const x2 =
+            selectionPosition.x > droppedX ? droppedX : selectionPosition.x;
+          const y1 =
+            selectionPosition.y > droppedY ? selectionPosition.y : droppedY;
+          const y2 =
+            selectionPosition.y > droppedY ? droppedY : selectionPosition.y;
           const targetX1 = targetPosition.x;
           const targetX2 = targetPosition.x + targetSize.x;
           const targetY1 = targetPosition.y;
@@ -166,7 +171,8 @@ const Home: React.FC = () => {
           if (
             x1 > targetX1 &&
             x2 < targetX2 &&
-            y1 > targetY1 && y2 < targetY2
+            y1 > targetY1 &&
+            y2 < targetY2
           ) {
             objectArray[value].selected = true;
             selected.push(objectArray[value]);
@@ -260,32 +266,20 @@ const Home: React.FC = () => {
     const selected = global.objects.selectedArray;
     const zoom = view.zoom;
     const snap = global.tools.snap;
-    if (selected && selected.length > 0 && selected.length <= 1) {
+    const mx = ((x - view.x) * zoom) / zoom;
+    const my = ((y - view.y) * zoom) / zoom;
+    if (selected) {
       for (const value of selected) {
         if (!snap) {
-          value.updatePosition({
-            x: Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom),
-            y: Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom),
-          });
+          const rx = (mx - value.offSet.x * zoom) / zoom;
+          const ry = (my - value.offSet.y * zoom) / zoom;
+          value.updatePosition({ x: rx, y: ry });
         } else {
-          value.updatePosition({
-            x:
-              Math.floor((x - view.x - (value.size.x / 2) * zoom) / zoom / 10) *
-              10,
-            y:
-              Math.floor((y - view.y - (value.size.y / 2) * zoom) / zoom / 10) *
-              10,
-          });
+          const rxr = Math.floor((mx - value.offSet.x * zoom) / zoom / 10) * 10;
+          const ryr = Math.floor((my - value.offSet.y * zoom) / zoom / 10) * 10;
+          value.updatePosition({ x: rxr, y: ryr });
         }
-      }
-      draw();
-    } else if (selected && selected.length > 1 ) {
-      const mx = ((x - view.x) * zoom) / zoom;
-      const my = ((y - view.y) * zoom) / zoom;
-      for (const value of selected) {
-        const rx = (mx - value.offSet.x * zoom) / zoom;
-        const ry = (my - value.offSet.y * zoom) / zoom;
-        value.updatePosition({x: rx, y: ry});
+
       }
       draw();
     }
@@ -306,8 +300,8 @@ const Home: React.FC = () => {
       weighted.y = (y - view.y) / (windowSize.y * view.zoom);
       setview((prev) => ({
         ...prev,
-        x: (view.x -= weighted.x * windowSize.x * zoom),
-        y: (view.y -= weighted.y * windowSize.y * zoom),
+        x: view.x -= weighted.x * windowSize.x * zoom,
+        y: view.y -= weighted.y * windowSize.y * zoom,
         zoom: view.zoom += zoom,
       }));
     }
@@ -412,8 +406,7 @@ const Home: React.FC = () => {
         </div>
         <div className='container--canvas'>
           <div className='container--location'>
-            x: {Math.floor(mousePosition.x)} y:{' '}
-            {Math.floor(mousePosition.y)} z:{' '}
+            x: {Math.floor(mousePosition.x)} y: {Math.floor(mousePosition.y)} z:{' '}
             {view.zoom.toFixed(2)}
           </div>
           <canvas
