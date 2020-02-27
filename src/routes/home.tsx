@@ -32,7 +32,7 @@ const Home: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [lastHovered, setLastHovered] = useState<ObjectInterface | null>();
   const [imageCache, setImageCache] = useState<HTMLImageElement[]>();
-  const [viewPos, setViewPos] = useState<ControlsInterface>({
+  const [viewPosition, setViewPosition] = useState<ControlsInterface>({
     isDragging: true,
     prevX: 0,
     prevY: 0,
@@ -45,16 +45,13 @@ const Home: React.FC = () => {
 
   const setMouseDown = (event: React.MouseEvent) => {
     setOffSets();
-    const hitObject = selectedObject();
-    if (!global.tools.selector) selectObject(hitObject);
-    else if (canvas && global.tools.selector) {
-      startSelection(hitObject);
-    }
+    if (!global.tools.selector) selectObject();
+    if (global.tools.selector) startSelection();
     if (canvas && !global.tools.selector) canvas.style.cursor = 'grab';
     if (canvas && global.tools.selector) canvas.style.cursor = 'default';
     const prevX = Math.floor(event.nativeEvent.offsetX);
     const prevY = Math.floor(event.nativeEvent.offsetY);
-    setViewPos(() => ({
+    setViewPosition(() => ({
       isDragging: true,
       prevX,
       prevY,
@@ -64,7 +61,7 @@ const Home: React.FC = () => {
   const setMouseUp = () => {
     if (canvas && !global.tools.selector) canvas.style.cursor = 'crosshair';
     else if (canvas && global.tools.selector) selectedObjects();
-    setViewPos(() => ({
+    setViewPosition(() => ({
       isDragging: false,
       prevX: null,
       prevY: null,
@@ -76,9 +73,9 @@ const Home: React.FC = () => {
     const y = (event.nativeEvent.offsetY - view.y) / view.zoom;
     setMousePosition({ x, y });
     if (!global.tools.selector) hoverObject();
-    if (viewPos.isDragging && dragBg) setPan(event.nativeEvent);
-    if (viewPos.isDragging && !dragBg) setMove();
-    if (viewPos.isDragging && global.tools.selector) drawSelection();
+    if (viewPosition.isDragging && dragBg) setPan(event.nativeEvent);
+    if (viewPosition.isDragging && !dragBg) setMove();
+    if (viewPosition.isDragging && global.tools.selector) drawSelection();
   };
 
   const setZoom = (event: React.WheelEvent) => {
@@ -113,27 +110,22 @@ const Home: React.FC = () => {
   };
 
   const setPan = (event: MouseEvent) => {
-    const x = event.offsetX;
-    const y = event.offsetY;
+    const prevX = event.offsetX;
+    const prevY = event.offsetY;
     let dx = 0;
     let dy = 0;
-    if (viewPos.prevX) dx = x - viewPos.prevX;
-    if (viewPos.prevY) dy = y - viewPos.prevY;
-    if (viewPos.prevX || viewPos.prevY) {
-      if (dx !== 0) setview((prev) => ({ ...prev, x: view.x += dx }));
-      if (dy !== 0) setview((prev) => ({ ...prev, y: view.y += dy }));
-      setViewPos(() => ({
-        isDragging: true,
-        prevX: Math.floor(x),
-        prevY: Math.floor(y),
-      }));
+    if (viewPosition.prevX) dx = prevX - viewPosition.prevX;
+    if (viewPosition.prevY) dy = prevY - viewPosition.prevY;
+    if (viewPosition.prevX || viewPosition.prevY) {
+      if (dx !== 0 && dy !== 0) setview((prev) => ({ ...prev, x: view.x += dx, y: view.y += dy }));
+      setViewPosition({isDragging: true, prevX, prevY });
     }
   };
 
   const setMove = () => {
     const selected = global.objects.selectedArray;
-    const snap = global.tools.snap;
     if (selected) {
+      const snap = global.tools.snap;
       for (const value of selected) {
         let position = { x: 0, y: 0 };
         if (!snap) {
@@ -191,7 +183,8 @@ const Home: React.FC = () => {
     }
   };
 
-  const selectObject = (hitObject: ObjectInterface | null) => {
+  const selectObject = () => {
+    const hitObject = selectedObject();
     unselectAll();
     if (hitObject) {
       setDragBg(false);
@@ -204,7 +197,8 @@ const Home: React.FC = () => {
     // TODO: if you click another node with Shift then push it into the global selected array (PUSH_SELECTED)
   };
 
-  const startSelection = (hitObject: ObjectInterface | null) => {
+  const startSelection = () => {
+    const hitObject = selectedObject();
     if (!hitObject) {
       unselectAll();
       setDragBg(false);

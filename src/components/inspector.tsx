@@ -150,8 +150,8 @@ const Inspector: React.FC = () => {
 
             <div className='inspector--item-two'>
               <div className='inspector--description'>Position</div>
-              <input type='number' value={position.x} id='x' onChange={changePosition} />
-              <input type='number' value={position.y} id='y' onChange={changePosition} />
+              <input type='number' value={Math.floor(position.x)} id='x' onChange={changePosition} />
+              <input type='number' value={Math.floor(position.y)} id='y' onChange={changePosition} />
             </div>
           </div>
         </React.Fragment>
