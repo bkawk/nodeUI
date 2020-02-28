@@ -12,6 +12,7 @@ import {
   Global,
   NEW_SELECTED,
   REMOVE_OBJECT,
+  SET_ALIGN,
 } from '../globalState';
 import { useWindowSize } from '../hooks/useWindowSize';
 import '../scss/index.scss';
@@ -322,6 +323,38 @@ const Home: React.FC = () => {
       canvas.style.cursor = 'crosshair';
     }
   }, [global.tools.selector, canvas]);
+
+  useEffect(() => {
+    const align = global.tools.align;
+    if (align) {
+      const array = [];
+      let result = 0;
+      const objectArray = global.objects.selectedArray;
+      for (const value in objectArray) {
+        if (value) {
+          const targets = objectArray[value];
+          if (align === 'left' || align === 'center' || align === 'right') {
+          array.push(targets.position.x);
+          } else array.push(targets.position.y);
+        }
+      }
+      array.sort((a, b) => a - b);
+      const small = array[0];
+      const big = array[array.length - 1];
+      if (align === 'center' || align === 'middle') result = (small + (big / 2)) + small;
+      if (align === 'left' || align === 'top') result = small;
+      if (align === 'right' || align === 'bottom') result = big;
+      for (const value in objectArray) {
+        if (value) {
+          if (align === 'left' || align === 'center' || align === 'right') {
+            objectArray[value].position.x = result;
+          } else objectArray[value].position.y = result;
+        }
+      }
+      draw();
+      dispatch({ type: SET_ALIGN, value: 'null' });
+    }
+  }, [global.tools.align]);
 
   useEffect(() => {
     const paint = () => {

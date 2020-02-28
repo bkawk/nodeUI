@@ -14,6 +14,7 @@ const InitialState: StateInterface = {
     selectedArray: [],
   },
   tools: {
+    align: null,
     selector: false,
     snap: false,
   },
@@ -23,14 +24,15 @@ const Global = createContext({
   global: InitialState,
 });
 
+const ADD_OBJECT = 'ADD_OBJECT';
+const CLEAR_SELECTED = 'CLEAR_SELECTED';
+const DRAW = 'DRAW';
 const NEW_SELECTED = 'NEW_SELECTED';
 const PUSH_SELECTED = 'PUSH_SELECTED';
-const CLEAR_SELECTED = 'CLEAR_SELECTED';
-const ADD_OBJECT = 'ADD_OBJECT';
 const REMOVE_OBJECT = 'REMOVE_OBJECT';
-const DRAW = 'DRAW';
-const TOGGLE_SNAP = 'TOGGLE_SNAP';
+const SET_ALIGN = 'SET_ALIGN';
 const TOGGLE_SELECTOR = 'TOGGLE_SELECTOR';
+const TOGGLE_SNAP = 'TOGGLE_SNAP';
 
 // tslint:disable-next-line: no-any
 const Reducer = (state: StateInterface, action: any) => {
@@ -50,6 +52,11 @@ const Reducer = (state: StateInterface, action: any) => {
         ...state,
         tools: { ...state.tools, snap: action.value },
       };
+    case 'SET_ALIGN':
+      return {
+        ...state,
+        tools: { ...state.tools, align: action.value },
+      };
     case 'TOGGLE_SELECTOR':
       return {
         ...state,
@@ -68,7 +75,9 @@ const Reducer = (state: StateInterface, action: any) => {
         ...state,
         objects: {
           ...state.objects,
-          objectArray: state.objects.objectArray.filter((obj) => obj !== action.value),
+          objectArray: state.objects.objectArray.filter(
+            (obj) => obj !== action.value
+          ),
         },
       };
     case 'DRAW':
@@ -90,8 +99,9 @@ export {
   InitialState,
   NEW_SELECTED,
   PUSH_SELECTED,
-  REMOVE_OBJECT,
   Reducer,
-  TOGGLE_SNAP,
+  REMOVE_OBJECT,
+  SET_ALIGN,
   TOGGLE_SELECTOR,
+  TOGGLE_SNAP,
 };

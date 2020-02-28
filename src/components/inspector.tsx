@@ -60,16 +60,16 @@ const Inspector: React.FC = () => {
     if (selected) selected.named = event.target.value;
     draw();
   };
+
   const changePosition = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.id === 'x') {
       setPosition({x: +event.target.value , y: position.y});
       if (selected) selected.position = {x: +event.target.value , y: position.y};
-      draw();
     } else {
       setPosition({x: position.x , y: +event.target.value});
       if (selected) selected.position = {x: position.x , y: +event.target.value};
-      draw();
     }
+    draw();
   };
 
   const toggleColors = () => {
@@ -77,10 +77,10 @@ const Inspector: React.FC = () => {
   };
 
   const generateColors = () => {
-    const arr = [];
+    const colorArray = [];
     for (const value in hexColors) {
       if (value) {
-        arr.push(
+        colorArray.push(
           <div
             key={hexColors[value]}
             id={hexColors[value]}
@@ -91,7 +91,7 @@ const Inspector: React.FC = () => {
         );
       }
     }
-    return arr;
+    return colorArray;
   };
 
   const setColor = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -114,7 +114,7 @@ const Inspector: React.FC = () => {
       setCategoryName(selectedOne.category);
       setNamed(selectedOne.named);
     }
-  }, [global.objects.selectedArray, global.draw]);
+  }, [global.objects.selectedArray]);
 
   return (
     <div className='inspector'>

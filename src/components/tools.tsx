@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Dispatch, TOGGLE_SELECTOR, TOGGLE_SNAP } from '../globalState';
+import { Dispatch, SET_ALIGN, TOGGLE_SELECTOR, TOGGLE_SNAP } from '../globalState';
 import bottomImage from '../images/bottom.svg';
 import centerImage from '../images/center.svg';
 import fullScreenImage from '../images/full-screen.svg';
@@ -36,22 +36,22 @@ const Tools: React.FC = () => {
   };
 
   const alignLeft = () => {
-    //
+    dispatch({ type: SET_ALIGN, value: 'left' });
   };
   const alignCenter = () => {
-    //
+    dispatch({ type: SET_ALIGN, value: 'center' });
   };
   const alignRight = () => {
-    //
+    dispatch({ type: SET_ALIGN, value: 'right' });
   };
   const alignTop = () => {
-    //
+    dispatch({ type: SET_ALIGN, value: 'top' });
   };
   const alignMiddle = () => {
-    //
+    dispatch({ type: SET_ALIGN, value: 'middle' });
   };
   const alignBottom = () => {
-    //
+    dispatch({ type: SET_ALIGN, value: 'bottom' });
   };
 
   return (

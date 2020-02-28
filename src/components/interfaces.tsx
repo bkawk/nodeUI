@@ -30,7 +30,7 @@ export interface ObjectInterface {
 
 export interface ActionInterface {
   type: string;
-  value: ObjectInterface | ObjectInterface[] | number | null | boolean;
+  value: ObjectInterface | ObjectInterface[] | number | null | boolean | string;
 }
 
 export interface StateInterface {
@@ -42,6 +42,7 @@ export interface StateInterface {
   tools: {
     snap: boolean;
     selector: boolean;
+    align: string | null;
   };
 }
 
