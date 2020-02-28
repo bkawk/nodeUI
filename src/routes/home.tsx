@@ -28,6 +28,7 @@ const Home: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const windowSize = useWindowSize();
   const [dragBg, setDragBg] = useState(true);
+  const [shiftOn, setShiftOn] = useState(false);
   const [canvasImage, setCanvasImage] = useState<HTMLImageElement>(); // TODO: move to image cache
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>();
@@ -110,11 +111,11 @@ const Home: React.FC = () => {
   };
 
   const setKeyUp = (event: React.KeyboardEvent<Element>) => {
-    if (event.keyCode === 16) console.log('shift up');
+    if (event.keyCode === 16) setShiftOn(false);
   };
 
   const setKeyDown = (event: React.KeyboardEvent<Element>) => {
-    if (event.keyCode === 16) console.log('shift down');
+    if (event.keyCode === 16) setShiftOn(true);
     if (event.keyCode === 8) deleteSelected();
     const objectArray = global.objects.objectArray;
     const selection = objectArray.filter((obj) => obj.name === 'Selection')[0];
@@ -199,11 +200,14 @@ const Home: React.FC = () => {
 
   const selectObject = () => {
     const hitObject = selectedObject();
-    unselectAll();
+    if (!shiftOn) unselectAll();
     if (hitObject) {
       setDragBg(false);
       hitObject.toggleSelected(true);
-      dispatch({ type: NEW_SELECTED, value: [hitObject] });
+      let selected: ObjectInterface[];
+      if (shiftOn) selected = [...global.objects.selectedArray, hitObject];
+      else selected = [hitObject];
+      dispatch({ type: NEW_SELECTED, value: selected });
     } else {
       setDragBg(true);
     }
