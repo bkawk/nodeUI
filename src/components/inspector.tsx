@@ -198,31 +198,31 @@ const Inspector: React.FC = () => {
           <div className='inspector--shelf-select'>
             <div className='inspector--shelf-box' onClick={() => align('left')}>
               <img src={leftImage} alt='Align left' />
-              <div className='tools--help'>Align left</div>
+              <div className='inspector--shelf-help'>Align left</div>
             </div>
 
             <div className='inspector--shelf-box' onClick={() => align('center')}>
               <img src={centerImage} alt='Align center' />
-              <div className='tools--help'>Align center</div>
+              <div className='inspector--shelf-help'>Align center</div>
             </div>
 
             <div className='inspector--shelf-box' onClick={() => align('right')}>
               <img src={rightImage} alt='Align right' />
-              <div className='tools--help'>Align right</div>
+              <div className='inspector--shelf-help'>Align right</div>
             </div>
 
             <div className='inspector--shelf-box' onClick={() => align('top')}>
               <img src={topImage} alt='Align Top' />
-              <div className='tools--help'>Align top</div>
+              <div className='inspector--shelf-help'>Align top</div>
             </div>
 
             <div className='inspector--shelf-box' onClick={() => align('middle')}>
               <img src={middleImage} alt='Align Middle' />
-              <div className='tools--help'>Align middle</div>
+              <div className='inspector--shelf-help'>Align middle</div>
             </div>
             <div className='inspector--shelf-box' onClick={() => align('bottom')}>
               <img src={bottomImage} alt='Align bottom' />
-              <div className='tools--help'>Align bottom</div>
+              <div className='inspector--shelf-help'>Align bottom</div>
             </div>
             <div>
             </div>

@@ -42,6 +42,23 @@
         display: grid;
         align-items: center;
         justify-content: center;
+        position: relative;
+    }
+    &--shelf-box:hover &--shelf-help {
+        visibility: visible;
+        transition-delay: 1.5s;
+      }
+    &--shelf-help {
+        visibility: hidden;
+        transition: 0.2s 0s;
+        position: absolute;
+        background-color: black;
+        padding: 6px 10px;
+        color: $not-white;
+        left: 0px;
+        z-index: 100;
+        white-space: nowrap;
+        bottom: -32px;
     }
     &--colors {
         border: 3px solid black;

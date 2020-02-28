@@ -326,6 +326,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const align = global.tools.align;
+
     if (align) {
       const array = [];
       let result = 0;
@@ -352,7 +353,7 @@ const Home: React.FC = () => {
         }
       }
       draw();
-      dispatch({ type: SET_ALIGN, value: 'null' });
+      dispatch({ type: SET_ALIGN, value: null });
     }
   }, [global.tools.align]);
 
