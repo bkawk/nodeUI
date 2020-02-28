@@ -1,6 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Dispatch, DRAW, Global } from '../globalState';
+import { Dispatch, DRAW, Global, SET_ALIGN } from '../globalState';
+import bottomImage from '../images/bottom.svg';
+import centerImage from '../images/center.svg';
 import colors from '../images/colors.svg';
+import leftImage from '../images/left.svg';
+import middleImage from '../images/middle.svg';
+import rightImage from '../images/right.svg';
+import topImage from '../images/top.svg';
 import { ObjectInterface, XYInterface } from './interfaces';
 
 const Inspector: React.FC = () => {
@@ -8,6 +14,7 @@ const Inspector: React.FC = () => {
   const { dispatch } = useContext(Dispatch);
   const [position, setPosition] = useState<XYInterface>({ x: 0, y: 0 });
   const [selected, setSelected] = useState<ObjectInterface | null>();
+  const [multiSelected, setMultiSelected] = useState<boolean>(false);
   const [showColors, setShowColors] = useState<boolean>(false);
   const [categoryImage, setCategoryImage] = useState<string>();
   const [categoryName, setCategoryName] = useState<string>();
@@ -51,6 +58,11 @@ const Inspector: React.FC = () => {
     '#D6D6D6',
     '#FFFFFF',
   ];
+
+  const align = (alignTo: string) => {
+    dispatch({ type: SET_ALIGN, value: alignTo });
+  };
+
   const draw = () => {
     dispatch({ type: DRAW, value: Date.now() });
   };
@@ -63,11 +75,15 @@ const Inspector: React.FC = () => {
 
   const changePosition = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.id === 'x') {
-      setPosition({x: +event.target.value , y: position.y});
-      if (selected) selected.position = {x: +event.target.value , y: position.y};
+      setPosition({ x: +event.target.value, y: position.y });
+      if (selected) {
+        selected.position = { x: +event.target.value, y: position.y };
+      }
     } else {
-      setPosition({x: position.x , y: +event.target.value});
-      if (selected) selected.position = {x: position.x , y: +event.target.value};
+      setPosition({ x: position.x, y: +event.target.value });
+      if (selected) {
+        selected.position = { x: position.x, y: +event.target.value };
+      }
     }
     draw();
   };
@@ -103,6 +119,7 @@ const Inspector: React.FC = () => {
 
   useEffect(() => {
     setSelected(null);
+    setMultiSelected(false);
     if (
       global.objects.selectedArray &&
       global.objects.selectedArray.length === 1
@@ -114,6 +131,12 @@ const Inspector: React.FC = () => {
       setCategoryName(selectedOne.category);
       setNamed(selectedOne.named);
     }
+    if (
+      global.objects.selectedArray &&
+      global.objects.selectedArray.length > 1
+    ) {
+      setMultiSelected(true);
+    }
   }, [global.objects.selectedArray]);
 
   return (
@@ -121,7 +144,11 @@ const Inspector: React.FC = () => {
       {selected && (
         <React.Fragment>
           <div className='inspector--shelf'>
-            <img src={categoryImage} className='inspector--category-icon' alt={categoryName}/>
+            <img
+              src={categoryImage}
+              className='inspector--category-icon'
+              alt={categoryName}
+            />
             <p className='inspector--category-name'>{categoryName}</p>
             <input
               type='text'
@@ -150,10 +177,75 @@ const Inspector: React.FC = () => {
 
             <div className='inspector--item-two'>
               <div className='inspector--description'>Position</div>
-              <input type='number' value={Math.floor(position.x)} id='x' onChange={changePosition} />
-              <input type='number' value={Math.floor(position.y)} id='y' onChange={changePosition} />
+              <input
+                type='number'
+                value={Math.floor(position.x)}
+                id='x'
+                onChange={changePosition}
+              />
+              <input
+                type='number'
+                value={Math.floor(position.y)}
+                id='y'
+                onChange={changePosition}
+              />
             </div>
           </div>
+        </React.Fragment>
+      )}
+      {multiSelected && (
+        <React.Fragment>
+          <div className='inspector--shelf-select'>
+            <div className='inspector--shelf-box' onClick={() => align('left')}>
+              <img src={leftImage} alt='Align left' />
+              <div className='tools--help'>Align left</div>
+            </div>
+
+            <div className='inspector--shelf-box' onClick={() => align('center')}>
+              <img src={centerImage} alt='Align center' />
+              <div className='tools--help'>Align center</div>
+            </div>
+
+            <div className='inspector--shelf-box' onClick={() => align('right')}>
+              <img src={rightImage} alt='Align right' />
+              <div className='tools--help'>Align right</div>
+            </div>
+
+            <div className='inspector--shelf-box' onClick={() => align('top')}>
+              <img src={topImage} alt='Align Top' />
+              <div className='tools--help'>Align top</div>
+            </div>
+
+            <div className='inspector--shelf-box' onClick={() => align('middle')}>
+              <img src={middleImage} alt='Align Middle' />
+              <div className='tools--help'>Align middle</div>
+            </div>
+            <div className='inspector--shelf-box' onClick={() => align('bottom')}>
+              <img src={bottomImage} alt='Align bottom' />
+              <div className='tools--help'>Align bottom</div>
+            </div>
+            <div>
+            </div>
+            <div className='inspector--shelf-box'>
+            <img
+              src={colors}
+              alt='colors'
+              onClick={toggleColors}
+              className='inspector--colors-buutton'
+            />
+            </div>
+          </div>
+          <div className='inspector--container'>
+          <div
+              className={`${
+                showColors === true
+                  ? 'inspector--colors'
+                  : 'inspector--colors-hidden'
+              }`}
+            >
+              {generateColors()}
+            </div>
+            </div>
         </React.Fragment>
       )}
     </div>

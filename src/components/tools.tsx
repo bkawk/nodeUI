@@ -1,14 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { Dispatch, SET_ALIGN, TOGGLE_SELECTOR, TOGGLE_SNAP } from '../globalState';
-import bottomImage from '../images/bottom.svg';
-import centerImage from '../images/center.svg';
+import { Dispatch, TOGGLE_SELECTOR, TOGGLE_SNAP } from '../globalState';
 import fullScreenImage from '../images/full-screen.svg';
-import leftImage from '../images/left.svg';
-import middleImage from '../images/middle.svg';
 import pointerImage from '../images/pointer.svg';
-import rightImage from '../images/right.svg';
 import snapImage from '../images/snap.svg';
-import topImage from '../images/top.svg';
 
 const Tools: React.FC = () => {
   const { dispatch } = useContext(Dispatch);
@@ -35,25 +29,6 @@ const Tools: React.FC = () => {
     setSnap(value);
   };
 
-  const alignLeft = () => {
-    dispatch({ type: SET_ALIGN, value: 'left' });
-  };
-  const alignCenter = () => {
-    dispatch({ type: SET_ALIGN, value: 'center' });
-  };
-  const alignRight = () => {
-    dispatch({ type: SET_ALIGN, value: 'right' });
-  };
-  const alignTop = () => {
-    dispatch({ type: SET_ALIGN, value: 'top' });
-  };
-  const alignMiddle = () => {
-    dispatch({ type: SET_ALIGN, value: 'middle' });
-  };
-  const alignBottom = () => {
-    dispatch({ type: SET_ALIGN, value: 'bottom' });
-  };
-
   return (
     <div className='tools'>
       <div className='tools--container'>
@@ -61,36 +36,6 @@ const Tools: React.FC = () => {
           <img src={pointerImage} alt='Select' />
           <div className='tools--help'>Select</div>
         </div>
-
-        <div className='tools--box' onClick={alignLeft}>
-          <img src={leftImage} alt='Align left' />
-          <div className='tools--help'>Align left</div>
-        </div>
-
-        <div className='tools--box' onClick={alignCenter}>
-          <img src={centerImage} alt='Align center' />
-          <div className='tools--help'>Align center</div>
-        </div>
-
-        <div className='tools--box' onClick={alignRight}>
-          <img src={rightImage} alt='Align right' />
-          <div className='tools--help'>Align right</div>
-        </div>
-
-        <div className='tools--box' onClick={alignTop}>
-          <img src={topImage} alt='Align Top' />
-          <div className='tools--help'>Align top</div>
-        </div>
-
-        <div className='tools--box' onClick={alignMiddle}>
-          <img src={middleImage} alt='Align Middle' />
-          <div className='tools--help'>Align middle</div>
-        </div>
-        <div className='tools--box' onClick={alignBottom}>
-          <img src={bottomImage} alt='Align bottom' />
-          <div className='tools--help'>Align bottom</div>
-        </div>
-
         <div className={`${snap ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSnap}>
           <img src={snapImage} alt='Snap to grid' />
           <div className='tools--help'>Snap to grid</div>
