@@ -181,9 +181,9 @@ const Home: React.FC = () => {
     for (const target of global.objects.objectArray) {
       if (
         mousePosition.x > target.position.x &&
-        mousePosition.x < target.position.x + target.size.x * view.zoom &&
+        mousePosition.x < target.position.x + target.size.x &&
         mousePosition.y > target.position.y &&
-        mousePosition.y < target.position.y + target.size.y * view.zoom
+        mousePosition.y < target.position.y + target.size.y
       ) {
         return target;
       }
