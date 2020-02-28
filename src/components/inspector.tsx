@@ -112,14 +112,11 @@ const Inspector: React.FC = () => {
 
   const setColor = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const color = event.currentTarget.id;
-    for (const value in global.objects.selectedArray) {
-      if (value) {
-        global.objects.selectedArray[value].updateColor(color);
-      }
+    const selectedItems = global.objects.selectedArray;
+    for (const value in selectedItems) {
+      if (value) selectedItems[value].updateColor(color);
     }
-    //if (selected) selected.updateColor(color);
     draw();
-    // push draw event to canvas by dispatching it to global state, then have the canvas use efect listen for changes
   };
 
   useEffect(() => {

@@ -109,7 +109,12 @@ const Home: React.FC = () => {
     dispatch({ type: CLEAR_SELECTED, value: null });
   };
 
+  const setKeyUp = (event: React.KeyboardEvent<Element>) => {
+    if (event.keyCode === 16) console.log('shift up');
+  };
+
   const setKeyDown = (event: React.KeyboardEvent<Element>) => {
+    if (event.keyCode === 16) console.log('shift down');
     if (event.keyCode === 8) deleteSelected();
     const objectArray = global.objects.objectArray;
     const selection = objectArray.filter((obj) => obj.name === 'Selection')[0];
@@ -426,6 +431,7 @@ const Home: React.FC = () => {
             onMouseMove={(e: React.MouseEvent) => setMouseMove(e)}
             onWheel={(e: React.WheelEvent) => setZoom(e)}
             onKeyDown={(e: React.KeyboardEvent) => setKeyDown(e)}
+            onKeyUp={(e: React.KeyboardEvent) => setKeyUp(e)}
           />
         </div>
         <div className='container--inspector'>
