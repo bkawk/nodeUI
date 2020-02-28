@@ -112,7 +112,12 @@ const Inspector: React.FC = () => {
 
   const setColor = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const color = event.currentTarget.id;
-    if (selected) selected.updateColor(color);
+    for (const value in global.objects.selectedArray) {
+      if (value) {
+        global.objects.selectedArray[value].updateColor(color);
+      }
+    }
+    //if (selected) selected.updateColor(color);
     draw();
     // push draw event to canvas by dispatching it to global state, then have the canvas use efect listen for changes
   };
@@ -137,7 +142,7 @@ const Inspector: React.FC = () => {
     ) {
       setMultiSelected(true);
     }
-  }, [global.objects.selectedArray]);
+  }, [global.objects.selectedArray, global.draw]);
 
   return (
     <div className='inspector'>
@@ -201,12 +206,18 @@ const Inspector: React.FC = () => {
               <div className='inspector--shelf-help'>Align left</div>
             </div>
 
-            <div className='inspector--shelf-box' onClick={() => align('center')}>
+            <div
+              className='inspector--shelf-box'
+              onClick={() => align('center')}
+            >
               <img src={centerImage} alt='Align center' />
               <div className='inspector--shelf-help'>Align center</div>
             </div>
 
-            <div className='inspector--shelf-box' onClick={() => align('right')}>
+            <div
+              className='inspector--shelf-box'
+              onClick={() => align('right')}
+            >
               <img src={rightImage} alt='Align right' />
               <div className='inspector--shelf-help'>Align right</div>
             </div>
@@ -216,27 +227,32 @@ const Inspector: React.FC = () => {
               <div className='inspector--shelf-help'>Align top</div>
             </div>
 
-            <div className='inspector--shelf-box' onClick={() => align('middle')}>
+            <div
+              className='inspector--shelf-box'
+              onClick={() => align('middle')}
+            >
               <img src={middleImage} alt='Align Middle' />
               <div className='inspector--shelf-help'>Align middle</div>
             </div>
-            <div className='inspector--shelf-box' onClick={() => align('bottom')}>
+            <div
+              className='inspector--shelf-box'
+              onClick={() => align('bottom')}
+            >
               <img src={bottomImage} alt='Align bottom' />
               <div className='inspector--shelf-help'>Align bottom</div>
             </div>
-            <div>
-            </div>
+            <div></div>
             <div className='inspector--shelf-box'>
-            <img
-              src={colors}
-              alt='colors'
-              onClick={toggleColors}
-              className='inspector--colors-buutton'
-            />
+              <img
+                src={colors}
+                alt='colors'
+                onClick={toggleColors}
+                className='inspector--colors-buutton'
+              />
             </div>
           </div>
           <div className='inspector--container'>
-          <div
+            <div
               className={`${
                 showColors === true
                   ? 'inspector--colors'
@@ -245,7 +261,7 @@ const Inspector: React.FC = () => {
             >
               {generateColors()}
             </div>
-            </div>
+          </div>
         </React.Fragment>
       )}
     </div>

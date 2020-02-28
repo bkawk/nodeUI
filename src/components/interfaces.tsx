@@ -43,6 +43,7 @@ export interface StateInterface {
     snap: boolean;
     selector: boolean;
     align: string | null;
+    delete: boolean;
   };
 }
 

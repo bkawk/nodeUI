@@ -15,6 +15,7 @@ const InitialState: StateInterface = {
   },
   tools: {
     align: null,
+    delete: false,
     selector: false,
     snap: false,
   },
@@ -26,6 +27,7 @@ const Global = createContext({
 
 const ADD_OBJECT = 'ADD_OBJECT';
 const CLEAR_SELECTED = 'CLEAR_SELECTED';
+const DELETE_SELECTED = 'DELETE_SELECTED';
 const DRAW = 'DRAW';
 const NEW_SELECTED = 'NEW_SELECTED';
 const PUSH_SELECTED = 'PUSH_SELECTED';
@@ -51,6 +53,11 @@ const Reducer = (state: StateInterface, action: any) => {
       return {
         ...state,
         tools: { ...state.tools, snap: action.value },
+      };
+    case 'DELETE_SELECTED':
+      return {
+        ...state,
+        tools: { ...state.tools, delete: action.value },
       };
     case 'SET_ALIGN':
       return {
@@ -93,6 +100,7 @@ const Reducer = (state: StateInterface, action: any) => {
 export {
   ADD_OBJECT,
   CLEAR_SELECTED,
+  DELETE_SELECTED,
   Dispatch,
   DRAW,
   Global,

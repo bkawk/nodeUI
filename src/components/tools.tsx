@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { Dispatch, TOGGLE_SELECTOR, TOGGLE_SNAP } from '../globalState';
+import { DELETE_SELECTED, Dispatch, TOGGLE_SELECTOR, TOGGLE_SNAP} from '../globalState';
+import deleteImage from '../images/delete.svg';
 import fullScreenImage from '../images/full-screen.svg';
 import pointerImage from '../images/pointer.svg';
 import snapImage from '../images/snap.svg';
@@ -28,6 +29,10 @@ const Tools: React.FC = () => {
     dispatch({ type: TOGGLE_SNAP, value });
     setSnap(value);
   };
+  const deleteSelected = () => {
+    const value = true;
+    dispatch({ type: DELETE_SELECTED, value });
+  };
 
   return (
     <div className='tools'>
@@ -35,6 +40,10 @@ const Tools: React.FC = () => {
         <div className={`${selector ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSelector}>
           <img src={pointerImage} alt='Select' />
           <div className='tools--help'>Select</div>
+        </div>
+        <div className='tools--box' onClick={deleteSelected}>
+          <img src={deleteImage} alt='Delete selected' />
+          <div className='tools--help'>Delete selected</div>
         </div>
         <div className={`${snap ? 'tools--box-on' : 'tools--box'}`} onClick={toggleSnap}>
           <img src={snapImage} alt='Snap to grid' />

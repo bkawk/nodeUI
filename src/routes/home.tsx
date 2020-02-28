@@ -7,6 +7,7 @@ import { Tools } from '../components/tools';
 import {
   ADD_OBJECT,
   CLEAR_SELECTED,
+  DELETE_SELECTED,
   Dispatch,
   DRAW,
   Global,
@@ -100,9 +101,16 @@ const Home: React.FC = () => {
     }
   };
 
+  const deleteSelected = () => {
+    const selected = global.objects.selectedArray;
+    for (const value in selected) {
+      if (value) dispatch({ type: REMOVE_OBJECT, value: selected[value] });
+    }
+    dispatch({ type: CLEAR_SELECTED, value: null });
+  };
+
   const setKeyDown = (event: React.KeyboardEvent<Element>) => {
-    // TODO: Delete object/s
-    if (event.keyCode === 8) alert('Delete');
+    if (event.keyCode === 8) deleteSelected();
     const objectArray = global.objects.objectArray;
     const selection = objectArray.filter((obj) => obj.name === 'Selection')[0];
     if (event.keyCode === 27 && selection) {
@@ -323,6 +331,12 @@ const Home: React.FC = () => {
       canvas.style.cursor = 'crosshair';
     }
   }, [global.tools.selector, canvas]);
+
+  useEffect(() => {
+    deleteSelected();
+    const value = false;
+    dispatch({ type: DELETE_SELECTED, value });
+  }, [global.tools.delete]);
 
   useEffect(() => {
     const align = global.tools.align;
