@@ -10,15 +10,17 @@ export interface ControlsInterface {
 }
 
 export interface ObjectInterface {
-  offSet: XYInterface;
-  selected: boolean;
-  description: string;
+  category: string;
   categoryImage: string;
+  description: string;
+  hidden: boolean;
+  mainToolbarIcon: string;
   name: string;
   named: string;
-  category: string;
-  mainToolbarIcon: string;
+  offSet: XYInterface;
+  placeholder: boolean;
   position: XYInterface;
+  selected: boolean;
   size: XYInterface;
   draw(ctx: CanvasRenderingContext2D, imageCache: HTMLImageElement[] | undefined): void;
   updatePosition(position: XYInterface): void;

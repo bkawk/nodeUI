@@ -42,7 +42,7 @@ const Tools: React.FC = () => {
     if (selector === false && global.tools.selector === true) {
       setSelector(true);
     }
-  }, [global.tools.selector]);
+  }, [global.tools.selector, selector]);
 
   return (
     <div className='tools'>

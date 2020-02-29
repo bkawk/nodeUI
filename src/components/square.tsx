@@ -7,36 +7,40 @@ class Square {
   categoryImage: string;
   color: string;
   description: string;
+  hidden: boolean;
   hovered: boolean;
   hoveredColor: string;
   locked: boolean;
   mainToolbarIcon: string;
   name: string;
   named: string;
+  offSet: XYInterface;
+  placeholder: boolean;
   position: XYInterface;
   selected: boolean;
   selectedColor: string;
   size: XYInterface;
-  offSet: XYInterface;
 
   constructor() {
-    this.offSet = { x: 0, y: 0 };
     this.category = 'Shape';
+    this.categoryImage = shapesImage;
     this.color = '#2E2E2E';
     this.description = 'A black test square of 30x30 px';
+    this.hidden = true;
+    this.hovered = false;
     this.hoveredColor = 'rgba(0, 0, 0, 0.2)';
+    this.locked = false;
     this.mainToolbarIcon = squareImg;
     this.name = 'Square';
     this.named = 'Square_001';
+    this.offSet = { x: 0, y: 0 };
+    this.placeholder = true;
     this.position = { x: 0, y: 0 };
-    this.position.x = Math.floor(Math.random() * 800);
-    this.position.y = Math.floor(Math.random() * 800);
+    this.position.x = 0;
+    this.position.y = 0;
     this.selected = false;
-    this.hovered = false;
     this.selectedColor = '#EDD02E';
     this.size = { x: 100, y: 30 };
-    this.locked = false;
-    this.categoryImage = shapesImage;
   }
   updatePosition(position: XYInterface) {
     this.position = position;
@@ -57,6 +61,7 @@ class Square {
     //
   }
   draw(ctx: CanvasRenderingContext2D, imageCache: HTMLImageElement[]) {
+    if (!this.hidden) {
     // Draw the background shape
     ctx.fillStyle = this.color;
     ctx.fillRect(
@@ -96,6 +101,7 @@ class Square {
     ctx.fillText(this.named, this.position.x + this.size.x + 12, this.position.y + 30);
     // Add the category image from the cache
     ctx.drawImage(imageCache[0] as CanvasImageSource, this.position.x + this.size.x / 2 - 7 , this.position.y + 7);
+    }
   }
 }
 

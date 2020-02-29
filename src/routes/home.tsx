@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Inspector } from '../components/inspector';
-import { ControlsInterface, ObjectInterface } from '../components/interfaces';
+import { ControlsInterface, ObjectInterface, XYInterface } from '../components/interfaces';
 import { MainToolbar } from '../components/mainToolbar';
 import { Selection } from '../components/selection';
 import { Tools } from '../components/tools';
@@ -46,12 +46,22 @@ const Home: React.FC = () => {
     zoom: 1,
   });
 
+  const dropPlaceholder = () => {
+    const objectArray = global.objects.objectArray;
+    const selection = objectArray.filter((obj) => obj.placeholder === true)[0];
+    if (selection) {
+      selection.position = {x: mousePosition.x - 50, y: mousePosition.y - 15};
+      selection.placeholder = false;
+    }
+  };
+
   const setMouseDown = (event: React.MouseEvent) => {
     setOffSets();
     if (!global.tools.selector) selectObject();
     if (global.tools.selector) startSelection();
     if (canvas && !global.tools.selector) canvas.style.cursor = 'grab';
     if (canvas && global.tools.selector) canvas.style.cursor = 'default';
+    dropPlaceholder();
     const prevX = Math.floor(event.nativeEvent.offsetX);
     const prevY = Math.floor(event.nativeEvent.offsetY);
     setViewPosition(() => ({
@@ -118,10 +128,30 @@ const Home: React.FC = () => {
     }));
   };
 
+  const movePlaceholder = () => {
+    const objectArray = global.objects.objectArray;
+    const selection = objectArray.filter((obj) => obj.placeholder === true)[0];
+    const position: XYInterface = {x: 0, y: 0};
+    if (selection) {
+      if (canvas) canvas.style.cursor = 'grab';
+      if (global.tools.snap) {
+        position.x =  Math.floor((mousePosition.x - 50) / 10) * 10;
+        position.y = Math.floor((mousePosition.y - 15) / 10) * 10;
+      } else {
+        position.x = mousePosition.x - 50;
+        position.y = mousePosition.y - 15;
+      }
+      selection.position = position;
+      selection.hidden = false;
+    }
+  };
+
   const setMouseMove = (event: React.MouseEvent) => {
     const x = (event.nativeEvent.offsetX - view.x) / view.zoom;
     const y = (event.nativeEvent.offsetY - view.y) / view.zoom;
     setMousePosition({ x, y });
+    movePlaceholder();
+
     if (!global.tools.selector) hoverObject();
     if (viewPosition.isDragging && dragBg) setPan(event.nativeEvent);
     if (viewPosition.isDragging && !dragBg) setMove();
@@ -381,8 +411,9 @@ const Home: React.FC = () => {
       array.sort((a, b) => a - b);
       const small = array[0];
       const big = array[array.length - 1];
-      if (align === 'center' || align === 'middle')
+      if (align === 'center' || align === 'middle') {
         result = small + big / 2 + small;
+      }
       if (align === 'left' || align === 'top') result = small;
       if (align === 'right' || align === 'bottom') result = big;
       for (const value in objectArray) {
