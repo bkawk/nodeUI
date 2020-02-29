@@ -6,7 +6,6 @@ import { Selection } from '../components/selection';
 import { Tools } from '../components/tools';
 import {
   ADD_OBJECT,
-  CLEAR_SELECTED,
   DELETE_SELECTED,
   Dispatch,
   DRAW,
@@ -61,9 +60,56 @@ const Home: React.FC = () => {
     }));
   };
 
+  const unselectAll = () => {
+    for (const value of global.objects.objectArray) {
+      value.toggleSelected(false);
+      dispatch({ type: NEW_SELECTED, value: [] });
+    }
+  };
+
+  const selectObject = () => {
+    const hitObject = objectClicked();
+    if (!hitObject) {
+      setDragBg(true);
+      unselectAll();
+    } else {
+      setDragBg(false);
+    }
+
+    if (!shiftOn && hitObject && !hitObject.selected) {
+      unselectAll();
+      hitObject.toggleSelected(true);
+      dispatch({ type: NEW_SELECTED, value: [hitObject] });
+    }
+    if (shiftOn && hitObject && hitObject.selected) {
+      hitObject.toggleSelected(false);
+      const selected = global.objects.selectedArray.filter(
+        (obj) => obj !== hitObject
+      );
+      dispatch({ type: NEW_SELECTED, value: selected });
+    } else if (shiftOn && hitObject && !hitObject.selected) {
+      hitObject.toggleSelected(true);
+      const selected = [...global.objects.selectedArray, hitObject];
+      dispatch({ type: NEW_SELECTED, value: selected });
+    }
+    draw();
+  };
+
+  const startSelection = () => {
+    const hitObject = objectClicked();
+    if (!hitObject) {
+      unselectAll();
+      setDragBg(false);
+      dispatch({
+        type: ADD_OBJECT,
+        value: new Selection({ x: mousePosition.x, y: mousePosition.y }),
+      });
+    }
+  };
+
   const setMouseUp = () => {
     if (canvas && !global.tools.selector) canvas.style.cursor = 'crosshair';
-    else if (canvas && global.tools.selector) selectedObjects();
+    else if (canvas && global.tools.selector) objectClickeds();
     setViewPosition(() => ({
       isDragging: false,
       prevX: null,
@@ -78,7 +124,7 @@ const Home: React.FC = () => {
     if (!global.tools.selector) hoverObject();
     if (viewPosition.isDragging && dragBg) setPan(event.nativeEvent);
     if (viewPosition.isDragging && !dragBg) setMove();
-    if (viewPosition.isDragging && global.tools.selector) drawSelection();
+    if (viewPosition.isDragging) drawSelection();
   };
 
   const setZoom = (event: React.WheelEvent) => {
@@ -107,7 +153,7 @@ const Home: React.FC = () => {
     for (const value in selected) {
       if (value) dispatch({ type: REMOVE_OBJECT, value: selected[value] });
     }
-    dispatch({ type: CLEAR_SELECTED, value: null });
+    dispatch({ type: NEW_SELECTED, value: null });
   };
 
   const setKeyUp = (event: React.KeyboardEvent<Element>) => {
@@ -132,8 +178,10 @@ const Home: React.FC = () => {
     if (viewPosition.prevX) dx = prevX - viewPosition.prevX;
     if (viewPosition.prevY) dy = prevY - viewPosition.prevY;
     if (viewPosition.prevX || viewPosition.prevY) {
-      if (dx !== 0 && dy !== 0) setview((prev) => ({ ...prev, x: view.x += dx, y: view.y += dy }));
-      setViewPosition({isDragging: true, prevX, prevY });
+      if (dx !== 0 && dy !== 0) {
+        setview((prev) => ({ ...prev, x: view.x += dx, y: view.y += dy }));
+      }
+      setViewPosition({ isDragging: true, prevX, prevY });
     }
   };
 
@@ -177,7 +225,7 @@ const Home: React.FC = () => {
     }
   };
 
-  const selectedObject = () => {
+  const objectClicked = () => {
     for (const target of global.objects.objectArray) {
       if (
         mousePosition.x > target.position.x &&
@@ -191,50 +239,16 @@ const Home: React.FC = () => {
     return null;
   };
 
-  const unselectAll = () => {
-    for (const value of global.objects.objectArray) {
-      value.toggleSelected(false);
-      dispatch({ type: CLEAR_SELECTED, value: null });
-    }
-  };
-
-  const selectObject = () => {
-    const hitObject = selectedObject();
-    if (!shiftOn) unselectAll();
-    if (hitObject) {
-      setDragBg(false);
-      hitObject.toggleSelected(true);
-      let selected: ObjectInterface[];
-      if (shiftOn) selected = [...global.objects.selectedArray, hitObject];
-      else selected = [hitObject];
-      dispatch({ type: NEW_SELECTED, value: selected });
-    } else {
-      setDragBg(true);
-    }
-    draw();
-    // TODO: if you click another node with Shift then push it into the global selected array (PUSH_SELECTED)
-  };
-
-  const startSelection = () => {
-    const hitObject = selectedObject();
-    if (!hitObject) {
-      unselectAll();
-      setDragBg(false);
-      dispatch({
-        type: ADD_OBJECT,
-        value: new Selection({ x: mousePosition.x, y: mousePosition.y }),
-      });
-    }
-  };
-
   const drawSelection = () => {
     const objectArray = global.objects.objectArray;
     const selection = objectArray.filter((obj) => obj.name === 'Selection')[0];
-    if (selection) selection.updateSize({ x: mousePosition.x, y: mousePosition.y});
+    if (selection) {
+      selection.updateSize({ x: mousePosition.x, y: mousePosition.y });
+    }
     draw();
   };
 
-  const selectedObjects = () => {
+  const objectClickeds = () => {
     if (canvas) canvas.style.cursor = 'default';
     const objectArray = global.objects.objectArray;
     const selected: ObjectInterface[] = [];
@@ -282,7 +296,7 @@ const Home: React.FC = () => {
   };
 
   const hoverObject = () => {
-    const hitObject = selectedObject();
+    const hitObject = objectClicked();
     if (!hitObject && lastHovered) {
       lastHovered.toggleHovered(false);
       setLastHovered(null);
@@ -313,7 +327,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     // TODO: Get these values from local storage instead of asuming zoom 1 etc
-    setview({x: 0, y: 0, zoom: 1});
+    setview({ x: 0, y: 0, zoom: 1 });
     const img = new Image();
     img.src = gridImageBg;
     img.onload = () => {
@@ -358,14 +372,15 @@ const Home: React.FC = () => {
         if (value) {
           const targets = objectArray[value];
           if (align === 'left' || align === 'center' || align === 'right') {
-          array.push(targets.position.x);
+            array.push(targets.position.x);
           } else array.push(targets.position.y);
         }
       }
       array.sort((a, b) => a - b);
       const small = array[0];
       const big = array[array.length - 1];
-      if (align === 'center' || align === 'middle') result = (small + (big / 2)) + small;
+      if (align === 'center' || align === 'middle')
+        result = small + big / 2 + small;
       if (align === 'left' || align === 'top') result = small;
       if (align === 'right' || align === 'bottom') result = big;
       for (const value in objectArray) {

@@ -26,7 +26,6 @@ const Global = createContext({
 });
 
 const ADD_OBJECT = 'ADD_OBJECT';
-const CLEAR_SELECTED = 'CLEAR_SELECTED';
 const DELETE_SELECTED = 'DELETE_SELECTED';
 const DRAW = 'DRAW';
 const NEW_SELECTED = 'NEW_SELECTED';
@@ -44,21 +43,17 @@ const Reducer = (state: StateInterface, action: any) => {
         ...state,
         objects: { ...state.objects, selectedArray: action.value },
       };
-    case 'CLEAR_SELECTED':
+    case 'DELETE_SELECTED':
       return {
         ...state,
-        objects: { ...state.objects, selectedArray: action.value },
+        tools: { ...state.tools, delete: action.value },
       };
     case 'TOGGLE_SNAP':
       return {
         ...state,
         tools: { ...state.tools, snap: action.value },
       };
-    case 'DELETE_SELECTED':
-      return {
-        ...state,
-        tools: { ...state.tools, delete: action.value },
-      };
+
     case 'SET_ALIGN':
       return {
         ...state,
@@ -99,7 +94,6 @@ const Reducer = (state: StateInterface, action: any) => {
 
 export {
   ADD_OBJECT,
-  CLEAR_SELECTED,
   DELETE_SELECTED,
   Dispatch,
   DRAW,
