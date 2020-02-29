@@ -42,9 +42,6 @@ class Square {
     this.selectedColor = '#EDD02E';
     this.size = { x: 100, y: 30 };
   }
-  updateSize(size: XYInterface) {
-    this.size = size;
-  }
   update(tick: number) {
     //
   }

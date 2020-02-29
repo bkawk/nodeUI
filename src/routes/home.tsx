@@ -274,7 +274,9 @@ const Home: React.FC = () => {
     const objectArray = global.objects.objectArray;
     const selection = objectArray.filter((obj) => obj.name === 'Selection')[0];
     if (selection) {
-      selection.updateSize({ x: mousePosition.x, y: mousePosition.y });
+      const x = mousePosition.x - selection.position.x;
+      const y = mousePosition.y - selection.position.y;
+      selection.size = { x, y };
     }
     draw();
   };

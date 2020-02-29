@@ -41,11 +41,6 @@ class Selection {
     this.size = { x: 0, y: 0 };
   }
 
-  updateSize(size: XYInterface) {
-    const x = size.x - this.position.x;
-    const y = size.y - this.position.y;
-    this.size = { x, y };
-  }
   update(tick: number) {
     //
   }
