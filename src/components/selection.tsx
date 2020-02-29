@@ -40,22 +40,11 @@ class Selection {
     this.selectedColor = '#EDD02E';
     this.size = { x: 0, y: 0 };
   }
-  updatePosition(position: XYInterface) {
-    this.position = position;
-  }
+
   updateSize(size: XYInterface) {
     const x = size.x - this.position.x;
     const y = size.y - this.position.y;
     this.size = { x, y };
-  }
-  toggleSelected(toggle: boolean) {
-    this.selected = toggle;
-  }
-  toggleHovered(toggle: boolean) {
-    this.hovered = toggle;
-  }
-  updateColor(color: string) {
-    this.color = color;
   }
   update(tick: number) {
     //

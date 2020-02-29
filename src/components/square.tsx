@@ -42,20 +42,8 @@ class Square {
     this.selectedColor = '#EDD02E';
     this.size = { x: 100, y: 30 };
   }
-  updatePosition(position: XYInterface) {
-    this.position = position;
-  }
   updateSize(size: XYInterface) {
     this.size = size;
-  }
-  toggleSelected(toggle: boolean) {
-    this.selected = toggle;
-  }
-  toggleHovered(toggle: boolean) {
-    this.hovered = toggle;
-  }
-  updateColor(color: string) {
-    this.color = color;
   }
   update(tick: number) {
     //

@@ -73,7 +73,7 @@ const Home: React.FC = () => {
 
   const unselectAll = () => {
     for (const value of global.objects.objectArray) {
-      value.toggleSelected(false);
+      value.selected = false;
       dispatch({ type: NEW_SELECTED, value: [] });
     }
   };
@@ -89,17 +89,17 @@ const Home: React.FC = () => {
 
     if (!shiftOn && hitObject && !hitObject.selected) {
       unselectAll();
-      hitObject.toggleSelected(true);
+      hitObject.selected = true;
       dispatch({ type: NEW_SELECTED, value: [hitObject] });
     }
     if (shiftOn && hitObject && hitObject.selected) {
-      hitObject.toggleSelected(false);
+      hitObject.selected = false;
       const selected = global.objects.selectedArray.filter(
         (obj) => obj !== hitObject
       );
       dispatch({ type: NEW_SELECTED, value: selected });
     } else if (shiftOn && hitObject && !hitObject.selected) {
-      hitObject.toggleSelected(true);
+      hitObject.selected = true;
       const selected = [...global.objects.selectedArray, hitObject];
       dispatch({ type: NEW_SELECTED, value: selected });
     }
@@ -120,7 +120,7 @@ const Home: React.FC = () => {
 
   const setMouseUp = () => {
     if (canvas && !global.tools.selector) canvas.style.cursor = 'crosshair';
-    else if (canvas && global.tools.selector) objectClickeds();
+    else if (canvas && global.tools.selector) objectsSelected();
     setViewPosition(() => ({
       isDragging: false,
       prevX: null,
@@ -233,7 +233,7 @@ const Home: React.FC = () => {
             y: Math.floor((mousePosition.y - value.offSet.y) / 10) * 10,
           };
         }
-        value.updatePosition(position);
+        value.position = position;
       }
       draw();
     }
@@ -279,7 +279,7 @@ const Home: React.FC = () => {
     draw();
   };
 
-  const objectClickeds = () => {
+  const objectsSelected = () => {
     if (canvas) canvas.style.cursor = 'default';
     const objectArray = global.objects.objectArray;
     const selected: ObjectInterface[] = [];
@@ -330,18 +330,18 @@ const Home: React.FC = () => {
   const hoverObject = () => {
     const hitObject = objectClicked();
     if (!hitObject && lastHovered) {
-      lastHovered.toggleHovered(false);
+      lastHovered.hovered = false;
       setLastHovered(null);
       if (canvas) canvas.style.cursor = 'crosshair';
     }
     if (lastHovered && hitObject && hitObject !== lastHovered) {
-      lastHovered.toggleHovered(false);
-      hitObject.toggleHovered(true);
+      lastHovered.hovered = false;
+      hitObject.hovered = true;
       setLastHovered(hitObject);
       if (canvas) canvas.style.cursor = 'pointer';
     }
     if (!lastHovered && hitObject) {
-      hitObject.toggleHovered(true);
+      hitObject.hovered = true;
       setLastHovered(hitObject);
       if (canvas) canvas.style.cursor = 'pointer';
     }

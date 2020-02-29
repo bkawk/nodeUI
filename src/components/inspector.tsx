@@ -114,7 +114,7 @@ const Inspector: React.FC = () => {
     const color = event.currentTarget.id;
     const selectedItems = global.objects.selectedArray;
     for (const value in selectedItems) {
-      if (value) selectedItems[value].updateColor(color);
+      if (value) selectedItems[value].color = color;
     }
     draw();
   };
