@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Inspector } from '../components/inspector';
-import { ControlsInterface, ObjectInterface, XYInterface } from '../components/interfaces';
+import {
+  ControlsInterface,
+  ObjectInterface,
+  XYInterface,
+} from '../components/interfaces';
 import { MainToolbar } from '../components/mainToolbar';
 import { Selection } from '../components/selection';
 import { Tools } from '../components/tools';
@@ -50,7 +54,7 @@ const Home: React.FC = () => {
     const objectArray = global.objects.objectArray;
     const selection = objectArray.filter((obj) => obj.placeholder === true)[0];
     if (selection) {
-      selection.position = {x: mousePosition.x - 50, y: mousePosition.y - 15};
+      selection.position = { x: mousePosition.x - 50, y: mousePosition.y - 15 };
       selection.placeholder = false;
     }
   };
@@ -131,11 +135,11 @@ const Home: React.FC = () => {
   const movePlaceholder = () => {
     const objectArray = global.objects.objectArray;
     const selection = objectArray.filter((obj) => obj.placeholder === true)[0];
-    const position: XYInterface = {x: 0, y: 0};
+    const position: XYInterface = { x: 0, y: 0 };
     if (selection) {
       if (canvas) canvas.style.cursor = 'grab';
       if (global.tools.snap) {
-        position.x =  Math.floor((mousePosition.x - 50) / 10) * 10;
+        position.x = Math.floor((mousePosition.x - 50) / 10) * 10;
         position.y = Math.floor((mousePosition.y - 15) / 10) * 10;
       } else {
         position.x = mousePosition.x - 50;
@@ -437,7 +441,12 @@ const Home: React.FC = () => {
         ctx.save();
         ctx.translate(Math.floor(view.x), Math.floor(view.y));
         ctx.scale(view.zoom, view.zoom);
-        ctx.rect(0, 0, Math.floor(windowSize.x), Math.floor(windowSize.y));
+        ctx.rect(
+          Math.floor(0 - view.x / view.zoom),
+          Math.floor(0 - view.y / view.zoom),
+          Math.floor(windowSize.x / view.zoom),
+          Math.floor(windowSize.y / view.zoom)
+        );
         const gridPatternBackground = ctx.createPattern(
           canvasImage as CanvasImageSource,
           'repeat'
