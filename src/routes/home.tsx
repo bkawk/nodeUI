@@ -446,9 +446,7 @@ const Home: React.FC = () => {
         if (gridPatternBackground) ctx.fill();
 
         global.objects.objectArray.forEach((object) => {
-          ctx.save();
           object.draw(ctx, imageCache);
-          ctx.restore();
         });
         ctx.restore();
       }
