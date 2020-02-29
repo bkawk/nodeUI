@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { Connector } from '../components/connector';
 import { ToolbarInterface } from '../components/interfaces';
 import { Square } from '../components/square';
 import { ADD_OBJECT, Dispatch } from '../globalState';
@@ -7,7 +8,7 @@ const MainToolbar: React.FC  = () => {
   const { dispatch } = useContext(Dispatch);
   const toolbar = {
     shapes: [
-      new Square(),
+      new Square(), new Connector(),
     ],
     data: [new Square(), new Square(), ], // tslint:disable-line
   } as ToolbarInterface;
@@ -30,6 +31,9 @@ const MainToolbar: React.FC  = () => {
     const nodeToPush = event.currentTarget.id;
     if (nodeToPush === 'Square') {
       dispatch({ type: ADD_OBJECT, value: new Square() });
+    }
+    if (nodeToPush === 'Connector') {
+      dispatch({ type: ADD_OBJECT, value: new Connector() });
     }
 
   };

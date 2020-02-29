@@ -4,15 +4,15 @@ export interface XYInterface {
 }
 
 export interface ControlsInterface {
+  isDragging: boolean;
   prevX: number | null;
   prevY: number | null;
-  isDragging: boolean;
 }
 
 export interface ObjectInterface {
   category: string;
-  color: string;
   categoryImage: string;
+  color: string;
   description: string;
   hidden: boolean;
   hovered: boolean;
@@ -24,7 +24,10 @@ export interface ObjectInterface {
   position: XYInterface;
   selected: boolean;
   size: XYInterface;
-  draw(ctx: CanvasRenderingContext2D, imageCache: HTMLImageElement[] | undefined): void;
+  draw(
+    ctx: CanvasRenderingContext2D,
+    imageCache: HTMLImageElement[] | undefined
+  ): void;
 }
 
 export interface ActionInterface {
@@ -39,13 +42,13 @@ export interface StateInterface {
     selectedArray: ObjectInterface[];
   };
   tools: {
-    snap: boolean;
-    selector: boolean;
     align: string | null;
     delete: boolean;
+    selector: boolean;
+    snap: boolean;
   };
 }
 
 export interface ToolbarInterface {
   [key: string]: ObjectInterface[];
- }
+}

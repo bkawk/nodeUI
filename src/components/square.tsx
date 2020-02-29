@@ -36,8 +36,6 @@ class Square {
     this.offSet = { x: 0, y: 0 };
     this.placeholder = true;
     this.position = { x: 0, y: 0 };
-    this.position.x = 0;
-    this.position.y = 0;
     this.selected = false;
     this.selectedColor = '#EDD02E';
     this.size = { x: 100, y: 30 };
@@ -47,45 +45,57 @@ class Square {
   }
   draw(ctx: CanvasRenderingContext2D, imageCache: HTMLImageElement[]) {
     if (!this.hidden) {
-    // Draw the background shape
-    ctx.fillStyle = this.color;
-    ctx.fillRect(
-      Math.floor(this.position.x),
-      Math.floor(this.position.y),
-      Math.floor(this.size.x),
-      Math.floor(this.size.y)
-    );
-    // Draw the hovered overlay
-    if (this.hovered) {
-      ctx.fillStyle = this.hoveredColor;
+      // Draw the background shape
+      ctx.fillStyle = this.color;
       ctx.fillRect(
         Math.floor(this.position.x),
         Math.floor(this.position.y),
         Math.floor(this.size.x),
         Math.floor(this.size.y)
       );
-    }
-    // Draw the border and change color if selected
-    if (this.selected) {
-    ctx.strokeStyle = this.selectedColor;
-    } else {
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-    }
-    ctx.strokeRect(
-      Math.floor(this.position.x),
-      Math.floor(this.position.y),
-      Math.floor(this.size.x),
-      Math.floor(this.size.y)
-    );
-    // Add the category name as text
-    ctx.fillStyle = '#2E2E2E';
-    ctx.font = '14px Roboto';
-    ctx.fillText(this.category, this.position.x + this.size.x + 12, this.position.y + 10);
-    ctx.fillStyle = '#000000';
-    ctx.font = '18px Roboto';
-    ctx.fillText(this.named, this.position.x + this.size.x + 12, this.position.y + 30);
-    // Add the category image from the cache
-    ctx.drawImage(imageCache[0] as CanvasImageSource, this.position.x + this.size.x / 2 - 7 , this.position.y + 7);
+      // Draw the hovered overlay
+      if (this.hovered) {
+        ctx.fillStyle = this.hoveredColor;
+        ctx.fillRect(
+          Math.floor(this.position.x),
+          Math.floor(this.position.y),
+          Math.floor(this.size.x),
+          Math.floor(this.size.y)
+        );
+      }
+      // Draw the border and change color if selected
+      if (this.selected) {
+        ctx.strokeStyle = this.selectedColor;
+      } else {
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+      }
+      ctx.strokeRect(
+        Math.floor(this.position.x),
+        Math.floor(this.position.y),
+        Math.floor(this.size.x),
+        Math.floor(this.size.y)
+      );
+      // Add the category name as text
+      ctx.fillStyle = '#2E2E2E';
+      ctx.font = '14px Roboto';
+      ctx.fillText(
+        this.category,
+        Math.floor(this.position.x + this.size.x + 12),
+        Math.floor(this.position.y + 10)
+      );
+      ctx.fillStyle = '#000000';
+      ctx.font = '18px Roboto';
+      ctx.fillText(
+        this.named,
+        Math.floor(this.position.x + this.size.x + 12),
+        Math.floor(this.position.y + 30)
+      );
+      // Add the category image from the cache
+      ctx.drawImage(
+        imageCache[0] as CanvasImageSource,
+        Math.floor(this.position.x + this.size.x / 2 - 7),
+        Math.floor(this.position.y + 7)
+      );
     }
   }
 }
