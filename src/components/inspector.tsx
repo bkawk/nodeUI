@@ -13,6 +13,7 @@ const Inspector: React.FC = () => {
   const { global } = useContext(Global);
   const { dispatch } = useContext(Dispatch);
   const [position, setPosition] = useState<XYInterface>({ x: 0, y: 0 });
+  const [size, setSize] = useState<XYInterface>({ x: 50, y: 50 });
   const [selected, setSelected] = useState<ObjectInterface | null>();
   const [multiSelected, setMultiSelected] = useState<boolean>(false);
   const [showColors, setShowColors] = useState<boolean>(false);
@@ -88,6 +89,21 @@ const Inspector: React.FC = () => {
     draw();
   };
 
+  const changeSize = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.id === 'x') {
+      setSize({ x: +event.target.value, y: size.y });
+      if (selected) {
+        selected.size = { x: +event.target.value, y: size.y };
+      }
+    } else {
+      setSize({ x: size.x, y: +event.target.value });
+      if (selected) {
+        selected.size = { x: size.x, y: +event.target.value };
+      }
+    }
+    draw();
+  };
+
   const toggleColors = () => {
     setShowColors(!showColors);
   };
@@ -129,6 +145,7 @@ const Inspector: React.FC = () => {
       const selectedOne = global.objects.selectedArray[0];
       setPosition({ x: selectedOne.position.x, y: selectedOne.position.y });
       setSelected(selectedOne);
+      setSize({x: selectedOne.size.x, y: selectedOne.size.y})
       setCategoryImage(selectedOne.categoryImage);
       setCategoryName(selectedOne.category);
       setNamed(selectedOne.named);
@@ -190,6 +207,21 @@ const Inspector: React.FC = () => {
                 value={Math.floor(position.y)}
                 id='y'
                 onChange={changePosition}
+              />
+            </div>
+            <div className='inspector--item-two'>
+              <div className='inspector--description'>Size</div>
+              <input
+                type='number'
+                value={Math.floor(size.x)}
+                id='x'
+                onChange={changeSize}
+              />
+              <input
+                type='number'
+                value={Math.floor(size.y)}
+                id='y'
+                onChange={changeSize}
               />
             </div>
           </div>

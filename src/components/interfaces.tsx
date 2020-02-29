@@ -52,3 +52,9 @@ export interface StateInterface {
 export interface ToolbarInterface {
   [key: string]: ObjectInterface[];
 }
+
+
+export interface Category {
+  name: string; // Tab name
+  image: string; // Image for all nodes in that category
+}
