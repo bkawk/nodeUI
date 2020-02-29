@@ -13,6 +13,7 @@ import {
   NEW_SELECTED,
   REMOVE_OBJECT,
   SET_ALIGN,
+  TOGGLE_SELECTOR,
 } from '../globalState';
 import { useWindowSize } from '../hooks/useWindowSize';
 import '../scss/index.scss';
@@ -137,7 +138,7 @@ const Home: React.FC = () => {
     const zoom = direction * factor;
     if (direction === 1 && canvas) canvas.style.cursor = 'zoom-in';
     if (direction === -1 && canvas) canvas.style.cursor = 'zoom-out';
-    if (view.zoom + zoom < 1.5 && view.zoom + zoom > 0.7) {
+    if (view.zoom + zoom < 1.5 && view.zoom + zoom > 0.5) {
       weighted.x = (x - view.x) / (windowSize.x * view.zoom);
       weighted.y = (y - view.y) / (windowSize.y * view.zoom);
       setview({
@@ -289,6 +290,7 @@ const Home: React.FC = () => {
           }
         }
       }
+      dispatch({ type: TOGGLE_SELECTOR, value: false });
       dispatch({ type: REMOVE_OBJECT, value: selection });
       dispatch({ type: NEW_SELECTED, value: selected });
       draw();

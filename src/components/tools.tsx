@@ -1,11 +1,12 @@
-import React, { useContext, useState } from 'react';
-import { DELETE_SELECTED, Dispatch, TOGGLE_SELECTOR, TOGGLE_SNAP} from '../globalState';
+import React, { useContext, useEffect, useState } from 'react';
+import { DELETE_SELECTED, Dispatch, Global, TOGGLE_SELECTOR, TOGGLE_SNAP} from '../globalState';
 import deleteImage from '../images/delete.svg';
 import fullScreenImage from '../images/full-screen.svg';
 import pointerImage from '../images/pointer.svg';
 import snapImage from '../images/snap.svg';
 
 const Tools: React.FC = () => {
+  const { global } = useContext(Global);
   const { dispatch } = useContext(Dispatch);
   const [fullScreen, setFullScreen] = useState(false);
   const [selector, setSelector] = useState(false);
@@ -33,6 +34,15 @@ const Tools: React.FC = () => {
     const value = true;
     dispatch({ type: DELETE_SELECTED, value });
   };
+
+  useEffect(() => {
+    if (selector === true && global.tools.selector === false) {
+      setSelector(false);
+    }
+    if (selector === false && global.tools.selector === true) {
+      setSelector(true);
+    }
+  }, [global.tools.selector]);
 
   return (
     <div className='tools'>
