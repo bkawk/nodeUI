@@ -482,8 +482,8 @@ const Home: React.FC = () => {
         </div>
         <div className='container--canvas'>
           <div className='container--location'>
-            x: {Math.floor(mousePosition.x)} y: {Math.floor(mousePosition.y)} zoom:{' '}
-            {view.zoom.toFixed(2)}
+            x: {Math.floor(mousePosition.x)} y: {Math.floor(mousePosition.y)}{' '}
+            zoom: {view.zoom.toFixed(2)}
           </div>
           <canvas
             id='canvas'
