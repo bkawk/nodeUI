@@ -147,7 +147,7 @@ const Inspector: React.FC = () => {
               src={colors}
               alt='colors'
               onClick={toggleColors}
-              className='inspector--colors-buutton'
+              className='inspector--colors-button'
             />
           </div>
           <div className='inspector--container'>
@@ -216,7 +216,7 @@ const Inspector: React.FC = () => {
                 src={colors}
                 alt='colors'
                 onClick={toggleColors}
-                className='inspector--colors-buutton'
+                className='inspector--colors-button'
               />
             </div>
           </div>

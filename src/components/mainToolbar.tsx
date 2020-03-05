@@ -1,24 +1,15 @@
 import React, { useContext, useState } from 'react';
 import { ToolbarInterface } from '../components/interfaces';
 import { ADD_OBJECT, Dispatch } from '../globalState';
-import { Auth } from '../nodes/api/auth';
-import { Headers } from '../nodes/api/headers';
-import { Params } from '../nodes/api/params';
-import { Request } from '../nodes/api/request';
-import { Response } from '../nodes/api/response';
-import { Socket } from '../nodes/api/socket';
 import { Timer } from '../nodes/api/timer';
-import { Trigger } from '../nodes/api/trigger';
 import { Rectangle } from '../nodes/shapes/rectangle';
 import { Square } from '../nodes/shapes/square';
 
 const MainToolbar: React.FC  = () => {
   const { dispatch } = useContext(Dispatch);
   const toolbar = {
-    API: [new Trigger(), new Timer(), new Request(), new Socket(), new Params(), new Auth(), new Headers(), new Response() ], // tslint:disable-line
-    Shapes: [
-      new Square(), new Rectangle(),
-    ],
+    API: [new Timer()], // tslint:disable-line
+    Shapes: [new Timer()],
   } as ToolbarInterface;
 
   const tabs = Object.keys(toolbar);
@@ -37,35 +28,9 @@ const MainToolbar: React.FC  = () => {
 
   const newNode = (event: React.MouseEvent<HTMLDivElement>) => {
     const nodeToPush = event.currentTarget.id;
-    if (nodeToPush === 'Square') {
-      dispatch({ type: ADD_OBJECT, value: new Square() });
-    }
-    if (nodeToPush === 'Rectangle') {
-      dispatch({ type: ADD_OBJECT, value: new Rectangle() });
-    }
-    if (nodeToPush === 'Trigger') {
-      dispatch({ type: ADD_OBJECT, value: new Trigger() });
-    }
+
     if (nodeToPush === 'Timer') {
       dispatch({ type: ADD_OBJECT, value: new Timer() });
-    }
-    if (nodeToPush === 'Request') {
-      dispatch({ type: ADD_OBJECT, value: new Request() });
-    }
-    if (nodeToPush === 'Socket') {
-      dispatch({ type: ADD_OBJECT, value: new Socket() });
-    }
-    if (nodeToPush === 'Params') {
-      dispatch({ type: ADD_OBJECT, value: new Params() });
-    }
-    if (nodeToPush === 'Auth') {
-      dispatch({ type: ADD_OBJECT, value: new Auth() });
-    }
-    if (nodeToPush === 'Headers') {
-      dispatch({ type: ADD_OBJECT, value: new Headers() });
-    }
-    if (nodeToPush === 'Response') {
-      dispatch({ type: ADD_OBJECT, value: new Response() });
     }
   };
 

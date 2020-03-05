@@ -19,6 +19,7 @@ class Selection {
   position: XYInterface;
   selected: boolean;
   selectedColor: string;
+  settings: object;
   size: XYInterface;
 
   constructor(position: XYInterface) {
@@ -38,6 +39,7 @@ class Selection {
     this.position = position;
     this.selected = false;
     this.selectedColor = '#EDD02E';
+    this.settings = {};
     this.size = { x: 0, y: 0 };
   }
 

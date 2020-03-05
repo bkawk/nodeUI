@@ -24,7 +24,7 @@ class Node {
   connectedFrom: Node[]; // The nodes this node is connected from
 
   constructor() {
-    this.category = 'Shape';
+    this.category = '';
     this.categoryImage = shapesImage;
     this.color = '#2E2E2E';
     this.description = 'A node';

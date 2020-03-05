@@ -24,6 +24,7 @@ export interface ObjectInterface {
   position: XYInterface;
   selected: boolean;
   size: XYInterface;
+  settings: any;
   draw(
     ctx: CanvasRenderingContext2D,
     imageCache: HTMLImageElement[] | undefined
