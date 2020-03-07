@@ -7,7 +7,7 @@ import leftImage from '../images/left.svg';
 import middleImage from '../images/middle.svg';
 import rightImage from '../images/right.svg';
 import topImage from '../images/top.svg';
-import { TimerInspector } from '../nodes/api/timer-inspector';
+import { TimerInspector } from './nodes/api/timer-inspector';
 import { ObjectInterface, XYInterface } from './interfaces';
 
 const Inspector: React.FC = () => {

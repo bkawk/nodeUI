@@ -1,6 +1,6 @@
-import { XYInterface } from '../components/interfaces';
-import shapesImage from '../images/shapes.svg';
-import squareImg from '../images/square.svg';
+import { XYInterface } from '../interfaces';
+import shapesImage from '../../images/shapes.svg';
+import squareImg from '../../images/square.svg';
 
 class Node {
   category: string;

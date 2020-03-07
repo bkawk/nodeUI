@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { ToolbarInterface } from '../components/interfaces';
 import { ADD_OBJECT, Dispatch } from '../globalState';
-import { Timer } from '../nodes/api/timer';
-import { Rectangle } from '../nodes/shapes/rectangle';
-import { Square } from '../nodes/shapes/square';
+import { Timer } from './nodes/api/timer';
+import { Rectangle } from './nodes/shapes/rectangle';
+import { Square } from './nodes/shapes/square';
 
 const MainToolbar: React.FC  = () => {
   const { dispatch } = useContext(Dispatch);

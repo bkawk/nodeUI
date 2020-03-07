@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ObjectInterface, XYInterface } from '../../components/interfaces';
-import { Dispatch, DRAW, Global } from '../../globalState';
+import { ObjectInterface, XYInterface } from '../../interfaces';
+import { Dispatch, DRAW, Global } from '../../../globalState';
 
 interface PropsInterface {
   selected: ObjectInterface;
@@ -123,7 +123,7 @@ const TimerInspector: React.FC<PropsInterface> = (props: PropsInterface) => {
       <div className='inspector--item-two'>
         <div className='inspector--description'></div>
         <button onClick={toggleStart}>{start ? 'Stop' : 'Start'} </button>
-        <button onClick={test}>Test</button>
+        <button onClick={test}>Test Trigger</button>
       </div>
 
 { start &&
